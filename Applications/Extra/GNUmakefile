@@ -13,6 +13,7 @@ SUBPROJECTS = \
 	Calculator \
 	DefaultsManager \
 	DictionaryReader \
+	DocumentViewer \
 	FTP \
 	FontManager \
 	HelpViewer \
