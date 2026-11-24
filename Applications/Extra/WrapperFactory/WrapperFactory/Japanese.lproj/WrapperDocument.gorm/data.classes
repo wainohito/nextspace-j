@@ -1,0 +1,146 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "changeType:",
+	    "chooseIcon:",
+	    "controlTextDidChange:",
+	    "deleteService:",
+	    "deleteType:",
+	    "changeUserInterfaceType:",
+	    "newService:",
+	    "newType:",
+	    "openNibFile:",
+	    "orderFrontFontPanel:",
+	    "setCurrentScriptToActivate:",
+	    "setCurrentScriptToFilter:",
+	    "setCurrentScriptToOpen:",
+	    "setCurrentScriptToStart:",
+	    "setCurrentScriptToStartOpen:",
+	    "setRole:",
+	    "changeUserInterface:"
+	);
+	Super = NSObject;
+    };
+    IconView = {
+	Actions = (
+	    "setDelegate:"
+	);
+	Outlets = (
+	    delegate,
+	    icon
+	);
+	Super = NSView;
+    };
+    IconView2 = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = IconView;
+    };
+    InterfaceController = {
+	Actions = (
+	    "changeType:"
+	);
+	Outlets = (
+	    shellTextField,
+	    actionTextView,
+	    typePopUp
+	);
+	Super = NSObject;
+    };
+    ServiceController = {
+	Actions = (
+	    "changeType:"
+	);
+	Outlets = (
+	    nameTextField,
+	    actionTextView,
+	    shellTextField,
+	    returnTypePopUp,
+	    sendTypePopUp
+	);
+	Super = NSObject;
+    };
+    ServicesController = {
+	Actions = (
+	    "newService:",
+	    "deleteService:"
+	);
+	Outlets = (
+	    tableView,
+	    serviceController,
+	    document
+	);
+	Super = NSObject;
+    };
+    TypeController = {
+	Actions = (
+	    "controlTextDidChange:",
+	    "setRole:",
+	    "chooseIcon:",
+	    "changeType:"
+	);
+	Outlets = (
+	    iconView,
+	    extensionsTextField,
+	    nameTextField,
+	    rolePopUp,
+	    filterButton,
+	    returnTypesTextField
+	);
+	Super = NSObject;
+    };
+    TypesController = {
+	Actions = (
+	    "setTableView:",
+	    "setTypeController:",
+	    "newType:",
+	    "deleteType:"
+	);
+	Outlets = (
+	    tableView,
+	    typeController,
+	    document,
+	    typeEditor
+	);
+	Super = NSObject;
+    };
+    WrapperDocumentController = {
+	Actions = (
+	    "setCurrentScriptToStart:",
+	    "setCurrentScriptToStartOpen:",
+	    "setCurrentScriptToOpen:",
+	    "setRole:",
+	    "chooseIcon:",
+	    "setCurrentScriptAction:",
+	    "setCurrentScriptToFilter:",
+	    "setCurrentScriptToActivate:",
+	    "changeUserInterface:",
+	    "openNibFile:",
+	    "changeUserInterfaceType:"
+	);
+	Outlets = (
+	    windowController,
+	    appIcon,
+	    name,
+	    version,
+	    fullVersion,
+	    description,
+	    url,
+	    authors,
+	    currentScriptShell,
+	    currentScript,
+	    document,
+	    rolePopUp,
+	    currentScriptActionPopUp,
+	    userInterface,
+	    interfaceController,
+	    userInterfaceTypePopUp,
+	    userInterfaceScript,
+	    userInterfaceShell
+	);
+	Super = NSObject;
+    };
+}

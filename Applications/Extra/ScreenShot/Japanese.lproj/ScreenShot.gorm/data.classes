@@ -1,0 +1,33 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    AppController = {
+	Actions = (
+	    "showPrefPanel:",
+	    "takeScreenShot:",
+	    "recordScreen:",
+	    "stopRecording:"
+	);
+	Outlets = (
+	    iconView,
+	    recordButton
+	);
+	Super = NSObject;
+    };
+    FirstResponder = {
+	Actions = (
+	    "stopRecording:",
+	    "orderFrontFontPanel:",
+	    "recordScreen:",
+	    "showPrefPanel:",
+	    "takeScreenShot:"
+	);
+	Super = NSObject;
+    };
+    MiniView = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSView;
+    };
+}

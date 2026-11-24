@@ -40,7 +40,28 @@
 - (void) awakeFromNib {
 }
 
+/* Localized gorms re-saved by gormtool lose the "NSRecentDocumentsMenu"
+   name: find the "Open Recent" submenu and register it again. */
+static NSMenu *findSubmenu(NSMenu *menu, NSString *title)
+{
+  for (NSMenuItem *item in [menu itemArray]) {
+    if (![item hasSubmenu])
+      continue;
+    if ([[item title] isEqualToString:title])
+      return [item submenu];
+    NSMenu *found = findSubmenu([item submenu], title);
+    if (found)
+      return found;
+  }
+  return nil;
+}
+
 - (void) applicationDidFinishLaunching: (NSNotification *)aNotif {
+  NSMenu *recent = findSubmenu([NSApp mainMenu], NSLocalizedString(@"Open Recent", @""));
+  NSDocumentController *dc = [NSDocumentController sharedDocumentController];
+  if (recent && [dc respondsToSelector:@selector(_setRecentDocumentsMenu:)]) {
+    [dc performSelector:@selector(_setRecentDocumentsMenu:) withObject:recent];
+  }
 #ifdef DOCVIEWER_HTML
   WebPreferences* pref = [WebPreferences standardPreferences];	// all windows share this
   [pref setJavaScriptEnabled:NO];

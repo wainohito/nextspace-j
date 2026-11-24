@@ -1,0 +1,40 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "execute:",
+	    "toggleStatus:",
+	    "refresh:",
+	    "select:",
+	    "toggleSwitch:"
+	);
+	Super = NSObject;
+    };
+    SystemWindow = {
+	Actions = (
+	    "refresh:",
+	    "select:",
+	    "execute:",
+	    "toggleSwitch:",
+	    "toggleStatus:"
+	);
+	Outlets = (
+	    window,
+	    processInfo,
+	    processList,
+	    filterText,
+	    devicesSwitch,
+	    mountsSwitch,
+	    servicesSwitch,
+	    pathsSwitch,
+	    slicesSwitch,
+	    socketsSwitch,
+	    targetsSwitch,
+	    timersSwitch,
+	    scopesSwitch,
+	    swapsSwitch,
+	    statusPopUp
+	);
+	Super = NSObject;
+    };
+}

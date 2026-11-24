@@ -1,0 +1,28 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    Document = {
+	Actions = (
+	    "list:",
+	    "rebuild:",
+	    "search:",
+	    "inspect:"
+	);
+	Outlets = (
+	    window,
+	    resultsView,
+	    queryField,
+	    statusField,
+	    queryTypeButton
+	);
+	Super = NSObject;
+    };
+    FirstResponder = {
+	Actions = (
+	    "list:",
+	    "inspect:",
+	    "rebuild:",
+	    "search:"
+	);
+	Super = NSObject;
+    };
+}

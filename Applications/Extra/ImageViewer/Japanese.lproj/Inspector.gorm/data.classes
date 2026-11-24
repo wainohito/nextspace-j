@@ -1,0 +1,29 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "findPrevious:",
+	    "openRepresentation:",
+	    "orderFrontFindPanel:",
+	    "performInspectorPanelAction:"
+	);
+	Super = NSObject;
+    };
+    InspectorPanel = {
+	Actions = (
+	    "orderFrontInspecrorPanel:",
+	    "openRepresentation:"
+	);
+	Outlets = (
+	    panel,
+	    "sel_hField",
+	    "sel_wField",
+	    "sel_xField",
+	    "sel_yField",
+	    "img_hField",
+	    "img_wField",
+	    "img_reps"
+	);
+	Super = NSObject;
+    };
+}

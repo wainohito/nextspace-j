@@ -1,0 +1,32 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    AppController = {
+	Actions = (
+	    "showPrefPanel:",
+	    "discoverServices:",
+	    "showPanel:",
+	    "openService:",
+	    "selectService:",
+	    "refreshServices:"
+	);
+	Outlets = (
+	    panel,
+	    browser,
+	    location,
+	    service
+	);
+	Super = NSObject;
+    };
+    FirstResponder = {
+	Actions = (
+	    "discoverServices:",
+	    "refreshServices:",
+	    "openService:",
+	    "orderFrontFontPanel:",
+	    "selectService:",
+	    "showPanel:",
+	    "showPrefPanel:"
+	);
+	Super = NSObject;
+    };
+}

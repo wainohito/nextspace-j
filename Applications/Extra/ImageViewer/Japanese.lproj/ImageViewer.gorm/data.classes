@@ -1,0 +1,41 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    AppController = {
+	Actions = (
+	    "showPrefPanel:",
+	    "showInspectorPanel:",
+	    "cloneDocument:"
+	);
+	Outlets = (
+	);
+	Super = NSObject;
+    };
+    Document = {
+	Actions = (
+	    "crop:",
+	    "zoomOut:",
+	    "zoomIn:",
+	    "cropAsNew:"
+	);
+	Outlets = (
+	    window,
+	    imageView
+	);
+	Super = NSObject;
+    };
+    FirstResponder = {
+	Actions = (
+	    "cloneDocument:",
+	    "crop:",
+	    "cropAsNew:",
+	    "toggleFullScreen:",
+	    "orderFrontFontPanel:",
+	    "resizeToFit:",
+	    "showInspectorPanel:",
+	    "showPrefPanel:",
+	    "zoomIn:",
+	    "zoomOut:"
+	);
+	Super = NSObject;
+    };
+}
