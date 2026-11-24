@@ -107,11 +107,47 @@
 
 //
 // Localized labels can be wider than the English ones the layout was made
-// for.  First tighten the letter spacing (kerning, up to 2pt per gap) so the
-// font size stays consistent with neighbours; shrink the font only if that
-// is not enough.
+// for.  To keep font sizes consistent with neighbours: first tighten the
+// letter spacing (kerning, up to 1.5pt per gap), then widen centered labels
+// symmetrically if that doesn't overlap a sibling's text; shrink the font
+// only as a last resort.
 //
-static const CGFloat kMaxKern = 2.0;
+static const CGFloat kMaxKern = 1.5;
+
+// Rect occupied by the text of a label (frame narrowed by alignment).
+static NSRect textRectOfLabel(NSTextField *tf)
+{
+  NSRect f = [tf frame];
+  CGFloat w = MIN([[tf cell] cellSize].width, NSWidth(f));
+
+  switch ([tf alignment]) {
+    case NSCenterTextAlignment: f.origin.x += (NSWidth(f) - w) / 2; break;
+    case NSRightTextAlignment:  f.origin.x += NSWidth(f) - w; break;
+    default: break;
+  }
+  f.size.width = w;
+  return f;
+}
+
+static BOOL widenCenteredLabel(NSTextField *tf, CGFloat extra)
+{
+  NSRect old = [tf frame];
+  NSRect wide = NSInsetRect(old, -ceil(extra / 2) - 1, 0);
+
+  if ([tf alignment] != NSCenterTextAlignment || NSMinX(wide) < 0 ||
+      NSMaxX(wide) > NSWidth([[tf superview] bounds])) {
+    return NO;
+  }
+  for (NSView *sib in [[tf superview] subviews]) {
+    if (sib == tf || ![sib isKindOfClass:[NSTextField class]])
+      continue;
+    if (NSIntersectsRect(wide, textRectOfLabel((NSTextField *)sib)))
+      return NO;
+  }
+  [tf setFrame:wide];
+  [[tf superview] setNeedsDisplayInRect:wide];
+  return YES;
+}
 
 static NSAttributedString *kernedString(NSString *text, NSFont *font, NSColor *color, CGFloat kern)
 {
@@ -135,13 +171,27 @@ static void fitControl(NSControl *c, BOOL isButton)
   if (excess <= 0 || [text length] == 0) {
     return;
   }
-  if (excess / gaps <= kMaxKern) {
-    NSAttributedString *as = kernedString(text, font, color, -(excess / gaps) - 0.1);
+  {
+    CGFloat kern = MIN(excess / gaps + 0.1, kMaxKern);
+    NSAttributedString *as = kernedString(text, font, color, -kern);
+    CGFloat rest;
+
     if (isButton)
       [(NSButton *)c setAttributedTitle:as];
     else
       [c setAttributedStringValue:as];
-    return;
+    rest = [cell cellSize].width - available;
+    if (rest <= 0) {
+      return;
+    }
+    if (!isButton && widenCenteredLabel((NSTextField *)c, rest)) {
+      return;
+    }
+    // Undo kerning before shrinking the font.
+    if (isButton)
+      [(NSButton *)c setTitle:text];
+    else
+      [c setStringValue:text];
   }
   while (font && [cell cellSize].width > available && [font pointSize] > 8) {
     font = [NSFont fontWithName:[font fontName] size:[font pointSize] - 1];
