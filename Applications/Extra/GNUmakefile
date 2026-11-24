@@ -21,6 +21,7 @@ SUBPROJECTS = \
 	Librarian \
 	NetHood \
 	Player \
+	RemoteView \
 	ScanImage \
 	ScreenShot \
 	Sketch \

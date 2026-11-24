@@ -11,4 +11,5 @@ Build and install (installs into `/Applications`):
 
 Runtime dependencies (Debian 13): vlc-bin vlc-plugin-base vlc-plugin-video-output
 (Player), scrot slop ffmpeg (ScreenShot), sane-utils (ScanImage), avahi-utils
-(NetHood), recollcmd poppler-utils unrtf (Librarian).
+(NetHood), recollcmd poppler-utils unrtf (Librarian), freerdp3-x11 (RemoteView).
+Build dependencies: libsdl2-dev libvncserver-dev (RemoteView).
