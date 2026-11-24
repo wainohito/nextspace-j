@@ -95,10 +95,13 @@ static NSString *WMComputerShouldGoDownNotification = @"WMComputerShouldGoDownNo
   NSDictionary *viewerTypes = [[ModuleLoader shared] menuViewerInfo];
 
   for (NSString *viewerType in [viewerTypes allKeys]) {
-    [viewMenu insertItemWithTitle:viewerType
-                           action:@selector(setViewerType:)
-                    keyEquivalent:[viewerTypes objectForKey:viewerType]
-                          atIndex:0];
+    // Title is localized for display; the viewer type identifier is kept
+    // in representedObject.
+    id<NSMenuItem> item = [viewMenu insertItemWithTitle:_(viewerType)
+                                              action:@selector(setViewerType:)
+                                       keyEquivalent:[viewerTypes objectForKey:viewerType]
+                                             atIndex:0];
+    [item setRepresentedObject:viewerType];
   }
 }
 
@@ -1270,18 +1273,18 @@ static NSString *WMComputerShouldGoDownNotification = @"WMComputerShouldGoDownNo
 {
   WScreen *scr = wDefaultScreen();
 
-  if ([[sender title] isEqualToString:@"Hide"]) {
+  if ([[sender title] isEqualToString:_(@"Hide")]) {
     wDockHideIcons(scr->dock);
     wScreenUpdateUsableArea(scr);
     if (!scr->dock->mapped) {
-      [sender setTitle:@"Show"];
+      [sender setTitle:_(@"Show")];
     }
   } else {
     wDockShowIcons(scr->dock);
     [recycler updateIconImage];
     wScreenUpdateUsableArea(scr);
     if (scr->dock->mapped) {
-      [sender setTitle:@"Hide"];
+      [sender setTitle:_(@"Hide")];
     }
   }
 }
@@ -1289,16 +1292,16 @@ static NSString *WMComputerShouldGoDownNotification = @"WMComputerShouldGoDownNo
 {
   WScreen *scr = wDefaultScreen();
 
-  if ([[sender title] isEqualToString:@"Collapse"]) {
+  if ([[sender title] isEqualToString:_(@"Collapse")]) {
     wDockCollapse(scr->dock);
     if (scr->dock->collapsed) {
-      [sender setTitle:@"Uncollapse"];
+      [sender setTitle:_(@"Uncollapse")];
     }
   } else {
     wDockUncollapse(scr->dock);
     [recycler updateIconImage];
     if (!scr->dock->collapsed) {
-      [sender setTitle:@"Collapse"];
+      [sender setTitle:_(@"Collapse")];
     }
   }
 }
@@ -1308,16 +1311,16 @@ static NSString *WMComputerShouldGoDownNotification = @"WMComputerShouldGoDownNo
 {
   WScreen *scr = wDefaultScreen();
 
-  if ([[sender title] isEqualToString:@"Hide"]) {
+  if ([[sender title] isEqualToString:_(@"Hide")]) {
     wIconYardHideIcons(scr);
     // wScreenUpdateUsableArea(scr);
     // if (!scr->dock->mapped)
-    [sender setTitle:@"Show"];
+    [sender setTitle:_(@"Show")];
   } else {
     wIconYardShowIcons(scr);
     // wScreenUpdateUsableArea(scr);
     // if (scr->dock->mapped)
-    [sender setTitle:@"Hide"];
+    [sender setTitle:_(@"Hide")];
   }
 }
 
@@ -1333,53 +1336,53 @@ static NSString *WMComputerShouldGoDownNotification = @"WMComputerShouldGoDownNo
 
   fileViewer = [self fileViewerForWindow:[NSApp keyWindow]];
 
-  if ([menuTitle isEqualToString:@"File"]) {
-    if ([[menuItem title] isEqualToString:@"Empty Recycler"]) {
+  if ([menuTitle isEqualToString:_(@"File")]) {
+    if ([[menuItem title] isEqualToString:_(@"Empty Recycler")]) {
       if (!recycler || [recycler itemsCount] == 0) {
         return NO;
       }
     }
-  } else if ([menuTitle isEqualToString:@"Dock"]) {
-    if ([[menuItem title] isEqualToString:@"Collapse"] ||
-        [[menuItem title] isEqualToString:@"Uncollapse"]) {
+  } else if ([menuTitle isEqualToString:_(@"Dock")]) {
+    if ([[menuItem title] isEqualToString:_(@"Collapse")] ||
+        [[menuItem title] isEqualToString:_(@"Uncollapse")]) {
       if (wDefaultScreen()->dock->collapsed) {
-        [menuItem setTitle:@"Uncollapse"];
+        [menuItem setTitle:_(@"Uncollapse")];
       } else {
-        [menuItem setTitle:@"Collapse"];
+        [menuItem setTitle:_(@"Collapse")];
       }
       if (!wDefaultScreen()->dock->mapped) {
         return NO;
       }
     }
-    if ([[menuItem title] isEqualToString:@"Hide"] || [[menuItem title] isEqualToString:@"Show"]) {
+    if ([[menuItem title] isEqualToString:_(@"Hide")] || [[menuItem title] isEqualToString:_(@"Show")]) {
       if (wDefaultScreen()->dock->mapped) {
-        [menuItem setTitle:@"Hide"];
+        [menuItem setTitle:_(@"Hide")];
       } else {
-        [menuItem setTitle:@"Show"];
+        [menuItem setTitle:_(@"Show")];
       }
     }
-  } else if ([menuTitle isEqualToString:@"Icon Yard"]) {
-    if ([[menuItem title] isEqualToString:@"Hide"] && !wDefaultScreen()->flags.icon_yard_mapped) {
-      [menuItem setTitle:@"Show"];
+  } else if ([menuTitle isEqualToString:_(@"Icon Yard")]) {
+    if ([[menuItem title] isEqualToString:_(@"Hide")] && !wDefaultScreen()->flags.icon_yard_mapped) {
+      [menuItem setTitle:_(@"Show")];
     }
-  } else if ([menuTitle isEqualToString:@"Disk"]) {
-    if ([[menuItem title] isEqualToString:@"Initialize..."])
+  } else if ([menuTitle isEqualToString:_(@"Disk")]) {
+    if ([[menuItem title] isEqualToString:_(@"Initialize...")])
       return NO;
-    if ([[menuItem title] isEqualToString:@"Check For Disks"] && !mediaAdaptor)
+    if ([[menuItem title] isEqualToString:_(@"Check For Disks")] && !mediaAdaptor)
       return NO;
-  } else if ([menuTitle isEqualToString:@"View"]) {
-    if ([[menuItem title] isEqualToString:[[[fileViewer viewer] class] viewerType]]) {
+  } else if ([menuTitle isEqualToString:_(@"View")]) {
+    if ([[menuItem representedObject] isEqual:[[[fileViewer viewer] class] viewerType]]) {
       return NO;
     }
-  } else if ([menuTitle isEqualToString:@"Inspector"]) {
+  } else if ([menuTitle isEqualToString:_(@"Inspector")]) {
     if (!fileViewer) {
-      if ([[menuItem title] isEqualToString:@"Attributes"])
+      if ([[menuItem title] isEqualToString:_(@"Attributes")])
         return NO;
-      if ([[menuItem title] isEqualToString:@"Contents"])
+      if ([[menuItem title] isEqualToString:_(@"Contents")])
         return NO;
-      if ([[menuItem title] isEqualToString:@"Tools"])
+      if ([[menuItem title] isEqualToString:_(@"Tools")])
         return NO;
-      if ([[menuItem title] isEqualToString:@"Permissions"])
+      if ([[menuItem title] isEqualToString:_(@"Permissions")])
         return NO;
     }
   }

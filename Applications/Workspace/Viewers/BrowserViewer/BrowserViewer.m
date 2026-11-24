@@ -325,7 +325,7 @@
 
 + (NSString *)viewerType
 {
-  return _(@"Browser");
+  return @"Browser";
 }
 
 + (NSString *)viewerShortcut

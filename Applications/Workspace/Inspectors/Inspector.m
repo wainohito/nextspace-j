@@ -447,7 +447,7 @@ static Inspector *inspectorPanel = nil;
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 
   // It's an Inspector panel instance
-  if ([[window title] isEqualToString:@"Inspector"]) {
+  if ([[window title] isEqualToString:_(@"Inspector")]) {
     TEST_RELEASE(filePath);
 
     TEST_RELEASE(noInspectorBox);
@@ -627,9 +627,9 @@ static Inspector *inspectorPanel = nil;
     // Update contents of section inspector
     [self selectView:popUpButton];
   } else if (self == inspectorPanel) {
-    [[okButton cell] setTitle:@"OK"];
+    [[okButton cell] setTitle:_(@"OK")];
     [okButton setEnabled:NO];
-    [[revertButton cell] setTitle:@"Revert"];
+    [[revertButton cell] setTitle:_(@"Revert")];
     [revertButton setEnabled:NO];
 
     [window setDocumentEdited:NO];

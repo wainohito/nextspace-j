@@ -341,7 +341,7 @@ static NSRect viewFrame;
 //=============================================================================
 + (NSString *)viewerType
 {
-  return _(@"Icon");
+  return @"Icon";
 }
 
 + (NSString *)viewerShortcut

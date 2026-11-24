@@ -183,7 +183,7 @@
   [self awakeFromNib];
 
   if (isRootViewer) {
-    [window setTitle:@"File Viewer"];
+    [window setTitle:_(@"File Viewer")];
     [window setFrameAutosaveName:@"RootViewer"];
 
     // try the saved path, then the home directory and as last
@@ -196,7 +196,7 @@
     // rootFrame.origin.x += 20;
     // rootFrame.origin.y -= 20;
     // [window setFrame:rootFrame display:NO];
-    [window setTitle:@"File Viewer  \u2014  /"];
+    [window setTitle:_(@"File Viewer  \u2014  /")];
     [window center];
     relativePath = rootPath;
   } else {
@@ -1596,7 +1596,12 @@
 // Menu items in 'Viewers' submenu loaded by [Controller _loadViewMenu]
 - (void)setViewerType:(id)sender
 {
-  NSString *viewerType = [sender title];
+  NSString *viewerType = nil;
+
+  if ([sender respondsToSelector:@selector(representedObject)])
+    viewerType = [sender representedObject];
+  if (![viewerType isKindOfClass:[NSString class]])
+    viewerType = [sender title];
 
   if (!viewerType) {
     return;
@@ -1829,7 +1834,7 @@
   NSString *selectedPath = [self absolutePath];
 
   // File operations
-  if ([menuTitle isEqualToString:@"File"]) {
+  if ([menuTitle isEqualToString:_(@"File")]) {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSString *parentPath;
     NSString *fileType;
@@ -1840,7 +1845,7 @@
     // if ([[menuItem title] isEqualToString:@"Open"] &&
     //     (![fm fileExistsAtPath:selectedPath isDirectory:&isDir] || isDir)) return NO;
 
-    if ([[menuItem title] isEqualToString:@"Open as Folder"]) {
+    if ([[menuItem title] isEqualToString:_(@"Open as Folder")]) {
       if ([selection count] == 1) {
         fullPath = [selectedPath stringByAppendingPathComponent:[selection lastObject]];
         fileType = [[fm fileAttributesAtPath:fullPath traverseLink:YES] fileType];
@@ -1853,12 +1858,12 @@
       }
     }
 
-    if ([[menuItem title] isEqualToString:@"New Folder"] && ![fm isWritableFileAtPath:selectedPath])
+    if ([[menuItem title] isEqualToString:_(@"New Folder")] && ![fm isWritableFileAtPath:selectedPath])
       return NO;
 
-    if ([[menuItem title] isEqualToString:@"Destroy"] ||
-        [[menuItem title] isEqualToString:@"Duplicate"] ||
-        [[menuItem title] isEqualToString:@"Compress"]) {
+    if ([[menuItem title] isEqualToString:_(@"Destroy")] ||
+        [[menuItem title] isEqualToString:_(@"Duplicate")] ||
+        [[menuItem title] isEqualToString:_(@"Compress")]) {
       if ([selection count] > 0 && ![fm isWritableFileAtPath:selectedPath]) {
         return NO;
       }
@@ -1869,7 +1874,7 @@
   }
 
   // Media operations
-  if ([menuTitle isEqualToString:@"Disk"]) {
+  if ([menuTitle isEqualToString:_(@"Disk")]) {
     NSArray *mountedRemovables;
     NSString *selectedMountPoint;
 
@@ -1877,22 +1882,22 @@
     selectedMountPoint = [mediaManager mountPointForPath:selectedPath];
 
     if ([mountedRemovables indexOfObjectIdenticalTo:selectedMountPoint] == NSNotFound) {
-      if ([[menuItem title] isEqualToString:@"Eject"])
+      if ([[menuItem title] isEqualToString:_(@"Eject")])
         return NO;
-      if ([[menuItem title] isEqualToString:@"Unmount"])
+      if ([[menuItem title] isEqualToString:_(@"Unmount")])
         return NO;
     }
   }
 
-  if ([menuTitle isEqualToString:@"Edit"]) {
-    if ([[menuItem title] isEqualToString:@"Cut"]) {
+  if ([menuTitle isEqualToString:_(@"Edit")]) {
+    if ([[menuItem title] isEqualToString:_(@"Cut")]) {
       // Check if parent directory is writable
       NSString *parentDirectory = [selectedPath stringByDeletingLastPathComponent];
       
       if ([[NSFileManager defaultManager] isWritableFileAtPath:parentDirectory] == NO) {
         return NO;
       }
-    } else if ([[menuItem title] isEqualToString:@"Paste"]) {
+    } else if ([[menuItem title] isEqualToString:_(@"Paste")]) {
       return ([processManager editOperation] != nil);
     }
   }

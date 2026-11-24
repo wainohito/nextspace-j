@@ -1,6 +1,5 @@
 {
 "_comment": "English -> Japanese for Workspace.app (gorm + _() strings). Conventions: no trailing long vowel, ウインドウ, ごみ箱, 最小化.",
-
 "Workspace": "Workspace",
 "Info": "情報",
 "Info Panel...": "情報パネル...",
@@ -55,13 +54,11 @@
 "Log Out": "ログアウト",
 "Log out": "ログアウト",
 "Power off": "電源オフ",
-
 "File Viewer": "ファイルビューア",
 "Recycler": "ごみ箱",
 "Restore": "元に戻す",
 "Recycle": "ごみ箱へ",
 "Recover": "復元",
-
 "Application Inspector": "アプリケーションインスペクタ",
 "Attributes Inspector": "属性インスペクタ",
 "Contents Inspector": "内容インスペクタ",
@@ -112,7 +109,6 @@
 "Encoding:": "エンコーディング:",
 "Disk info": "ディスク情報",
 "Generic file type": "一般ファイル",
-
 "Background Processes": "バックグラウンドプロセス",
 "No Background Process": "バックグラウンドプロセスなし",
 "Applications": "アプリケーション",
@@ -151,7 +147,6 @@
 "Run": "実行",
 "Run Command": "コマンドを実行",
 "Run in Terminal": "ターミナルで実行",
-
 "Workspace Manager Preferences": "Workspace Manager 環境設定",
 "Desktop Preferences": "デスクトップ環境設定",
 "Dock Preferences": "Dock 環境設定",
@@ -198,7 +193,6 @@
 "Type": "タイプ",
 "Window": "ウインドウ",
 "Manager": "マネージャ",
-
 "Version:": "バージョン:",
 "Processor:": "プロセッサ:",
 "Memory:": "メモリ:",
@@ -207,7 +201,6 @@
 "Foundation Kit:": "Foundation Kit:",
 "Application Kit:": "Application Kit:",
 "Workspace Manager for          the rest of us": "Workspace Manager for          the rest of us",
-
 "%lu items": "%lu 項目",
 "%lu Elements": "%lu 要素",
 "%u Bytes": "%u バイト",
@@ -245,5 +238,13 @@
 "Warning: SUID executable!": "警告: SUID 実行ファイル!",
 "Warning: SUID root executable!": "警告: SUID root 実行ファイル!",
 "You can skip this file to proceed with operation.": "このファイルをスキップして操作を続けられます。",
-"You can skip this file, or stop the entire operation": "このファイルをスキップするか、操作全体を中止できます"
+"You can skip this file, or stop the entire operation": "このファイルをスキップするか、操作全体を中止できます",
+"_code_keys": [
+"Browser",
+"Icon"
+],
+"Show": "表示",
+"Uncollapse": "展開",
+"Check For Disks": "ディスクを確認",
+"File Viewer  —  /": "ファイルビューア  —  /"
 }
