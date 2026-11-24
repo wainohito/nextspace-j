@@ -24,3 +24,9 @@ cd ../..
 make
 sudo -E sh -c ". /Developer/Makefiles/GNUstep.sh; make install GNUSTEP_INSTALLATION_DOMAIN=LOCAL"
 sudo ldconfig
+
+# Wrappers around non-GNUstep applications (need WrapperFactory's
+# /Library/bin/GSWrapper_Launcher, installed above)
+for app in Wrappers/*.app; do
+  sudo cp -a "$app" /Applications/
+done

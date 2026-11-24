@@ -18,3 +18,11 @@ Runtime dependencies (Debian 13): vlc-bin vlc-plugin-base vlc-plugin-video-outpu
 (Player), scrot slop ffmpeg (ScreenShot), sane-utils (ScanImage), avahi-utils
 (NetHood), recollcmd poppler-utils unrtf (Librarian), freerdp3-x11 (RemoteView), rclone (CloudManager).
 Build dependencies: libfreetype-dev (PDFKit), libsdl2-dev libvncserver-dev (RemoteView).
+
+## Wrappers
+
+`Wrappers/Firefox.app` and `Wrappers/Chromium.app` (from gs-desktop's
+extra-apps, adapted to use the browsers' normal profiles and key settings)
+make Firefox and Chromium launchable from /Applications and the Dock, with a
+GNUstep menu and an "Open URL" service. They are plain bundles that run
+`/Library/bin/GSWrapper_Launcher` (WrapperFactory); build.sh copies them.
