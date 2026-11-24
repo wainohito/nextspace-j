@@ -591,58 +591,37 @@ static int byte_order(void)
 - (void)_updateInputMethodWithInsertionPoint:(NSPoint)insertionPoint
 {
   id displayServer = (XGServer *)GSCurrentServer();
+  NSWindow *window = [self window];
+  NSRect ipRect;
+  NSRect screenRect;
+  NSRect client_win_rect;
+  NSPoint p;
 
-  if (![displayServer respondsToSelector:@selector(inputMethodStyle)])
+  if (window == nil || ![displayServer respondsToSelector:@selector(inputMethodStyle)])
+    return;
+  if (![[displayServer inputMethodStyle] isEqual:@"OverTheSpot"])
+    return;
+  if (![displayServer clientWindowRect:&client_win_rect])
     return;
 
-  if ([[displayServer inputMethodStyle] isEqual:@"OverTheSpot"]) {
-    id view;
-    NSRect frame;
-    NSPoint p;
-    NSRect client_win_rect;
-    NSPoint screenXY_of_frame;
-    double x_offset;
-    double y_offset;
-    int font_size;
-    NSRect doc_rect;
-    NSRect doc_visible_rect;
-    BOOL cond;
-    float x = insertionPoint.x;
-    float y = insertionPoint.y;
-
-    [displayServer clientWindowRect:&client_win_rect];
+  // Insertion point rectangle in the text view's (flipped) coordinates.
+  ipRect = _insertionPointRect;
+  ipRect.origin = insertionPoint;
+  if (ipRect.size.height < 1) {
+    int font_size = 12;
     [displayServer fontSize:&font_size];
-
-    cond = [[self superview] isKindOfClass:[NSClipView class]];
-    if (cond)
-      view = [self superview];
-    else
-      view = self;
-
-    frame = [view frame];
-    screenXY_of_frame = [[view window] convertBaseToScreen:frame.origin];
-
-    // N.B. The window of NSTextView isn't necessarily the same as the input
-    // method's client window.
-    x_offset = screenXY_of_frame.x - client_win_rect.origin.x;
-    y_offset = (client_win_rect.origin.y + client_win_rect.size.height) -
-               (screenXY_of_frame.y + frame.size.height) + font_size;
-
-    x += x_offset;
-    y += y_offset;
-    if (cond)  // If 'view' is of NSClipView, then
-    {
-      // N.B. Remember, (x, y) are the values with respect to NSTextView.
-      // We need to know the corresponding insertion position with respect
-      // to NSClipView.
-      doc_rect = [(NSClipView *)view documentRect];
-      doc_visible_rect = [view documentVisibleRect];
-      y -= doc_visible_rect.origin.y - doc_rect.origin.y;
-    }
-
-    p = NSMakePoint(x, y);
-    [displayServer setPreeditSpot:&p];
+    ipRect.size.height = font_size;
   }
+
+  // Text view -> window base -> screen (GNUstep, origin bottom-left).
+  screenRect = [window convertRectToScreen:[self convertRect:ipRect toView:nil]];
+
+  // Screen -> X client window coordinates (origin top-left).  The spot
+  // location is the baseline-ish point under the insertion point.
+  p.x = NSMinX(screenRect) - NSMinX(client_win_rect);
+  p.y = NSMaxY(client_win_rect) - NSMinY(screenRect);
+
+  [displayServer setPreeditSpot:&p];
 }
 
 @end  // NSTextView

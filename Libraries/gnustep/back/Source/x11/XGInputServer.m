@@ -48,6 +48,7 @@
 @interface XGInputServer (XIMPrivate)
 - (BOOL)ximInit:(Display *)dpy;
 - (void)ximClose;
+- (XIC)currentIC;
 - (int)ximStyleInit;
 - (XIC)ximCreateIC:(Window)w;
 - (unsigned long)ximXicGetMask:(XIC)xic;
@@ -282,6 +283,17 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
   return 1;
 }
 
+/* The IC that preedit/status values apply to: the focused one if known,
+   otherwise the most recently created one (old behaviour). */
+- (XIC)currentIC
+{
+  if (focused_xic != NULL)
+    return focused_xic;
+  if (num_xics > 0)
+    return xics[num_xics - 1];
+  return NULL;
+}
+
 - (void)ximClose
 {
   int i;
@@ -291,6 +303,7 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
   free(xics);
   num_xics = 0;
   xics = NULL;
+  focused_xic = NULL;
 
   NSDebugLLog(@"XIM", @"Closed XIM\n");
 
@@ -318,6 +331,7 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
   if (windev->ic) {
     NSDebugLLog(@"XIM", @"XSetICFocus to window %lu", windev->ident);
     XSetICFocus(windev->ic);
+    focused_xic = windev->ic;
   }
 }
 
@@ -442,6 +456,8 @@ finish:
     xics[i - 1] = xics[i];
   num_xics--;
 
+  if (focused_xic == xic)
+    focused_xic = NULL;
   XDestroyIC(xic);
 }
 
@@ -484,12 +500,12 @@ finish:
   unsigned int w, h;
   unsigned int bw, d;
 
-  if (num_xics <= 0 || !rect)
+  if ([self currentIC] == NULL || !rect)
     return NO;
 
   *rect = NSMakeRect(0, 0, 0, 0);
 
-  if (XGetICValues(xics[num_xics - 1], XNClientWindow, &win, NULL))
+  if (XGetICValues([self currentIC], XNClientWindow, &win, NULL))
     return NO;
   dpy = [XGServer xDisplay];
   if (XTranslateCoordinates(dpy, win, DefaultRootWindow(dpy), 0, 0, &abs_x, &abs_y, &dummy) == 0)
@@ -507,7 +523,7 @@ finish:
 
 - (BOOL)statusArea:(NSRect *)rect
 {
-  if (num_xics > 0 && (xim_style & XIMStatusArea)) {
+  if ([self currentIC] != NULL && (xim_style & XIMStatusArea)) {
     XRectangle area;
     int dummy = 0;
     XVaNestedList arglist = NULL;
@@ -515,7 +531,7 @@ finish:
     if (!(arglist = XVaCreateNestedList(dummy, XNArea, &area, NULL))) {
       return NO;
     }
-    XGetICValues(xics[num_xics - 1], XNStatusAttributes, arglist, NULL);
+    XGetICValues([self currentIC], XNStatusAttributes, arglist, NULL);
 
     rect->origin.x = area.x;
     rect->origin.y = area.y;
@@ -534,7 +550,7 @@ finish:
 
 - (BOOL)preeditArea:(NSRect *)rect
 {
-  if (num_xics > 0 && ((xim_style & XIMPreeditArea) || (xim_style & XIMPreeditPosition))) {
+  if ([self currentIC] != NULL && ((xim_style & XIMPreeditArea) || (xim_style & XIMPreeditPosition))) {
     XRectangle area;
     int dummy = 0;
     XVaNestedList arglist = NULL;
@@ -542,7 +558,7 @@ finish:
     if (!(arglist = XVaCreateNestedList(dummy, XNArea, &area, NULL))) {
       return NO;
     }
-    XGetICValues(xics[num_xics - 1], XNPreeditAttributes, arglist, NULL);
+    XGetICValues([self currentIC], XNPreeditAttributes, arglist, NULL);
 
     rect->origin.x = area.x;
     rect->origin.y = area.y;
@@ -561,7 +577,7 @@ finish:
 
 - (BOOL)preeditSpot:(NSPoint *)p
 {
-  if (num_xics > 0 && (xim_style & XIMPreeditPosition)) {
+  if ([self currentIC] != NULL && (xim_style & XIMPreeditPosition)) {
     XPoint spot;
     int dummy = 0;
     XVaNestedList arglist = NULL;
@@ -569,7 +585,7 @@ finish:
     if (!(arglist = XVaCreateNestedList(dummy, XNSpotLocation, &spot, NULL))) {
       return NO;
     }
-    XGetICValues(xics[num_xics - 1], XNPreeditAttributes, arglist, NULL);
+    XGetICValues([self currentIC], XNPreeditAttributes, arglist, NULL);
 
     p->x = spot.x;
     p->y = spot.y;
@@ -586,7 +602,7 @@ finish:
 
 - (BOOL)setStatusArea:(NSRect *)rect
 {
-  if (num_xics > 0 && (xim_style & XIMStatusArea)) {
+  if ([self currentIC] != NULL && (xim_style & XIMStatusArea)) {
     XRectangle area;
     int dummy = 0;
     XVaNestedList arglist = NULL;
@@ -599,7 +615,7 @@ finish:
     if (!(arglist = XVaCreateNestedList(dummy, XNArea, &area, NULL))) {
       return NO;
     }
-    XSetICValues(xics[num_xics - 1], XNStatusAttributes, arglist, NULL);
+    XSetICValues([self currentIC], XNStatusAttributes, arglist, NULL);
 
     if (arglist) {
       XFree(arglist);
@@ -613,7 +629,7 @@ finish:
 
 - (BOOL)setPreeditArea:(NSRect *)rect
 {
-  if (num_xics > 0 && ((xim_style & XIMPreeditArea) || (xim_style & XIMPreeditPosition))) {
+  if ([self currentIC] != NULL && ((xim_style & XIMPreeditArea) || (xim_style & XIMPreeditPosition))) {
     XRectangle area;
     int dummy = 0;
     XVaNestedList arglist = NULL;
@@ -626,7 +642,7 @@ finish:
     if (!(arglist = XVaCreateNestedList(dummy, XNArea, &area, NULL))) {
       return NO;
     }
-    XSetICValues(xics[num_xics - 1], XNPreeditAttributes, arglist, NULL);
+    XSetICValues([self currentIC], XNPreeditAttributes, arglist, NULL);
 
     if (arglist) {
       XFree(arglist);
@@ -640,7 +656,7 @@ finish:
 
 - (BOOL)setPreeditSpot:(NSPoint *)p
 {
-  if (num_xics > 0 && (xim_style & XIMPreeditPosition)) {
+  if ([self currentIC] != NULL && (xim_style & XIMPreeditPosition)) {
     XPoint spot;
     int dummy = 0;
     XVaNestedList arglist = NULL;
@@ -651,7 +667,7 @@ finish:
     if (!(arglist = XVaCreateNestedList(dummy, XNSpotLocation, &spot, NULL))) {
       return NO;
     }
-    XSetICValues(xics[num_xics - 1], XNPreeditAttributes, arglist, NULL);
+    XSetICValues([self currentIC], XNPreeditAttributes, arglist, NULL);
 
     if (arglist) {
       XFree(arglist);

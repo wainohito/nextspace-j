@@ -49,6 +49,7 @@
    */
   XIC *xics;
   int num_xics;
+  XIC focused_xic;  /* IC of the window that currently has input focus */
 }
 
 - (id)initWithDelegate:(id)aDelegate display:(Display *)dpy name:(NSString *)name;
