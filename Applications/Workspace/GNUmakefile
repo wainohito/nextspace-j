@@ -37,7 +37,8 @@ $(APP_NAME)_OBJC_FILES = \
 $(APP_NAME)_RESOURCE_FILES = \
 	$(wildcard Resources/*) \
 	Inspectors/Inspectors.bundle \
-	$(wildcard Processes/English.lproj)
+	$(wildcard Processes/English.lproj) \
+	$(wildcard Processes/Japanese.lproj)
 
 # Window manager
 WM_DIR = WM

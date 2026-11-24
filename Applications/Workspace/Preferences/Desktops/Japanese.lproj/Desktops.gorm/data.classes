@@ -1,0 +1,46 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    DesktopsPrefs = {
+	Actions = (
+	    "setShowInDock:",
+	    "selectWorkspace:",
+	    "changeName:",
+	    "setWorkspaceQuantity:",
+	    "setDirectSwitchShortcut:",
+	    "setSwitchShortcut:"
+	);
+	Outlets = (
+	    showInDockBtn,
+	    window,
+	    box,
+	    changeNameBtn,
+	    dt1,
+	    dt10,
+	    dt2,
+	    dt3,
+	    dt4,
+	    dt5,
+	    dt6,
+	    dt7,
+	    dt8,
+	    dt9,
+	    nameField,
+	    desktopsBox,
+	    desktopsNumber,
+	    directSwitchKey,
+	    switchKey
+	);
+	Super = NSObject;
+    };
+    FirstResponder = {
+	Actions = (
+	    "changeName:",
+	    "setDirectSwitchShortcut:",
+	    "selectWorkspace:",
+	    "setShowInDock:",
+	    "setSwitchShortcut:",
+	    "setWorkspaceQuantity:"
+	);
+	Super = NSObject;
+    };
+}
