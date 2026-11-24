@@ -970,7 +970,7 @@ static void wApplicationSaveIconPathFor(const char *iconPath, const char *wm_ins
   char *tmp;
 
   if (!dict) {
-    WMLogError(_("cannot save appicon to a NULL WMWindowAttributes"));
+    WMLogError("cannot save appicon to a NULL WMWindowAttributes");
     return;
   }
 

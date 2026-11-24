@@ -46,6 +46,50 @@
 #import "Processes/ProcessManager.h"
 
 NSString *WMShowAlertPanel = @"WMShowAlertPanelNotification";
+
+//-----------------------------------------------------------------------------
+// Localization of the C (Window Maker) part: WM.h maps _() to this function.
+// Translations come from Workspace's Localizable.strings.  The returned
+// pointer stays valid for the process lifetime (strings are cached); if
+// there is no translation the original pointer is returned unchanged.
+//-----------------------------------------------------------------------------
+char *WMLocalizedString(const char *text)
+{
+  static NSMutableDictionary *cache = nil;
+  const char *result = text;
+
+  if (text == NULL || *text == '\0')
+    return (char *)text;
+
+  @synchronized([NSBundle class]) {
+    @autoreleasepool {
+      NSString *key = [NSString stringWithUTF8String:text];
+      id cached;
+
+      if (key == nil)
+        return (char *)text;
+      if (cache == nil)
+        cache = [[NSMutableDictionary alloc] init];
+
+      // Cache value: NSData holding a NUL-terminated UTF-8 copy, or
+      // NSNull when there is no translation.
+      cached = [cache objectForKey:key];
+      if (cached == nil) {
+        NSString *value = [[NSBundle mainBundle] localizedStringForKey:key value:key table:nil];
+        if (value == nil || [value isEqualToString:key]) {
+          cached = [NSNull null];
+        } else {
+          const char *utf8 = [value UTF8String];
+          cached = [NSData dataWithBytes:utf8 length:strlen(utf8) + 1];
+        }
+        [cache setObject:cached forKey:key];
+      }
+      if ([cached isKindOfClass:[NSData class]])
+        result = (const char *)[cached bytes];
+    }
+  }
+  return (char *)result;
+}
 dispatch_queue_t workspace_q;
 WorkspaceExitCode ws_quit_code;
 

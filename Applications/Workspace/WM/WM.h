@@ -134,9 +134,11 @@
 #define M_(text) (text)
 #endif
 #else
-#define _(text) text
+/* Localized via Workspace's Localizable.strings (see Workspace+WM.m) */
+extern char *WMLocalizedString(const char *text);
+#define _(text) WMLocalizedString(text)
 #define N_(text) text
-#define M_(text) text
+#define M_(text) WMLocalizedString(text)
 #endif /* HAVE_LIBINTL_H && I18N */
 
 #endif /* !__OBJC__ */

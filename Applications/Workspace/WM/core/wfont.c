@@ -73,7 +73,7 @@ static FcPattern *xlfdToFcPattern(const char *xlfd)
   wfree(fname);
 
   if (!pattern) {
-    WMLogWarning(_("invalid font: %s. Trying '%s'"), xlfd, SYSTEM_FONT);
+    WMLogWarning("invalid font: %s. Trying '%s'", xlfd, SYSTEM_FONT);
     pattern = FcNameParse((FcChar8 *) SYSTEM_FONT);
   }
 
@@ -288,7 +288,7 @@ WMFont *WMSystemFontOfSize(WMScreen *scrPtr, int size)
   font = WMCreateFont(scrPtr, fontSpec);
 
   if (!font) {
-    WMLogWarning(_("could not load font: %s."), fontSpec);
+    WMLogWarning("could not load font: %s.", fontSpec);
   }
 
   wfree(fontSpec);
@@ -306,7 +306,7 @@ WMFont *WMBoldSystemFontOfSize(WMScreen *scrPtr, int size)
   font = WMCreateFont(scrPtr, fontSpec);
 
   if (!font) {
-    WMLogWarning(_("could not load font: %s."), fontSpec);
+    WMLogWarning("could not load font: %s.", fontSpec);
   }
 
   wfree(fontSpec);

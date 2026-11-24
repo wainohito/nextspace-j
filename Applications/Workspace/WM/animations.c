@@ -379,7 +379,7 @@ static int bounceDirection(WAppIcon *aicon)
       break;
 
     default:
-      WMLogWarning(_("Impossible direction: %d"), dir);
+      WMLogWarning("Impossible direction: %d", dir);
       dir = 3;
       break;
   }

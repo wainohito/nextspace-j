@@ -1665,7 +1665,7 @@ static void _handleSelectionClear(XSelectionClearEvent *event)
   if (event->selection != scr->sn_atom)
     return;
 
-  WMLogInfo(_("another window manager is replacing us!"));
+  WMLogInfo("another window manager is replacing us!");
   Shutdown(WSExitMode);
 #else
   /*

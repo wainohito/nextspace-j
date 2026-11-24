@@ -184,7 +184,7 @@ static int _catchXError(Display *dpy, XErrorEvent *error)
   }
 
   FormatXError(dpy, error, buffer, MAXLINE);
-  WMLogWarning(_("internal X error: %s"), buffer);
+  WMLogWarning("internal X error: %s", buffer);
   return -1;
 }
 
@@ -699,7 +699,7 @@ void wStartUp(Bool defaultScreenOnly)
   w_global.xext.xkb.supported =
       XkbQueryExtension(dpy, NULL, &w_global.xext.xkb.event_base, NULL, NULL, NULL);
   if (!w_global.xext.xkb.supported) {
-    WMLogWarning(_("XKB is not supported."));
+    WMLogWarning("XKB is not supported.");
   }
 #endif
 
@@ -813,7 +813,7 @@ void wInitialize(int argc, char **argv)
   /* open display */
   dpy = XOpenDisplay(DisplayName);
   if (dpy == NULL) {
-    WMLogCritical(_("could not open display \"%s\""), XDisplayName(DisplayName));
+    WMLogCritical("could not open display \"%s\"", XDisplayName(DisplayName));
     exit(1);
   }
 

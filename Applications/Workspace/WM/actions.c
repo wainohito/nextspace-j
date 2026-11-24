@@ -956,7 +956,7 @@ static WWindow *recursiveTransientFor(WWindow *wwin)
     i--;
   }
   if (i == 0 && wwin) {
-    WMLogWarning(_("window \"%s\" has a severely broken WM_TRANSIENT_FOR hint"),
+    WMLogWarning("window \"%s\" has a severely broken WM_TRANSIENT_FOR hint",
                  wwin->frame->title);
     return NULL;
   }
@@ -1035,7 +1035,7 @@ void wIconifyWindow(WWindow *wwin)
             snprintf(title_buf, sizeof(title_buf), "(id=0x%lx)", wwin->client_win);
             title = title_buf;
           }
-          WMLogWarning(_("creation of mini-preview failed for window \"%s\""), title);
+          WMLogWarning("creation of mini-preview failed for window \"%s\"", title);
         }
       }
     }

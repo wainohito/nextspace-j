@@ -81,7 +81,7 @@ void RemakeStackList(WScreen *scr)
   int i, c;
 
   if (!XQueryTree(dpy, scr->root_win, &junkr, &junkp, &windows, &nwindows)) {
-    WMLogWarning(_("could not get window list!!"));
+    WMLogWarning("could not get window list!!");
     return;
   } else {
     WMEmptyBag(scr->stacking_list);

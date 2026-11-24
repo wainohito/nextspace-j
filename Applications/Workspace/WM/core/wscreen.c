@@ -267,8 +267,8 @@ WMScreen *WMCreateScreenWithRContext(Display *display, int screen, RContext *con
     scrPtr->boldFont = scrPtr->normalFont;
 
   if (!scrPtr->normalFont) {
-    WMLogWarning(_("could not load any fonts. Make sure your font installation"
-                   " and locale settings are correct."));
+    WMLogWarning("could not load any fonts. Make sure your font installation"
+                   " and locale settings are correct.");
 
     return NULL;
   }

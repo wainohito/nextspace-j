@@ -92,7 +92,7 @@ void WMInitIM(WMScreen *scr)
     cb.callback = destroyIM_cb;
     cb.client_data = (XPointer) scr;
     if (XSetIMValues(scr->imctx->xim, XNDestroyCallback, &cb, NULL))
-      WMLogWarning(_("could not add destroy callback for XIM input method"));
+      WMLogWarning("could not add destroy callback for XIM input method");
     XUnregisterIMInstantiateCallback(scr->display, NULL, NULL, NULL, instantiateIM_cb, (XPointer) scr);
     /* Get available input style */
     XGetIMValues(scr->imctx->xim, XNQueryInputStyle, &im_styles, NULL);

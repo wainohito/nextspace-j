@@ -347,7 +347,7 @@ static void icon_update_pixmap(WIcon *icon, RImage *image)
   }
 
   if (!RConvertImage(scr->rcontext, tile, &pixmap)) {
-    WMLogWarning(_("error rendering image:%s"), RMessageForError(RErrorCode));
+    WMLogWarning("error rendering image:%s", RMessageForError(RErrorCode));
   }
   RReleaseImage(tile);
   icon->pixmap = pixmap;

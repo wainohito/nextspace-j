@@ -340,12 +340,12 @@ static RImage *get_texture_image(WScreen *scr, const char *pixmap_file)
 
   file = WMAbsolutePathForFile(wPreferences.image_paths, pixmap_file);
   if (!file) {
-    WMLogWarning(_("image file \"%s\" used as texture could not be found."), pixmap_file);
+    WMLogWarning("image file \"%s\" used as texture could not be found.", pixmap_file);
     return NULL;
   }
   image = WSCreateRasterImage(file, scr);
   if (!image) {
-    WMLogWarning(_("could not load texture pixmap \"%s\":%s"), file, RMessageForError(RErrorCode));
+    WMLogWarning("could not load texture pixmap \"%s\":%s", file, RMessageForError(RErrorCode));
     wfree(file);
     return NULL;
   }
@@ -460,11 +460,11 @@ RImage *wTextureRenderImage(WTexture *texture, int width, int height, int relief
   if (!image) {
     RColor gray;
 
-    WMLogWarning(_("could not render texture: %s"), RMessageForError(RErrorCode));
+    WMLogWarning("could not render texture: %s", RMessageForError(RErrorCode));
 
     image = RCreateImage(width, height, False);
     if (image == NULL) {
-      WMLogWarning(_("could not allocate image buffer"));
+      WMLogWarning("could not allocate image buffer");
       return NULL;
     }
 

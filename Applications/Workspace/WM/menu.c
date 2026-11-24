@@ -374,7 +374,7 @@ void wMenuItemSetShortcut(WMenuItem *item, const char *shortcut_desc)
     *k = 0;
     mod = wXModifierFromKey(b);
     if (mod < 0) {
-      WMLogWarning(_("Failed to get modifier for shortcut \"%s\""), shortcut_desc);
+      WMLogWarning("Failed to get modifier for shortcut \"%s\"", shortcut_desc);
       wfree(item->shortcut);
       item->shortcut = NULL;
       break;
@@ -391,13 +391,13 @@ void wMenuItemSetShortcut(WMenuItem *item, const char *shortcut_desc)
     ksym = XStringToKeysym(b);
 
     if (ksym == NoSymbol) {
-      WMLogWarning(_("Failed to get KeySym for shortcut \"%s\""), shortcut_desc);
+      WMLogWarning("Failed to get KeySym for shortcut \"%s\"", shortcut_desc);
       wfree(item->shortcut);
       item->shortcut = NULL;
     } else {
       item->shortcut->keycode = XKeysymToKeycode(dpy, ksym);
       if (item->shortcut->keycode == 0) {
-        WMLogWarning(_("Failed to get Keycode for shortcut \"%s\""), shortcut_desc);
+        WMLogWarning("Failed to get Keycode for shortcut \"%s\"", shortcut_desc);
         wfree(item->shortcut);
         item->shortcut = NULL;
       } else {
@@ -744,7 +744,7 @@ static Pixmap renderTexture(WMenu *menu)
     img = wTextureRenderImage(texture, menu->menu->width, menu->menu->height + 1, WREL_MENUENTRY);
   }
   if (!img) {
-    WMLogWarning(_("could not render texture: %s"), RMessageForError(RErrorCode));
+    WMLogWarning("could not render texture: %s", RMessageForError(RErrorCode));
 
     return None;
   }
@@ -771,7 +771,7 @@ static Pixmap renderTexture(WMenu *menu)
     }
   }
   if (!RConvertImage(scr->rcontext, img, &pix)) {
-    WMLogWarning(_("error rendering image:%s"), RMessageForError(RErrorCode));
+    WMLogWarning("error rendering image:%s", RMessageForError(RErrorCode));
   }
   RReleaseImage(img);
 
@@ -2130,10 +2130,10 @@ static Bool getMenuInfo(CFTypeRef info, int *x, int *y, Bool *lowered)
 
   if (pos != NULL && (CFGetTypeID(pos) == CFStringGetTypeID())) {
     if (sscanf(CFStringGetCStringPtr(pos, kCFStringEncodingUTF8), "%i,%i", x, y) != 2) {
-      WMLogWarning(_("bad value in menus state info: %s"), "Position");
+      WMLogWarning("bad value in menus state info: %s", "Position");
     }
   } else {
-    WMLogWarning(_("bad value in menus state info: %s"), "(position, flags...)");
+    WMLogWarning("bad value in menus state info: %s", "(position, flags...)");
     return False;
   }
 

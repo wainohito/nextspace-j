@@ -122,7 +122,7 @@ static void setWindowTitle(WMWindow *win, const char *title)
 
   result = XmbTextListToTextProperty(scr->display, (char **)&title, 1, XStdICCTextStyle, &property);
   if (result == XNoMemory || result == XLocaleNotSupported) {
-    WMLogWarning(_("window title conversion error... using STRING encoding"));
+    WMLogWarning("window title conversion error... using STRING encoding");
     XStoreName(scr->display, win->view->window, title);
   } else {
     XSetWMName(scr->display, win->view->window, &property);
@@ -144,7 +144,7 @@ static void setMiniwindowTitle(WMWindow *win, const char *title)
   result = XmbTextListToTextProperty(scr->display, (char **)&title, 1,
                                      XStdICCTextStyle, &property);
   if (result == XNoMemory || result == XLocaleNotSupported) {
-    WMLogWarning(_("icon title conversion error... using STRING encoding"));
+    WMLogWarning("icon title conversion error... using STRING encoding");
     XSetIconName(scr->display, win->view->window, title);
   } else {
     XSetWMIconName(scr->display, win->view->window, &property);

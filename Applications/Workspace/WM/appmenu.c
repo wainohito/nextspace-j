@@ -53,15 +53,15 @@ static void mainCallback(WMenu *menu, WMenuItem *entry)
 {
   WApplication *wapp = (WApplication *)entry->clientdata;
   
-  if (!strcmp(entry->text, "Hide")) {
+  if (!strcmp(entry->text, _("Hide"))) {
     if (wapp && !WFLAGP(wapp->main_wwin, no_appicon)) {
       wApplicationHide(wapp);
     }
-  } else if (!strcmp(entry->text, "Hide Others")) {
+  } else if (!strcmp(entry->text, _("Hide Others"))) {
     wApplicationHideOthers(wapp->last_focused);
-  } else if (!strcmp(entry->text, "Quit")) {
+  } else if (!strcmp(entry->text, _("Quit"))) {
     wApplicationQuit(wapp, False);
-  } else if (!strcmp(entry->text, "Force Quit")) {
+  } else if (!strcmp(entry->text, _("Force Quit"))) {
     wApplicationQuit(wapp, True);
   }
 }
@@ -112,14 +112,14 @@ static void _shadeWindow(WMenu *menu, WMenuItem *entry)
 {
   WWindow *wwin = menu->menu->screen_ptr->focused_window;
   
-  if (!strcmp(entry->text, "Shade Window")) {
+  if (!strcmp(entry->text, _("Shade Window"))) {
     wShadeWindow(wwin);
     wfree(entry->text);
-    entry->text = wstrdup("Unshade Window");
-  } else if (!strcmp(entry->text, "Unshade Window")) {
+    entry->text = wstrdup(_("Unshade Window"));
+  } else if (!strcmp(entry->text, _("Unshade Window"))) {
     wUnshadeWindow(wwin);
     wfree(entry->text);
-    entry->text = wstrdup("Shade Window");
+    entry->text = wstrdup(_("Shade Window"));
   }
 }
 
@@ -127,9 +127,9 @@ static void _zoomWindow(WMenu *menu, WMenuItem *entry)
 {
   WWindow *wwin = menu->menu->screen_ptr->focused_window;
 
-  if (!strcmp(entry->text, "Zoom Window")) {
+  if (!strcmp(entry->text, _("Zoom Window"))) {
     wMaximizeWindow(wwin, MAX_MAXIMUS);
-  } else if (!strcmp(entry->text, "Unzoom Window")) {
+  } else if (!strcmp(entry->text, _("Unzoom Window"))) {
     wUnmaximizeWindow(wwin);
   }
 
@@ -205,40 +205,40 @@ static void _validateWindowsItems(WMenu *windows_menu, WWindow *wwin)
   
   /* Update menu entries according to focused window state */
   if (focused_win->flags.shaded) {
-    item = wMenuItemWithTitle(windows_menu, "Shade Window");
+    item = wMenuItemWithTitle(windows_menu, _("Shade Window"));
     if (item) {
       wfree(item->text);
-      item->text = wstrdup("Unshade Window");
+      item->text = wstrdup(_("Unshade Window"));
     }
   } else {
-    item = wMenuItemWithTitle(windows_menu, "Unshade Window");
+    item = wMenuItemWithTitle(windows_menu, _("Unshade Window"));
     if (item) {
       wfree(item->text);
-      item->text = wstrdup("Shade Window");
+      item->text = wstrdup(_("Shade Window"));
     }
   }
   if (focused_win->flags.maximized) {
-    item = wMenuItemWithTitle(windows_menu, "Zoom Window");
+    item = wMenuItemWithTitle(windows_menu, _("Zoom Window"));
     if (item) {
       wfree(item->text);
-      item->text = wstrdup("Unzoom Window");
+      item->text = wstrdup(_("Unzoom Window"));
     }
   } else {
-    item = wMenuItemWithTitle(windows_menu, "Unzoom Window");
+    item = wMenuItemWithTitle(windows_menu, _("Unzoom Window"));
     if (item) {
       wfree(item->text);
-      item->text = wstrdup("Zoom Window");
+      item->text = wstrdup(_("Zoom Window"));
     }
   }
 
   /* Enable items applicable to focused window. Diable otherwise */
-  item = wMenuItemWithTitle(windows_menu, "Miniaturize Window");
+  item = wMenuItemWithTitle(windows_menu, _("Miniaturize Window"));
   wMenuItemSetEnabled(windows_menu, item, !WFLAGP(focused_win, no_miniaturizable) ? True : False);
-  item = wMenuItemWithTitle(windows_menu, "Shade Window");
+  item = wMenuItemWithTitle(windows_menu, _("Shade Window"));
   wMenuItemSetEnabled(windows_menu, item, !WFLAGP(focused_win, no_titlebar) ? True : False);
-  item = wMenuItemWithTitle(windows_menu, "Zoom Window");
+  item = wMenuItemWithTitle(windows_menu, _("Zoom Window"));
   wMenuItemSetEnabled(windows_menu, item, IS_RESIZABLE(focused_win) ? True : False);
-  item = wMenuItemWithTitle(windows_menu, "Close Window");
+  item = wMenuItemWithTitle(windows_menu, _("Close Window"));
   wMenuItemSetEnabled(windows_menu, item, !WFLAGP(focused_win, no_closable) ? True : False);
 }
 
@@ -562,11 +562,11 @@ static void _hideDock(WMenu *menu, WMenuItem *entry)
   if (scr->dock->mapped) {
     wDockHideIcons(scr->dock);
     wfree(entry->text);
-    entry->text = wstrdup("Show");
+    entry->text = wstrdup(_("Show"));
   } else {
     wDockShowIcons(scr->dock);
     wfree(entry->text);
-    entry->text = wstrdup("Hide");
+    entry->text = wstrdup(_("Hide"));
   }
 }
 
@@ -577,11 +577,11 @@ static void _collapseDock(WMenu *menu, WMenuItem *entry)
   if (scr->dock->collapsed == 0) {
     wDockCollapse(scr->dock);
     wfree(entry->text);
-    entry->text = wstrdup("Uncollapse");
+    entry->text = wstrdup(_("Uncollapse"));
   } else {
     wDockUncollapse(scr->dock);
     wfree(entry->text);
-    entry->text = wstrdup("Collapse");
+    entry->text = wstrdup(_("Collapse"));
   }
 }
 
@@ -592,12 +592,12 @@ static void _hideIconYard(WMenu *menu, WMenuItem *entry)
   if (scr->flags.icon_yard_mapped) {
     wIconYardHideIcons(scr);
     wfree(entry->text);
-    entry->text = wstrdup("Show");
+    entry->text = wstrdup(_("Show"));
  }
   else {
     wIconYardShowIcons(scr);
     wfree(entry->text);
-    entry->text = wstrdup("Hide");
+    entry->text = wstrdup(_("Hide"));
   }
 }
 

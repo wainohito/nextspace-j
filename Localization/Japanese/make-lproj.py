@@ -79,14 +79,14 @@ def translate_keys(keys, d, where, warns):
     return lines
 
 
-CODE_KEY_RE = re.compile(r'(?:\b_|NSLocalizedString)\(\s*@"((?:[^"\\]|\\.)*)"')
+CODE_KEY_RE = re.compile(r'(?:\b_|\bM_|NSLocalizedString)\(\s*@?"((?:[^"\\]|\\.)*)"')
 
 
 def code_keys(top):
     keys = set()
     for root, dirs, files in os.walk(top):
         for f in files:
-            if f.endswith((".m", ".h")):
+            if f.endswith((".m", ".h", ".c")):
                 text = open(os.path.join(root, f), encoding="utf-8", errors="replace").read()
                 for m in CODE_KEY_RE.finditer(text):
                     keys.add(unq('"' + m.group(1) + '"'))

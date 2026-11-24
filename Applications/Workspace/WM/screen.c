@@ -241,8 +241,8 @@ static Bool replace_existing_wm(WScreen *scr)
   wm = XGetSelectionOwner(dpy, scr->sn_atom);
   if (wm) {
     if (!wPreferences.flags.replace) {
-      WMLogInfo(_("another window manager is running"));
-      WMLogWarning(_("use the --replace flag to replace it"));
+      WMLogInfo("another window manager is running");
+      WMLogWarning("use the --replace flag to replace it");
       return False;
     }
 
@@ -271,7 +271,7 @@ static Bool replace_existing_wm(WScreen *scr)
 
     while (wait < timeout) {
       if (!(wait % 1000000))
-        WMLogInfo(_("waiting %lus for other window manager to exit"), (timeout - wait) / 1000000L);
+        WMLogInfo("waiting %lus for other window manager to exit", (timeout - wait) / 1000000L);
 
       if (XCheckWindowEvent(dpy, wm, StructureNotifyMask, &event))
         if (event.type == DestroyNotify)
@@ -282,11 +282,11 @@ static Bool replace_existing_wm(WScreen *scr)
     }
 
     if (wait >= timeout) {
-      WMLogWarning(_("other window manager hasn't exited!"));
+      WMLogWarning("other window manager hasn't exited!");
       return False;
     }
 
-    WMLogInfo(_("replacing the other window manager"));
+    WMLogInfo("replacing the other window manager");
   }
 
   if (XGetSelectionOwner(dpy, scr->sn_atom) != scr->info_window)
@@ -762,7 +762,7 @@ WScreen *wScreenInit(int screen_number)
     scr->rcontext = RCreateContext(dpy, screen_number, &rattr);
   }
   if (scr->rcontext == NULL) {
-    WMLogCritical(_("can't create Context on screen %d, %s"), screen_number,
+    WMLogCritical("can't create Context on screen %d, %s", screen_number,
                   RMessageForError(RErrorCode));
     goto abort_no_context;
   }
@@ -776,7 +776,7 @@ WScreen *wScreenInit(int screen_number)
   scr->wmscreen = WMCreateScreenWithRContext(dpy, screen_number, scr->rcontext);
 
   if (!scr->wmscreen) {
-    WMLogCritical(_("could not initialize WINGs widget set"));
+    WMLogCritical("could not initialize WINGs widget set");
     RDestroyContext(scr->rcontext);
   abort_no_context:
     CFRelease(scr->fakeGroupLeaders);

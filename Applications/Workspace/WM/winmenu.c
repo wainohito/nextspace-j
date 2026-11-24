@@ -92,7 +92,7 @@ static WMenu *createWindowMenu(WScreen *scr)
 
   menu = wMenuCreate(scr, NULL, False);
   if (!menu) {
-    WMLogWarning(_("could not create submenu for window menu"));
+    WMLogWarning("could not create submenu for window menu");
     return NULL;
   }
 

@@ -824,7 +824,7 @@ static void launchDockedApplication(WAppIcon *btn, Bool withSelection)
         dockIconPaint(NULL, btn);
       }
     } else {
-      WMLogWarning(_("could not launch application %s"), btn->command);
+      WMLogWarning("could not launch application %s", btn->command);
       btn->flags.launching = 0;
       if (!btn->flags.relaunching)
         btn->flags.running = 0;
@@ -870,7 +870,7 @@ static WMenu *makeDesktopMenu(WScreen *scr)
 
   menu = wMenuCreate(scr, NULL, False);
   if (!menu)
-    WMLogWarning(_("could not create desktop submenu for Clip menu"));
+    WMLogWarning("could not create desktop submenu for Clip menu");
 
   wMenuAddItem(menu, "", switchWSCommand, (void *)scr->clip_icon);
 
@@ -926,7 +926,7 @@ static WMenu *makeClipOptionsMenu(WScreen *scr)
 
   menu = wMenuCreate(scr, NULL, False);
   if (!menu) {
-    WMLogWarning(_("could not create options submenu for Clip menu"));
+    WMLogWarning("could not create options submenu for Clip menu");
     return NULL;
   }
 
@@ -972,7 +972,7 @@ static WMenu *dockMenuCreate(WScreen *scr, int type)
   if (type == WM_DRAWER && scr->drawer_menu)
     return scr->drawer_menu;
 
-  menu = wMenuCreate(scr, "Dock", False);
+  menu = wMenuCreate(scr, _("Dock"), False);
   if (type == WM_DOCK) {
     if (!wPreferences.flags.nodrawer) {
       wMenuAddItem(menu, _("Add a drawer"), addADrawerCallback, NULL);
@@ -1371,7 +1371,7 @@ static Bool getBooleanDockValue(CFStringRef value, CFStringRef key)
       if (CFStringCompare(value, CFSTR("YES"), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
         return True;
     } else {
-      WMLogWarning(_("bad value in docked icon state info %s"),
+      WMLogWarning("bad value in docked icon state info %s",
                    CFStringGetCStringPtr(key, kCFStringEncodingUTF8));
     }
   }
@@ -1462,7 +1462,7 @@ static WAppIcon *_dockRestoreIconState(WScreen *scr, CFDictionaryRef info, int t
   if (value && CFGetTypeID(value) == CFStringGetTypeID()) {
     if (sscanf(CFStringGetCStringPtr(value, kCFStringEncodingUTF8), "%hi,%hi", &aicon->xindex,
                &aicon->yindex) != 2)
-      WMLogWarning(_("bad value in docked icon state info %s"),
+      WMLogWarning("bad value in docked icon state info %s",
                    CFStringGetCStringPtr(dPosition, kCFStringEncodingUTF8));
 
     /* check position sanity */
@@ -1486,7 +1486,7 @@ static WAppIcon *_dockRestoreIconState(WScreen *scr, CFDictionaryRef info, int t
   return aicon;
 }
 
-#define COMPLAIN(key) WMLogWarning(_("bad value in dock state info:%s"), key)
+#define COMPLAIN(key) WMLogWarning("bad value in dock state info:%s", key)
 
 WAppIcon *wClipRestoreState(WScreen *scr, CFDictionaryRef clip_state)
 {
@@ -1681,7 +1681,7 @@ WDock *wDockRestoreState(WScreen *scr, CFDictionaryRef dock_state, int type)
 
   for (i = 0; i < count; i++) {
     if (dock->icon_count >= dock->max_icons) {
-      WMLogWarning(_("there are too many icons stored in dock. Ignoring what doesn't fit"));
+      WMLogWarning("there are too many icons stored in dock. Ignoring what doesn't fit");
       break;
     }
 
@@ -4674,7 +4674,7 @@ static void drawerConsolidateIcons(WDock *drawer)
 
 /*   for (i=0; i<count; i++) { */
 /*     if (drawer->icon_count >= drawer->max_icons) { */
-/*       WMLogWarning(_("there are too many icons stored in drawer. Ignoring what doesn't fit")); */
+/*       WMLogWarning("there are too many icons stored in drawer. Ignoring what doesn't fit"); */
 /*       break; */
 /*     } */
 

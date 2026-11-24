@@ -1194,8 +1194,8 @@ void wDefaultsUpdateDomainsIfNeeded(void* arg)
 /* --------------------------- Local ----------------------- */
 
 #define GET_STRING_OR_DEFAULT(x, var) if (CFGetTypeID(value) != CFStringGetTypeID()) { \
-    WMLogWarning(_("Wrong option format for key \"%s\". Should be %s."), entry->key, x); \
-    WMLogWarning(_("using default \"%s\" instead"), entry->default_value);  \
+    WMLogWarning("Wrong option format for key \"%s\". Should be %s.", entry->key, x); \
+    WMLogWarning("using default \"%s\" instead", entry->default_value);  \
     var = entry->default_value;                                         \
   } else var = WMUserDefaultsGetCString(value, kCFStringEncodingUTF8);  \
 
@@ -1225,7 +1225,7 @@ static int string2index(CFTypeRef key, CFTypeRef val, const char *def, WOptionEn
       snprintf(buffer+strlen(buffer), sizeof(buffer)-strlen(buffer)-1, "\"%s\"", v->string);
     }
   }
-  WMLogWarning(_("wrong option value for key \"%s\"; got \"%s\", should be one of %s."),
+  WMLogWarning("wrong option value for key \"%s\"; got \"%s\", should be one of %s.",
            WMUserDefaultsGetCString(key, kCFStringEncodingUTF8),
            str ? str : "(unknown)",
            buffer);
@@ -1267,11 +1267,11 @@ static int getBool(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void *ad
       else
         data = 0;
     } else {
-      WMLogWarning(_("can't convert \"%s\" to boolean for key \"%s\""), val, entry->key);
+      WMLogWarning("can't convert \"%s\" to boolean for key \"%s\"", val, entry->key);
       if (second_pass == 0) {
         val = WMUserDefaultsGetCString(entry->plvalue, kCFStringEncodingUTF8);
         second_pass = 1;
-        WMLogWarning(_("using default \"%s\" instead"), val);
+        WMLogWarning("using default \"%s\" instead", val);
         goto again;
       }
       return False;
@@ -1297,9 +1297,9 @@ static int getInt(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void *add
   GET_STRING_OR_DEFAULT("Integer", val);
 
   if (sscanf(val, "%i", &data) != 1) {
-    WMLogWarning(_("can't convert \"%s\" to integer for key \"%s\""), val, entry->key);
+    WMLogWarning("can't convert \"%s\" to integer for key \"%s\"", val, entry->key);
     val = WMUserDefaultsGetCString(entry->plvalue, kCFStringEncodingUTF8);
-    WMLogWarning(_("using default \"%s\" instead"), val);
+    WMLogWarning("using default \"%s\" instead", val);
     if (sscanf(val, "%i", &data) != 1) {
       return False;
     }
@@ -1322,11 +1322,11 @@ static int getCoord(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void *a
 
  again:
   if (CFGetTypeID(value) != CFArrayGetTypeID()) {
-    WMLogWarning(_("Wrong option format for key \"%s\". Should be %s."), entry->key, "Coordinate");
+    WMLogWarning("Wrong option format for key \"%s\". Should be %s.", entry->key, "Coordinate");
     if (changed == 0) {
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
     return False;
@@ -1334,11 +1334,11 @@ static int getCoord(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void *a
 
   nelem = CFArrayGetCount(value);
   if (nelem != 2) {
-    WMLogWarning(_("Incorrect number of elements in array for key \"%s\"."), entry->key);
+    WMLogWarning("Incorrect number of elements in array for key \"%s\".", entry->key);
     if (changed == 0) {
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
     return False;
@@ -1348,11 +1348,11 @@ static int getCoord(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void *a
   elem_y = CFArrayGetValueAtIndex(value, 1);
 
   if (!elem_x || !elem_y /*|| !WMIsPLString(elem_x) || !WMIsPLString(elem_y)*/) {
-    WMLogWarning(_("Wrong value for key \"%s\". Should be Coordinate."), entry->key);
+    WMLogWarning("Wrong value for key \"%s\". Should be Coordinate.", entry->key);
     if (changed == 0) {
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
     return False;
@@ -1362,11 +1362,11 @@ static int getCoord(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void *a
   val_y = WMUserDefaultsGetCString(elem_y, kCFStringEncodingUTF8);
 
   if (sscanf(val_x, "%i", &data.x) != 1 || sscanf(val_y, "%i", &data.y) != 1) {
-    WMLogWarning(_("can't convert array to integers for \"%s\"."), entry->key);
+    WMLogWarning("can't convert array to integers for \"%s\".", entry->key);
     if (changed == 0) {
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
     return False;
@@ -1417,12 +1417,12 @@ static int getPathList(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void
 
  again:
   if (CFGetTypeID(value) != CFArrayGetTypeID()) {
-    WMLogWarning(_("Wrong option format for key \"%s\". Should be %s."), entry->key,
+    WMLogWarning("Wrong option format for key \"%s\". Should be %s.", entry->key,
              "an array of paths");
     if (changed == 0) {
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
     return False;
@@ -1434,7 +1434,7 @@ static int getPathList(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void
     if (changed == 0) {
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
     return False;
@@ -1540,7 +1540,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
     if (!XParseColor(dpy, scr->w_colormap, val, &color)) {
-      WMLogWarning(_("\"%s\" is not a valid color name"), val);
+      WMLogWarning("\"%s\" is not a valid color name", val);
       return NULL;
     }
 
@@ -1552,7 +1552,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     int type;
 
     if (nelem != 3) {
-      WMLogWarning(_("bad number of arguments in gradient specification"));
+      WMLogWarning("bad number of arguments in gradient specification");
       return NULL;
     }
 
@@ -1570,7 +1570,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
     if (!XParseColor(dpy, scr->w_colormap, val, &xcolor)) {
-      WMLogWarning(_("\"%s\" is not a valid color name"), val);
+      WMLogWarning("\"%s\" is not a valid color name", val);
       return NULL;
     }
     color1.alpha = 255;
@@ -1585,7 +1585,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
     if (!XParseColor(dpy, scr->w_colormap, val, &xcolor)) {
-      WMLogWarning(_("\"%s\" is not a valid color name"), val);
+      WMLogWarning("\"%s\" is not a valid color name", val);
       return NULL;
     }
     color2.alpha = 255;
@@ -1602,7 +1602,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     int i;
 
     if (nelem != 7) {
-      WMLogWarning(_("bad number of arguments in gradient specification"));
+      WMLogWarning("bad number of arguments in gradient specification");
       return NULL;
     }
 
@@ -1614,7 +1614,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
       val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
       if (!XParseColor(dpy, scr->w_colormap, val, &xcolor)) {
-        WMLogWarning(_("\"%s\" is not a valid color name"), val);
+        WMLogWarning("\"%s\" is not a valid color name", val);
         return NULL;
       }
       colors1[i].alpha = 255;
@@ -1636,7 +1636,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
       val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
       if (!XParseColor(dpy, scr->w_colormap, val, &xcolor)) {
-        WMLogWarning(_("\"%s\" is not a valid color name"), val);
+        WMLogWarning("\"%s\" is not a valid color name", val);
         return NULL;
       }
       colors2[i].alpha = 255;
@@ -1660,7 +1660,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     int type;
 
     if (nelem < 3) {
-      WMLogWarning(_("too few arguments in multicolor gradient specification"));
+      WMLogWarning("too few arguments in multicolor gradient specification");
       return NULL;
     }
 
@@ -1687,7 +1687,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
       val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
       if (!XParseColor(dpy, scr->w_colormap, val, &color)) {
-        WMLogWarning(_("\"%s\" is not a valid color name"), val);
+        WMLogWarning("\"%s\" is not a valid color name", val);
         for (--i; i >= 0; --i) {
           wfree(colors[i]);
         }
@@ -1725,7 +1725,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
     if (!XParseColor(dpy, scr->w_colormap, val, &color)) {
-      WMLogWarning(_("\"%s\" is not a valid color name"), val);
+      WMLogWarning("\"%s\" is not a valid color name", val);
       return NULL;
     }
 
@@ -1751,7 +1751,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
       style = WTEX_TDGRADIENT;
 
     if (nelem != 5) {
-      WMLogWarning(_("bad number of arguments in textured gradient specification"));
+      WMLogWarning("bad number of arguments in textured gradient specification");
       return NULL;
     }
 
@@ -1762,7 +1762,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
     if (!XParseColor(dpy, scr->w_colormap, val, &xcolor)) {
-      WMLogWarning(_("\"%s\" is not a valid color name"), val);
+      WMLogWarning("\"%s\" is not a valid color name", val);
       return NULL;
     }
     color1.alpha = 255;
@@ -1777,7 +1777,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
     if (!XParseColor(dpy, scr->w_colormap, val, &xcolor)) {
-      WMLogWarning(_("\"%s\" is not a valid color name"), val);
+      WMLogWarning("\"%s\" is not a valid color name", val);
       return NULL;
     }
     color2.alpha = 255;
@@ -1793,7 +1793,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
       val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
 
     if (!val || (opacity = atoi(val)) < 0 || opacity > 255) {
-      WMLogWarning(_("bad opacity value for tgradient texture \"%s\". Should be [0..255]"), val);
+      WMLogWarning("bad opacity value for tgradient texture \"%s\". Should be [0..255]", val);
       opacity = 128;
     }
 
@@ -1810,7 +1810,7 @@ static WTexture *parse_texture(WScreen *scr, CFTypeRef pl)
     WMLogWarning("function texture support has been removed");
     return NULL;
   } else {
-    WMLogWarning(_("invalid texture type %s"), val);
+    WMLogWarning("invalid texture type %s", val);
     return NULL;
   }
   return texture;
@@ -1824,11 +1824,11 @@ static int getTexture(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void 
 
  again:
   /* if (CFGetTypeID(value) != CFArrayGetTypeID()) { */
-  /*   WMLogWarning(_("Wrong option format for key \"%s\". Should be %s."), entry->key, "Texture"); */
+  /*   WMLogWarning("Wrong option format for key \"%s\". Should be %s.", entry->key, "Texture"); */
   /*   if (changed == 0) { */
   /*     value = entry->plvalue; */
   /*     changed = 1; */
-  /*     WMLogWarning(_("using default \"%s\" instead"), entry->default_value); */
+  /*     WMLogWarning("using default \"%s\" instead", entry->default_value); */
   /*     goto again; */
   /*   } */
   /*   return False; */
@@ -1841,12 +1841,12 @@ static int getTexture(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void 
       val = WMUserDefaultsGetCString(pl, kCFStringEncodingUTF8);
     }
     if (!val || strcasecmp(val, "solid") != 0) {
-      WMLogWarning(_("Wrong option format for key \"%s\". Should be %s."),
+      WMLogWarning("Wrong option format for key \"%s\". Should be %s.",
                entry->key, "Solid Texture");
 
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
   }
@@ -1854,11 +1854,11 @@ static int getTexture(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void 
   texture = parse_texture(scr, value);
 
   if (!texture) {
-    WMLogWarning(_("Error in texture specification for key \"%s\""), entry->key);
+    WMLogWarning("Error in texture specification for key \"%s\"", entry->key);
     if (changed == 0) {
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
     return False;
@@ -1887,7 +1887,7 @@ static int getFont(WScreen *scr, WDefaultEntry *entry, CFTypeRef value, void *ad
     font = WMCreateFont(scr->wmscreen, "fixed");
 
   if (!font) {
-    WMLogCritical(_("could not load any usable font!!!"));
+    WMLogCritical("could not load any usable font!!!");
     exit(1);
   }
 
@@ -1912,11 +1912,11 @@ static int getColor(WScreen * scr, WDefaultEntry * entry, CFTypeRef value, void 
 
  again:
   if (!wGetColor(scr, val, &color)) {
-    WMLogWarning(_("could not get color for key \"%s\""), entry->key);
+    WMLogWarning("could not get color for key \"%s\"", entry->key);
     if (second_pass == 0) {
       val = WMUserDefaultsGetCString(entry->plvalue, kCFStringEncodingUTF8);
       second_pass = 1;
-      WMLogWarning(_("using default \"%s\" instead"), val);
+      WMLogWarning("using default \"%s\" instead", val);
       goto again;
     }
     return False;
@@ -1968,7 +1968,7 @@ static int getKeybind(WScreen * scr, WDefaultEntry * entry, CFTypeRef value, voi
     *k = 0;
     mod = wXModifierFromKey(b);
     if (mod < 0) {
-      WMLogWarning(_("%s: invalid key modifier \"%s\""), entry->key, b);
+      WMLogWarning("%s: invalid key modifier \"%s\"", entry->key, b);
       return False;
     }
     shortcut.modifier |= mod;
@@ -1980,13 +1980,13 @@ static int getKeybind(WScreen * scr, WDefaultEntry * entry, CFTypeRef value, voi
   ksym = XStringToKeysym(b);
 
   if (ksym == NoSymbol) {
-    WMLogWarning(_("%s:invalid kbd shortcut specification \"%s\""), entry->key, val);
+    WMLogWarning("%s:invalid kbd shortcut specification \"%s\"", entry->key, val);
     return False;
   }
 
   shortcut.keycode = XKeysymToKeycode(dpy, ksym);
   if (shortcut.keycode == 0) {
-    WMLogWarning(_("%s:invalid key in shortcut \"%s\""), entry->key, val);
+    WMLogWarning("%s:invalid key in shortcut \"%s\"", entry->key, val);
     return False;
   }
 
@@ -2011,7 +2011,7 @@ static int getModMask(WScreen * scr, WDefaultEntry * entry, CFTypeRef value, voi
 
   mask = wXModifierFromKey(str);
   if (mask < 0) {
-    WMLogWarning(_("%s: modifier key %s is not valid"), entry->key, str);
+    WMLogWarning("%s: modifier key %s is not valid", entry->key, str);
     mask = 0;
     return False;
   }
@@ -2040,7 +2040,7 @@ static int getAltModMask(WScreen * scr, WDefaultEntry * entry, CFTypeRef value, 
 
   mask = wXModifierFromKey(str);
   if (mask < 0) {
-    WMLogWarning(_("%s: modifier key %s is not valid"), entry->key, str);
+    WMLogWarning("%s: modifier key %s is not valid", entry->key, str);
     mask = 0;
     return False;
   }
@@ -2147,13 +2147,13 @@ static void check_bitmap_status(int status, const char *filename, Pixmap bitmap)
 {
   switch (status) {
   case BitmapOpenFailed:
-    WMLogWarning(_("failed to open bitmap file \"%s\""), filename);
+    WMLogWarning("failed to open bitmap file \"%s\"", filename);
     break;
   case BitmapFileInvalid:
-    WMLogWarning(_("\"%s\" is not a valid bitmap file"), filename);
+    WMLogWarning("\"%s\" is not a valid bitmap file", filename);
     break;
   case BitmapNoMemory:
-    WMLogWarning(_("out of memory reading bitmap file \"%s\""), filename);
+    WMLogWarning("out of memory reading bitmap file \"%s\"", filename);
     break;
   case BitmapSuccess:
     XFreePixmap(dpy, bitmap);
@@ -2191,7 +2191,7 @@ static int parse_cursor(WScreen * scr, CFTypeRef pl, Cursor * cursor)
     int cursor_id = CURSOR_ID_NONE;
 
     if (nelem != 2) {
-      WMLogWarning(_("bad number of arguments in cursor specification"));
+      WMLogWarning("bad number of arguments in cursor specification");
       return (status);
     }
     elem = CFArrayGetValueAtIndex(pl, 1);
@@ -2207,7 +2207,7 @@ static int parse_cursor(WScreen * scr, CFTypeRef pl, Cursor * cursor)
       }
     }
     if (CURSOR_ID_NONE == cursor_id) {
-      WMLogWarning(_("unknown builtin cursor name \"%s\""), val);
+      WMLogWarning("unknown builtin cursor name \"%s\"", val);
     } else {
       *cursor = XCreateFontCursor(dpy, cursor_id);
       status = 1;
@@ -2224,7 +2224,7 @@ static int parse_cursor(WScreen * scr, CFTypeRef pl, Cursor * cursor)
     XColor fg, bg;
 
     if (nelem != 3) {
-      WMLogWarning(_("bad number of arguments in cursor specification"));
+      WMLogWarning("bad number of arguments in cursor specification");
       return (status);
     }
     elem = CFArrayGetValueAtIndex(pl, 1);
@@ -2234,7 +2234,7 @@ static int parse_cursor(WScreen * scr, CFTypeRef pl, Cursor * cursor)
     val = WMUserDefaultsGetCString(elem, kCFStringEncodingUTF8);
     bitmap_name = WMAbsolutePathForFile(wPreferences.image_paths, val);
     if (!bitmap_name) {
-      WMLogWarning(_("could not find cursor bitmap file \"%s\""), val);
+      WMLogWarning("could not find cursor bitmap file \"%s\"", val);
       return (status);
     }
     elem = CFArrayGetValueAtIndex(pl, 2);
@@ -2245,7 +2245,7 @@ static int parse_cursor(WScreen * scr, CFTypeRef pl, Cursor * cursor)
     mask_name = WMAbsolutePathForFile(wPreferences.image_paths, val);
     if (!mask_name) {
       wfree(bitmap_name);
-      WMLogWarning(_("could not find cursor bitmap file \"%s\""), val);
+      WMLogWarning("could not find cursor bitmap file \"%s\"", val);
       return (status);
     }
     mask_status = XReadBitmapFile(dpy, scr->w_win, mask_name, &w, &h, &mask, &x, &y);
@@ -2264,7 +2264,7 @@ static int parse_cursor(WScreen * scr, CFTypeRef pl, Cursor * cursor)
     wfree(mask_name);
   } else if (strcasecmp(val, "library") == 0) {
     if (nelem != 2) {
-      WMLogWarning(_("bad number of arguments in cursor specification"));
+      WMLogWarning("bad number of arguments in cursor specification");
       return (status);
     }
     elem = CFArrayGetValueAtIndex(pl, 1);
@@ -2277,7 +2277,7 @@ static int parse_cursor(WScreen * scr, CFTypeRef pl, Cursor * cursor)
     status = 1;
 
     if (cursor == NULL) {
-      WMLogWarning(_("unknown builtin cursor name \"%s\""), val);
+      WMLogWarning("unknown builtin cursor name \"%s\"", val);
     }
   }
   return (status);
@@ -2291,23 +2291,23 @@ static int getCursor(WScreen * scr, WDefaultEntry * entry, CFTypeRef value, void
 
  again:
   if (CFGetTypeID(value) != CFArrayGetTypeID()) {
-    WMLogWarning(_("Wrong option format for key \"%s\". Should be %s."),
+    WMLogWarning("Wrong option format for key \"%s\". Should be %s.",
              entry->key, "cursor specification");
     if (!changed) {
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
     return (False);
   }
   status = parse_cursor(scr, value, &cursor);
   if (!status) {
-    WMLogWarning(_("Error in cursor specification for key \"%s\""), entry->key);
+    WMLogWarning("Error in cursor specification for key \"%s\"", entry->key);
     if (!changed) {
       value = entry->plvalue;
       changed = 1;
-      WMLogWarning(_("using default \"%s\" instead"), entry->default_value);
+      WMLogWarning("using default \"%s\" instead", entry->default_value);
       goto again;
     }
     return (False);
@@ -2430,7 +2430,7 @@ static int setIconTile(WScreen * scr, WDefaultEntry * entry, void *tdata, void *
                             wPreferences.icon_size, ((*texture)->any.type & WREL_BORDER_MASK)
                             ? WREL_ICON : WREL_FLAT);
   if (!img) {
-    WMLogWarning(_("could not render texture for icon background"));
+    WMLogWarning("could not render texture for icon background");
     if (!entry->addr)
       wTextureDestroy(scr, *texture);
     return 0;
@@ -2497,7 +2497,7 @@ static int setMiniwindowTile(WScreen *scr, WDefaultEntry *entry, void *tdata, vo
                             ? WREL_ICON : WREL_FLAT);
   if (!img)
     {
-      WMLogWarning(_("could not render texture for miniwindow background"));
+      WMLogWarning("could not render texture for miniwindow background");
       if (!entry->addr)
         wTextureDestroy(scr, *texture);
       return 0;
@@ -3102,7 +3102,7 @@ static int setSwPOptions(WScreen *scr, WDefaultEntry *entry, void *tdata, void *
   case 4:
     value = CFArrayGetValueAtIndex(array, 1);
     if (CFGetTypeID(value) != CFStringGetTypeID()) {
-      WMLogWarning(_("Invalid arguments for option \"%s\""), entry->key);
+      WMLogWarning("Invalid arguments for option \"%s\"", entry->key);
       break;
     } else {
       path = WMAbsolutePathForFile(wPreferences.image_paths,
@@ -3110,12 +3110,12 @@ static int setSwPOptions(WScreen *scr, WDefaultEntry *entry, void *tdata, void *
     }
 
     if (!path) {
-      WMLogWarning(_("Could not find image \"%s\" for option \"%s\""),
+      WMLogWarning("Could not find image \"%s\" for option \"%s\"",
                WMUserDefaultsGetCString(value, kCFStringEncodingUTF8), entry->key);
     } else {
       bgimage = RLoadImage(scr->rcontext, path, 0);
       if (!bgimage) {
-        WMLogWarning(_("Could not load image \"%s\" for option \"%s\""), path, entry->key);
+        WMLogWarning("Could not load image \"%s\" for option \"%s\"", path, entry->key);
         wfree(path);
       } else {
         wfree(path);
@@ -3127,7 +3127,7 @@ static int setSwPOptions(WScreen *scr, WDefaultEntry *entry, void *tdata, void *
 
         if (cwidth <= 0 || cheight <= 0 ||
             cwidth >= bgimage->width - 2 || cheight >= bgimage->height - 2)
-          WMLogWarning(_("Invalid split sizes for switch panel back image."));
+          WMLogWarning("Invalid split sizes for switch panel back image.");
         else {
           int i;
           int swidth, theight;
@@ -3176,7 +3176,7 @@ static int setSwPOptions(WScreen *scr, WDefaultEntry *entry, void *tdata, void *
   case 1:
     value = CFArrayGetValueAtIndex(array, 0);
     if (CFGetTypeID(value) != CFStringGetTypeID()) {
-      WMLogWarning(_("Invalid arguments for option \"%s\""), entry->key);
+      WMLogWarning("Invalid arguments for option \"%s\"", entry->key);
       break;
     } else {
       path = WMAbsolutePathForFile(wPreferences.image_paths,
@@ -3184,7 +3184,7 @@ static int setSwPOptions(WScreen *scr, WDefaultEntry *entry, void *tdata, void *
     }
 
     if (!path) {
-      WMLogWarning(_("Could not find image \"%s\" for option \"%s\""),
+      WMLogWarning("Could not find image \"%s\" for option \"%s\"",
                WMUserDefaultsGetCString(value, kCFStringEncodingUTF8), entry->key);
     } else {
       if (prefs->swtileImage)
@@ -3192,14 +3192,14 @@ static int setSwPOptions(WScreen *scr, WDefaultEntry *entry, void *tdata, void *
 
       prefs->swtileImage = RLoadImage(scr->rcontext, path, 0);
       if (!prefs->swtileImage) {
-        WMLogWarning(_("Could not load image \"%s\" for option \"%s\""), path, entry->key);
+        WMLogWarning("Could not load image \"%s\" for option \"%s\"", path, entry->key);
       }
       wfree(path);
     }
     break;
 
   default:
-    WMLogWarning(_("Invalid number of arguments for option \"%s\""), entry->key);
+    WMLogWarning("Invalid number of arguments for option \"%s\"", entry->key);
     break;
   }
 
@@ -3216,7 +3216,7 @@ static int setModifierKeyLabels(WScreen *scr, WDefaultEntry *entry, void *tdata,
   struct WPreferences *prefs = foo;
 
   if ((CFGetTypeID(array) != CFArrayGetTypeID()) || CFArrayGetCount(array) != 7) {
-    WMLogWarning(_("Value for option \"%s\" must be an array of 7 strings"), entry->key);
+    WMLogWarning("Value for option \"%s\" must be an array of 7 strings", entry->key);
     CFRelease(array);
     return 0;
   }
@@ -3231,7 +3231,7 @@ static int setModifierKeyLabels(WScreen *scr, WDefaultEntry *entry, void *tdata,
     if (CFGetTypeID(value) == CFStringGetTypeID()) {
       prefs->modifier_labels[i] = wstrdup(WMUserDefaultsGetCString(value, kCFStringEncodingUTF8));
     } else {
-      WMLogWarning(_("Invalid argument for option \"%s\" item %d"), entry->key, i);
+      WMLogWarning("Invalid argument for option \"%s\" item %d", entry->key, i);
       prefs->modifier_labels[i] = NULL;
     }
   }

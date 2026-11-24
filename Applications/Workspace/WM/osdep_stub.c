@@ -21,7 +21,7 @@ Bool GetCommandForPid(int pid, char ***argv, int *argc)
        *  2nd %s is an email address
        *  3rd %s is the name of the operating system
        */
-      WMLogWarning(_("%s is not implemented on this platform; "), __FUNCTION__);
+      WMLogWarning("%s is not implemented on this platform; ", __FUNCTION__);
       notified = 1;
     }
   }

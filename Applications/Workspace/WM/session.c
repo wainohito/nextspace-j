@@ -125,7 +125,7 @@ static int getBool(CFTypeRef value)
     if (sscanf(val, "%i", &i) == 1) {
       return (i != 0);
     } else {
-      WMLogWarning(_("can't convert \"%s\" to boolean"), val);
+      WMLogWarning("can't convert \"%s\" to boolean", val);
       return 0;
     }
   }

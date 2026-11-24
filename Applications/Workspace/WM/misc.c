@@ -467,7 +467,7 @@ char *ExpandOptions(WScreen *scr, const char *cmdline)
   olen = len + 1;
   out = malloc(olen);
   if (!out) {
-    WMLogWarning(_("out of memory during expansion of \"%s\""), cmdline);
+    WMLogWarning("out of memory during expansion of \"%s\"", cmdline);
     return NULL;
   }
   *out = 0;
@@ -520,7 +520,7 @@ char *ExpandOptions(WScreen *scr, const char *cmdline)
               olen += slen;
               nout = realloc(out, olen);
               if (!nout) {
-                WMLogWarning(_("out of memory during expansion of '%s' for command \"%s\""), "%w",
+                WMLogWarning("out of memory during expansion of '%s' for command \"%s\"", "%w",
                              cmdline);
                 goto error;
               }
@@ -538,7 +538,7 @@ char *ExpandOptions(WScreen *scr, const char *cmdline)
             olen += slen;
             nout = realloc(out, olen);
             if (!nout) {
-              WMLogWarning(_("out of memory during expansion of '%s' for command \"%s\""), "%W",
+              WMLogWarning("out of memory during expansion of '%s' for command \"%s\"", "%W",
                            cmdline);
               goto error;
             }
@@ -557,7 +557,7 @@ char *ExpandOptions(WScreen *scr, const char *cmdline)
             olen += slen;
             nout = realloc(out, olen);
             if (!nout) {
-              WMLogWarning(_("out of memory during expansion of '%s' for command \"%s\""), "%d",
+              WMLogWarning("out of memory during expansion of '%s' for command \"%s\"", "%d",
                            cmdline);
               goto error;
             }
@@ -572,14 +572,14 @@ char *ExpandOptions(WScreen *scr, const char *cmdline)
               selection = getselection(scr);
             }
             if (!selection) {
-              WMLogWarning(_("selection not available"));
+              WMLogWarning("selection not available");
               goto error;
             }
             slen = strlen(selection);
             olen += slen;
             nout = realloc(out, olen);
             if (!nout) {
-              WMLogWarning(_("out of memory during expansion of '%s' for command \"%s\""), "%s",
+              WMLogWarning("out of memory during expansion of '%s' for command \"%s\"", "%s",
                            cmdline);
               goto error;
             }
@@ -715,13 +715,13 @@ void ParseWindowName(CFStringRef value, char **winstance, char **wclass, const c
   *winstance = *wclass = NULL;
 
   if (CFGetTypeID(value) != CFStringGetTypeID()) {
-    WMLogWarning(_("bad window name value in %s state info"), where);
+    WMLogWarning("bad window name value in %s state info", where);
     return;
   }
 
   name = CFStringGetCStringPtr(value, kCFStringEncodingUTF8);
   if (!name || strlen(name) == 0) {
-    WMLogWarning(_("bad window name value in %s state info"), where);
+    WMLogWarning("bad window name value in %s state info", where);
     return;
   }
 

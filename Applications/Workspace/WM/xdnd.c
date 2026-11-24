@@ -254,7 +254,7 @@ static void wXDNDGetTypeList(Display *dpy, Window window)
   if (type != XA_ATOM || format != 32 || count == 0 || !data) {
     if (data)
       XFree(data);
-    WMLogWarning(_("wXDNDGetTypeList failed = %ld"), _XA_XdndTypeList);
+    WMLogWarning("wXDNDGetTypeList failed = %ld", _XA_XdndTypeList);
     return;
   }
 

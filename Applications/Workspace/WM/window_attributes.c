@@ -181,7 +181,7 @@ static int getBool(CFStringRef key, CFTypeRef value)
   const char *val;
 
   if (CFGetTypeID(value) != CFStringGetTypeID()) {
-    WMLogWarning(_("Wrong option format for key \"%s\". Should be %s."),
+    WMLogWarning("Wrong option format for key \"%s\". Should be %s.",
                  CFStringGetCStringPtr(key, kCFStringEncodingUTF8), "Boolean");
     return 0;
   }
@@ -196,7 +196,7 @@ static int getBool(CFStringRef key, CFTypeRef value)
              (strcasecmp(val, "NO") == 0 || strcasecmp(val, "FALSE") == 0)) {
     return 0;
   } else {
-    WMLogWarning(_("can't convert \"%s\" to boolean"), val);
+    WMLogWarning("can't convert \"%s\" to boolean", val);
     /* We return False if we can't convert to BOOLEAN.
      * This is because all options defaults to False.
      * -1 is not checked and thus is interpreted as True,
@@ -209,7 +209,7 @@ static int getBool(CFStringRef key, CFTypeRef value)
 static const char *getString(CFStringRef key, CFTypeRef value)
 {
   if (CFGetTypeID(value) != CFStringGetTypeID()) {
-    WMLogWarning(_("Wrong option format for key \"%s\". Should be %s."),
+    WMLogWarning("Wrong option format for key \"%s\". Should be %s.",
                  CFStringGetCStringPtr(key, kCFStringEncodingUTF8), "String");
     return NULL;
   }
@@ -406,7 +406,7 @@ char *get_icon_filename(const char *winstance, const char *wclass, const char *c
     if (file_name) {
       file_path = WMAbsolutePathForFile(wPreferences.image_paths, file_name);
       if (!file_path)
-        WMLogWarning(_("icon \"%s\" doesn't exist, check your config files"), file_name);
+        WMLogWarning("icon \"%s\" doesn't exist, check your config files", file_name);
 
       /* FIXME: Here, if file_path does not exist then the icon is still in the
        * "icon database" (w_global.domain.window_attr->dictionary), but the file
@@ -438,7 +438,7 @@ RImage *get_rimage_from_file(WScreen *scr, const char *file_name, int max_size)
 
   image = WSCreateRasterImage(file_name, scr);
   if (!image) {
-    WMLogWarning(_("error loading image file \"%s\": %s"), file_name, RMessageForError(RErrorCode));
+    WMLogWarning("error loading image file \"%s\": %s", file_name, RMessageForError(RErrorCode));
   }
 
   image = wIconValidateIconSize(image, max_size);
@@ -477,7 +477,7 @@ RImage *get_default_image(WScreen *scr)
   /* Get the default icon */
   image = get_rimage_from_file(scr, path, wPreferences.icon_size);
   if (!image)
-    WMLogWarning(_("could not find default icon \"%s\""), path);
+    WMLogWarning("could not find default icon \"%s\"", path);
 
   /* Resize the icon to the wPreferences.icon_size size
    * usually this function will return early, because size is right */

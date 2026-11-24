@@ -608,7 +608,7 @@ void wApplicationActivate(WApplication *wapp)
 
     if (wapp->app_menu) {
       WMenuItem *item;
-      item = wMenuItemWithTitle(wapp->app_menu, "Windows");
+      item = wMenuItemWithTitle(wapp->app_menu, _("Windows"));
       if (item) {
         wMenuItemSetEnabled(item->menu, item, 1);
       }
@@ -631,7 +631,7 @@ void wApplicationDeactivate(WApplication *wapp)
   }
   if (wapp->app_menu) {
     WMenuItem *item;
-    item = wMenuItemWithTitle(wapp->app_menu, "Windows");
+    item = wMenuItemWithTitle(wapp->app_menu, _("Windows"));
     if (item) {
       wMenuItemSetEnabled(item->menu, item, 0);
     }
