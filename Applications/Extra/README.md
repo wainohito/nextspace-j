@@ -27,6 +27,12 @@ make Firefox and Chromium launchable from /Applications and the Dock, with a
 GNUstep menu and an "Open URL" service. They are plain bundles that run
 `/Library/bin/GSWrapper_Launcher` (WrapperFactory); build.sh copies them.
 
+Dock: put the .app (not the browser window's own icon) into the Dock; an
+icon docked from a running Chromium window records Debian's internal
+command line and fails to launch. To hide Chromium's own appicon next to the
+wrapper's, set `NoAppIcon = YES` for `chromium.Chromium` in
+~/Library/Preferences/.NextSpace/WMWindowAttributes.plist.
+
 ## WebBrowser
 
 From [gs-webbrowser](https://github.com/onflapp/gs-webbrowser) (ddf2808, MIT):
