@@ -1,0 +1,15 @@
+# Start Firefox with the user's normal profile and key settings.
+cleanup() {
+  exit 0
+}
+trap cleanup 2 15
+
+unset FONTCONFIG_FILE
+
+if [ -n "$FILE" ];then
+  firefox "$FILE"
+else
+  firefox --browser
+fi
+
+exit 0

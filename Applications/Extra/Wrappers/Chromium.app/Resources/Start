@@ -1,0 +1,18 @@
+# Start Chromium with the user's normal profile (~/.config/chromium).
+CHROME=`type -p chromium`
+[ -z "$CHROME" ] && CHROME=`type -p google-chrome`
+[ -z "$CHROME" ] && CHROME=`type -p chromium-browser`
+[ -z "$CHROME" ] && CHROME=`type -p chrome`
+
+if [ -z "$CHROME" ];then
+  echo "no chromium|google-chrome|chromium-browser|chrome found!"
+  exit 10
+fi
+
+unset FONTCONFIG_FILE
+
+if [ -n "$FILE" ];then
+  "$CHROME" "$FILE"
+else
+  "$CHROME"
+fi
