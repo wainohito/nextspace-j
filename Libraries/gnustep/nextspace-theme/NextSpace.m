@@ -28,6 +28,11 @@
     NSData *tiffRep;
 
     [pattern lockFocusOnRepresentation:nil];
+    // The bits are white dots on a transparent background.  Make the pattern
+    // opaque (NeXT light gray) so redrawing the knob slot erases the old knob
+    // position instead of leaving trails.
+    [[NSColor colorWithCalibratedWhite:(170.0 / 255.0) alpha:1.0] set];
+    NSRectFill(NSMakeRect(0, 0, 12, 12));
     [sharedGrayBits drawAtPoint:NSZeroPoint
                        fromRect:NSMakeRect(49, 88, 12, 12)
                       operation:NSCompositeSourceOver
@@ -43,6 +48,41 @@
   }
 
   return knobSlotPattern;
+}
+
+- (void)fillKnobSlotPatternInRect:(NSRect)rect
+{
+  NSGraphicsContext *ctxt = GSCurrentContext();
+  NSImage *pattern = self.knobSlotPattern;
+  NSSize size = [pattern size];
+  CGFloat x, y;
+
+  if (NSIsEmptyRect(rect)) {
+    return;
+  }
+
+  if ([[ctxt className] isEqualToString:@"CairoContext"]) {
+    [ctxt GSSetPatterColor:pattern];
+    [ctxt DPSrectfill:rect.origin.x:rect.origin.y:rect.size.width:rect.size.height];
+    return;
+  }
+
+  // Other backends (e.g. ART) have no pattern colors: fill with the opaque
+  // base color, then tile the pattern clipped to rect.  The tiles are aligned
+  // to the view's coordinate origin so adjacent redraws match up.
+  [NSGraphicsContext saveGraphicsState];
+  NSRectClip(rect);
+  [[NSColor colorWithCalibratedWhite:(170.0 / 255.0) alpha:1.0] set];
+  NSRectFill(rect);
+  for (y = floor(NSMinY(rect) / size.height) * size.height; y < NSMaxY(rect); y += size.height) {
+    for (x = floor(NSMinX(rect) / size.width) * size.width; x < NSMaxX(rect); x += size.width) {
+      [pattern drawAtPoint:NSMakePoint(x, y)
+                  fromRect:NSZeroRect
+                 operation:NSCompositeSourceOver
+                  fraction:1.0];
+    }
+  }
+  [NSGraphicsContext restoreGraphicsState];
 }
 
 #pragma mark - NSScroller
@@ -82,11 +122,7 @@
     return;
   }
 
-  NSGraphicsContext *ctxt = GSCurrentContext();
-  if ([[ctxt className] isEqualToString:@"CairoContext"]) {
-    [ctxt GSSetPatterColor:self.knobSlotPattern];
-    [ctxt DPSrectfill:rect.origin.x :rect.origin.y :rect.size.width :rect.size.height];
-  }
+  [self fillKnobSlotPatternInRect:rect];
 }
 
 // - (void)drawKnobInCell:(NSCell *)cell
