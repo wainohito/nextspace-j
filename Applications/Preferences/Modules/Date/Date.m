@@ -229,18 +229,28 @@ static NSString *timeZoneNames[] = {
     return;
   }
 
-  // Needs org.freedesktop.timedate1.set-timezone permission (polkit).
-  task = [NSTask new];
-  [task setLaunchPath:@"/usr/bin/timedatectl"];
-  [task setArguments:@[ @"--no-ask-password", @"set-timezone", name ]];
-  NS_DURING
-    [task launch];
-    [task waitUntilExit];
-    status = [task terminationStatus];
-  NS_HANDLER
-    status = -1;
-  NS_ENDHANDLER
-  [task release];
+  // Try timedated directly (works if polkit allows it), then a passwordless
+  // sudo rule (see Packaging/Sources/extra/nextspace-timezone.sudoers).
+  NSArray *attempts = @[
+    @[ @"/usr/bin/timedatectl", @[ @"--no-ask-password", @"set-timezone", name ] ],
+    @[ @"/usr/bin/sudo", @[ @"-n", @"/usr/bin/timedatectl", @"set-timezone", name ] ]
+  ];
+  for (NSArray *cmd in attempts) {
+    task = [NSTask new];
+    [task setLaunchPath:cmd[0]];
+    [task setArguments:cmd[1]];
+    [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
+    NS_DURING
+      [task launch];
+      [task waitUntilExit];
+      status = [task terminationStatus];
+    NS_HANDLER
+      status = -1;
+    NS_ENDHANDLER
+    [task release];
+    if (status == 0)
+      break;
+  }
 
   if (status != 0) {
     NSRunAlertPanel(NSLocalizedString(@"Time Zone", @""),

@@ -1,0 +1,4 @@
+# Install as /etc/sudoers.d/nextspace-timezone (mode 0440, owner root).
+# NextSpace Preferences (Date & Time): allow admins to change the system
+# time zone without a password (there is no polkit authentication agent).
+%sudo ALL=(root) NOPASSWD: /usr/bin/timedatectl set-timezone *

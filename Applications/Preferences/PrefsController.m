@@ -32,6 +32,8 @@
 #import <AppKit/NSButton.h>
 #import <AppKit/NSTextField.h>
 #import <AppKit/NSFont.h>
+#import <AppKit/NSAttributedString.h>
+#import <AppKit/NSColor.h>
 
 #import <SystemKit/OSEDefaults.h>
 #import <DesktopKit/NXTBundle.h>
@@ -105,25 +107,56 @@
 
 //
 // Localized labels can be wider than the English ones the layout was made
-// for: shrink the font of labels/buttons whose text doesn't fit.
+// for.  First tighten the letter spacing (kerning, up to 2pt per gap) so the
+// font size stays consistent with neighbours; shrink the font only if that
+// is not enough.
 //
+static const CGFloat kMaxKern = 2.0;
+
+static NSAttributedString *kernedString(NSString *text, NSFont *font, NSColor *color, CGFloat kern)
+{
+  NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
+  if (font) [attrs setObject:font forKey:NSFontAttributeName];
+  if (color) [attrs setObject:color forKey:NSForegroundColorAttributeName];
+  [attrs setObject:[NSNumber numberWithFloat:kern] forKey:NSKernAttributeName];
+  return [[[NSAttributedString alloc] initWithString:text attributes:attrs] autorelease];
+}
+
+static void fitControl(NSControl *c, BOOL isButton)
+{
+  NSCell *cell = [c cell];
+  NSString *text = isButton ? [(NSButton *)c title] : [c stringValue];
+  NSFont *font = [c font];
+  NSColor *color = isButton ? nil : [(NSTextField *)c textColor];
+  CGFloat available = NSWidth([c bounds]);
+  CGFloat excess = [cell cellSize].width - available;
+  NSUInteger gaps = ([text length] > 1) ? [text length] - 1 : 1;
+
+  if (excess <= 0 || [text length] == 0) {
+    return;
+  }
+  if (excess / gaps <= kMaxKern) {
+    NSAttributedString *as = kernedString(text, font, color, -(excess / gaps) - 0.1);
+    if (isButton)
+      [(NSButton *)c setAttributedTitle:as];
+    else
+      [c setAttributedStringValue:as];
+    return;
+  }
+  while (font && [cell cellSize].width > available && [font pointSize] > 8) {
+    font = [NSFont fontWithName:[font fontName] size:[font pointSize] - 1];
+    [c setFont:font];
+  }
+}
+
 static void fitTextInView(NSView *view)
 {
   for (NSView *v in [view subviews]) {
-    if ([v isKindOfClass:[NSTextField class]] || [v isKindOfClass:[NSButton class]]) {
-      NSControl *c = (NSControl *)v;
-      NSCell *cell = [c cell];
-      BOOL isLabel = [v isKindOfClass:[NSTextField class]] && ![(NSTextField *)v isEditable];
-      BOOL isTitled = [v isKindOfClass:[NSButton class]] && [[(NSButton *)v title] length] > 0 &&
-                      [(NSButton *)v imagePosition] != NSImageOnly;
-
-      if (isLabel || isTitled) {
-        NSFont *font = [c font];
-        while (font && [cell cellSize].width > NSWidth([c bounds]) && [font pointSize] > 8) {
-          font = [NSFont fontWithName:[font fontName] size:[font pointSize] - 1];
-          [c setFont:font];
-        }
-      }
+    if ([v isKindOfClass:[NSTextField class]] && ![(NSTextField *)v isEditable]) {
+      fitControl((NSControl *)v, NO);
+    } else if ([v isKindOfClass:[NSButton class]] && [[(NSButton *)v title] length] > 0 &&
+               [(NSButton *)v imagePosition] != NSImageOnly) {
+      fitControl((NSControl *)v, YES);
     }
     fitTextInView(v);
   }
