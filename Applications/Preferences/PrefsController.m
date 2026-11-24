@@ -30,6 +30,8 @@
 #import <AppKit/NSScrollView.h>
 #import <AppKit/NSScroller.h>
 #import <AppKit/NSButton.h>
+#import <AppKit/NSTextField.h>
+#import <AppKit/NSFont.h>
 
 #import <SystemKit/OSEDefaults.h>
 #import <DesktopKit/NXTBundle.h>
@@ -102,6 +104,32 @@
 }
 
 //
+// Localized labels can be wider than the English ones the layout was made
+// for: shrink the font of labels/buttons whose text doesn't fit.
+//
+static void fitTextInView(NSView *view)
+{
+  for (NSView *v in [view subviews]) {
+    if ([v isKindOfClass:[NSTextField class]] || [v isKindOfClass:[NSButton class]]) {
+      NSControl *c = (NSControl *)v;
+      NSCell *cell = [c cell];
+      BOOL isLabel = [v isKindOfClass:[NSTextField class]] && ![(NSTextField *)v isEditable];
+      BOOL isTitled = [v isKindOfClass:[NSButton class]] && [[(NSButton *)v title] length] > 0 &&
+                      [(NSButton *)v imagePosition] != NSImageOnly;
+
+      if (isLabel || isTitled) {
+        NSFont *font = [c font];
+        while (font && [cell cellSize].width > NSWidth([c bounds]) && [font pointSize] > 8) {
+          font = [NSFont fontWithName:[font fontName] size:[font pointSize] - 1];
+          [c setFont:font];
+        }
+      }
+    }
+    fitTextInView(v);
+  }
+}
+
+//
 // Button matrix
 //
 - (void)buttonClicked:(id)sender
@@ -118,6 +146,7 @@
   [iconList scrollRectToVisible:buttonRect];
   
   [prefsViewBox setContentView:view];
+  fitTextInView(view);
   [view setNeedsDisplay:YES];
   [window setTitle:NSLocalizedString(buttonCaption, @"")];
        

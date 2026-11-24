@@ -1,0 +1,8 @@
+// NextSpace Preferences (Date & Time): let local, active admins (sudo group)
+// change the system time zone without a password prompt (no polkit agent).
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.timedate1.set-timezone" &&
+        subject.local && subject.active && subject.isInGroup("sudo")) {
+        return polkit.Result.YES;
+    }
+});

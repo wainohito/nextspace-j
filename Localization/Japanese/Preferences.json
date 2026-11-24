@@ -142,7 +142,7 @@
 "Numeric Keypad Behaviour": "テンキーの動作",
 "Off after logon": "ログオン後オフ",
 "On after logon": "ログオン後オン",
-"Others": "その他",
+"Others": "他",
 "Owner": "所有者",
 "Password Preferences": "パスワード",
 "Password Secure": "パスワードの安全性",
@@ -197,5 +197,7 @@
 "Language ": "言語",
 "Arrangement": "配置",
 "Ok": "OK",
-"Change": "変更"
+"Change": "変更",
+"Time Zone": "タイムゾーン",
+"Could not change the time zone to %@.": "タイムゾーンを %@ に変更できませんでした。"
 }

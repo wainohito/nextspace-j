@@ -81,6 +81,88 @@
   [yearField setStringValue:[nowDate descriptionWithCalendarFormat:@"%Y"]];
 
   [calendarView setDate:nowDate];
+
+  [self _fillTimeZonePopUp];
+}
+
+//
+// Time zone
+//
+// GNUstep pop-up menus don't scroll, so offer one well-known zone per UTC
+// offset (plus the current system zone) instead of the full tz database.
+static NSString *timeZoneNames[] = {
+  @"Pacific/Pago_Pago", @"Pacific/Honolulu", @"America/Anchorage", @"America/Los_Angeles",
+  @"America/Denver", @"America/Chicago", @"America/Mexico_City", @"America/New_York",
+  @"America/Halifax", @"America/St_Johns", @"America/Sao_Paulo",
+  @"America/Argentina/Buenos_Aires", @"Atlantic/South_Georgia", @"Atlantic/Azores",
+  @"UTC", @"Europe/London", @"Europe/Paris", @"Europe/Berlin", @"Africa/Cairo",
+  @"Europe/Helsinki", @"Europe/Istanbul", @"Europe/Moscow", @"Asia/Tehran", @"Asia/Dubai",
+  @"Asia/Kabul", @"Asia/Karachi", @"Asia/Kolkata", @"Asia/Kathmandu", @"Asia/Dhaka",
+  @"Asia/Yangon", @"Asia/Bangkok", @"Asia/Shanghai", @"Asia/Singapore", @"Australia/Perth",
+  @"Asia/Seoul", @"Asia/Tokyo", @"Australia/Adelaide", @"Australia/Sydney",
+  @"Pacific/Noumea", @"Pacific/Auckland", @"Pacific/Tongatapu", @"Pacific/Kiritimati", nil};
+
+- (NSString *)_currentTimeZoneName
+{
+  NSString *link = [[NSFileManager defaultManager]
+      pathContentOfSymbolicLinkAtPath:@"/etc/localtime"];
+  NSRange r = [link rangeOfString:@"zoneinfo/"];
+
+  if (r.location != NSNotFound) {
+    return [link substringFromIndex:NSMaxRange(r)];
+  }
+  return [[NSTimeZone systemTimeZone] name];
+}
+
+- (NSString *)_titleForTimeZoneName:(NSString *)name
+{
+  NSTimeZone *tz = [NSTimeZone timeZoneWithName:name];
+  NSInteger secs = [tz secondsFromGMT];
+  NSInteger mins = labs(secs) / 60;
+
+  return [NSString stringWithFormat:@"UTC%c%02ld:%02ld  %@", (secs < 0) ? '-' : '+',
+                                    (long)(mins / 60), (long)(mins % 60), name];
+}
+
+- (void)_fillTimeZonePopUp
+{
+  NSPopUpButton *popup = timeZoneRegionSelectorPopUpButton;
+  NSMutableArray *names = [NSMutableArray array];
+  NSString *current = [self _currentTimeZoneName];
+
+  if (popup == nil) {
+    return;
+  }
+  for (int i = 0; timeZoneNames[i] != nil; i++) {
+    if ([NSTimeZone timeZoneWithName:timeZoneNames[i]] != nil) {
+      [names addObject:timeZoneNames[i]];
+    }
+  }
+  if (current && ![names containsObject:current] && [NSTimeZone timeZoneWithName:current]) {
+    [names addObject:current];
+  }
+  [names sortUsingComparator:^NSComparisonResult(NSString *a, NSString *b) {
+    NSInteger oa = [[NSTimeZone timeZoneWithName:a] secondsFromGMT];
+    NSInteger ob = [[NSTimeZone timeZoneWithName:b] secondsFromGMT];
+    if (oa != ob) {
+      return (oa < ob) ? NSOrderedAscending : NSOrderedDescending;
+    }
+    return [a compare:b];
+  }];
+
+  [popup removeAllItems];
+  for (NSString *name in names) {
+    [popup addItemWithTitle:[self _titleForTimeZoneName:name]];
+    [[popup lastItem] setRepresentedObject:name];
+  }
+  if (current) {
+    NSInteger idx = [popup indexOfItemWithRepresentedObject:current];
+    if (idx >= 0) {
+      [popup selectItemAtIndex:idx];
+    }
+  }
+  [popup setTarget:self];
+  [popup setAction:@selector(selectRegionAction:)];
 }
 
 - (NSView *)view
@@ -138,6 +220,39 @@
 
 - (void)selectRegionAction:(id)sender
 {
+  NSString *name = [[timeZoneRegionSelectorPopUpButton selectedItem] representedObject];
+  NSString *current = [self _currentTimeZoneName];
+  NSTask *task;
+  int status = -1;
+
+  if (name == nil || [name isEqualToString:current]) {
+    return;
+  }
+
+  // Needs org.freedesktop.timedate1.set-timezone permission (polkit).
+  task = [NSTask new];
+  [task setLaunchPath:@"/usr/bin/timedatectl"];
+  [task setArguments:@[ @"--no-ask-password", @"set-timezone", name ]];
+  NS_DURING
+    [task launch];
+    [task waitUntilExit];
+    status = [task terminationStatus];
+  NS_HANDLER
+    status = -1;
+  NS_ENDHANDLER
+  [task release];
+
+  if (status != 0) {
+    NSRunAlertPanel(NSLocalizedString(@"Time Zone", @""),
+                    NSLocalizedString(@"Could not change the time zone to %@.", @""),
+                    NSLocalizedString(@"OK", @""), nil, nil, name);
+    [self _fillTimeZonePopUp];
+    return;
+  }
+
+  [NSTimeZone resetSystemTimeZone];
+  [NSTimeZone setDefaultTimeZone:[NSTimeZone timeZoneWithName:name]];
+  [clockView setCalendarDate:[NSCalendarDate now]];
 }
 
 @end
