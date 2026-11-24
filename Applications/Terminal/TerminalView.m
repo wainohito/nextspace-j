@@ -1177,12 +1177,38 @@ static void set_foreground(NSGraphicsContext *gc, unsigned char color, unsigned 
                                                       object:self];
 }
 
+// East Asian Wide/Fullwidth characters (UAX #11) occupy two terminal cells,
+// as assumed by wcwidth()-based programs (shells, ls, editors).
+static BOOL isEastAsianWide(unichar ch)
+{
+  if (ch < 0x1100)
+    return NO;
+  return ((ch <= 0x115F) ||                               // Hangul Jamo
+          (ch >= 0x2E80 && ch <= 0x303E) ||               // CJK radicals .. CJK symbols
+          (ch >= 0x3041 && ch <= 0x33FF) ||               // Kana .. CJK compatibility
+          (ch >= 0x3400 && ch <= 0x4DBF) ||               // CJK ext. A
+          (ch >= 0x4E00 && ch <= 0x9FFF) ||               // CJK unified ideographs
+          (ch >= 0xA000 && ch <= 0xA4CF) ||               // Yi
+          (ch >= 0xA960 && ch <= 0xA97F) ||               // Hangul Jamo ext. A
+          (ch >= 0xAC00 && ch <= 0xD7A3) ||               // Hangul syllables
+          (ch >= 0xF900 && ch <= 0xFAFF) ||               // CJK compatibility ideographs
+          (ch >= 0xFE10 && ch <= 0xFE19) ||               // Vertical forms
+          (ch >= 0xFE30 && ch <= 0xFE6F) ||               // CJK compatibility forms
+          (ch >= 0xFF00 && ch <= 0xFF60) ||               // Fullwidth forms
+          (ch >= 0xFFE0 && ch <= 0xFFE6));
+}
+
 - (int)relativeWidthOfCharacter:(unichar)ch
 {
   int s;
+
+  if (isEastAsianWide(ch)) {
+    return 2;
+  }
   if (!useMultiCellGlyphs) {
     return 1;
   }
+  // Other glyphs wider than a cell (font dependent).
   s = ceil([font boundingRectForGlyph:ch].size.width / fx);
   if (s < 1) {
     return 1;
