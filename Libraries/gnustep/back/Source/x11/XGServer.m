@@ -593,15 +593,12 @@ static int byte_order(void)
   id displayServer = (XGServer *)GSCurrentServer();
   NSWindow *window = [self window];
   NSRect ipRect;
-  NSRect screenRect;
-  NSRect client_win_rect;
+  NSRect baseRect;
   NSPoint p;
 
   if (window == nil || ![displayServer respondsToSelector:@selector(inputMethodStyle)])
     return;
   if (![[displayServer inputMethodStyle] isEqual:@"OverTheSpot"])
-    return;
-  if (![displayServer clientWindowRect:&client_win_rect])
     return;
 
   // Insertion point rectangle in the text view's (flipped) coordinates.
@@ -613,14 +610,17 @@ static int byte_order(void)
     ipRect.size.height = font_size;
   }
 
-  // Text view -> window base -> screen (GNUstep, origin bottom-left).
-  screenRect = [window convertRectToScreen:[self convertRect:ipRect toView:nil]];
+  // Text view -> window base coordinates (origin bottom-left).  The XIC's
+  // client window is the X window backing this NSWindow, whose origin is the
+  // window's top-left corner, so only a vertical flip is needed.  The spot
+  // is placed at the bottom of the insertion point (baseline-ish).
+  baseRect = [self convertRect:ipRect toView:nil];
+  p.x = NSMinX(baseRect);
+  p.y = NSHeight([window frame]) - NSMinY(baseRect);
 
-  // Screen -> X client window coordinates (origin top-left).  The spot
-  // location is the baseline-ish point under the insertion point.
-  p.x = NSMinX(screenRect) - NSMinX(client_win_rect);
-  p.y = NSMaxY(client_win_rect) - NSMinY(screenRect);
-
+  if (getenv("GS_XIM_DEBUG"))
+    NSLog(@"XIM spot: ip=%@ base=%@ -> %@", NSStringFromPoint(insertionPoint),
+          NSStringFromRect(baseRect), NSStringFromPoint(p));
   [displayServer setPreeditSpot:&p];
 }
 

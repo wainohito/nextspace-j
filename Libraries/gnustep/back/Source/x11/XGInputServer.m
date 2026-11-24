@@ -332,6 +332,8 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
     NSDebugLLog(@"XIM", @"XSetICFocus to window %lu", windev->ident);
     XSetICFocus(windev->ic);
     focused_xic = windev->ic;
+    if (getenv("GS_XIM_DEBUG"))
+      NSLog(@"XIM: focus IC %p window %lu", windev->ic, windev->ident);
   }
 }
 
@@ -667,7 +669,11 @@ finish:
     if (!(arglist = XVaCreateNestedList(dummy, XNSpotLocation, &spot, NULL))) {
       return NO;
     }
-    XSetICValues([self currentIC], XNPreeditAttributes, arglist, NULL);
+    {
+      char *r = XSetICValues([self currentIC], XNPreeditAttributes, arglist, NULL);
+      if (getenv("GS_XIM_DEBUG"))
+        NSLog(@"XIM: setPreeditSpot %d,%d IC %p -> %s", spot.x, spot.y, [self currentIC], r ? r : "ok");
+    }
 
     if (arglist) {
       XFree(arglist);
@@ -676,6 +682,8 @@ finish:
 
     return YES;
   }
+  if (getenv("GS_XIM_DEBUG"))
+    NSLog(@"XIM: setPreeditSpot skipped (IC %p style %lx)", [self currentIC], xim_style);
   return NO;
 }
 
