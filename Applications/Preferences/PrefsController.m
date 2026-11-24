@@ -34,6 +34,7 @@
 #import <AppKit/NSFont.h>
 #import <AppKit/NSAttributedString.h>
 #import <AppKit/NSColor.h>
+#import <AppKit/NSParagraphStyle.h>
 
 #import <SystemKit/OSEDefaults.h>
 #import <DesktopKit/NXTBundle.h>
@@ -149,9 +150,16 @@ static BOOL widenCenteredLabel(NSTextField *tf, CGFloat extra)
   return YES;
 }
 
-static NSAttributedString *kernedString(NSString *text, NSFont *font, NSColor *color, CGFloat kern)
+static NSAttributedString *kernedString(NSString *text, NSFont *font, NSColor *color, CGFloat kern,
+                                        NSTextAlignment alignment)
 {
   NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
+  NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+
+  // An attributed value overrides the cell's alignment: keep it.
+  [style setAlignment:alignment];
+  [attrs setObject:style forKey:NSParagraphStyleAttributeName];
+  [style release];
   if (font) [attrs setObject:font forKey:NSFontAttributeName];
   if (color) [attrs setObject:color forKey:NSForegroundColorAttributeName];
   [attrs setObject:[NSNumber numberWithFloat:kern] forKey:NSKernAttributeName];
@@ -173,7 +181,7 @@ static void fitControl(NSControl *c, BOOL isButton)
   }
   {
     CGFloat kern = MIN(excess / gaps + 0.1, kMaxKern);
-    NSAttributedString *as = kernedString(text, font, color, -kern);
+    NSAttributedString *as = kernedString(text, font, color, -kern, [c alignment]);
     CGFloat rest;
 
     if (isButton)
