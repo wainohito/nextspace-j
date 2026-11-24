@@ -573,8 +573,9 @@ static int byte_order(void)
     preedit_area.size.width = frame.size.width;
     preedit_area.size.height = status_area.size.height;
 
-    [displayServer setStatusArea:&status_area];
-    [displayServer setPreeditArea:&preedit_area];
+    // Don't send XNArea for OverTheSpot: fcitx5 would anchor the preedit
+    // to the area's origin instead of the spot location.
+    (void)preedit_area;
   } else if ([[displayServer inputMethodStyle] isEqual:@"OffTheSpot"]) {
     preedit_area.origin.x = status_area.size.width + 2;
     preedit_area.origin.y = status_area.origin.y;

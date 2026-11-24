@@ -402,8 +402,15 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
     preedit_spot.x = 0;
     preedit_spot.y = 0;
 
-    preedit_args = XVaCreateNestedList(dummy, XNArea, &preedit_area, XNSpotLocation, &preedit_spot,
-                                       XNFontSet, font_set, NULL);
+    // For OverTheSpot only the spot location matters.  Sending XNArea makes
+    // some servers (fcitx5) anchor the preedit to the area origin (0,0),
+    // i.e. the window's top-left corner, ignoring the spot.
+    if (xim_style == OverTheSpotStyle)
+      preedit_args = XVaCreateNestedList(dummy, XNSpotLocation, &preedit_spot,
+                                         XNFontSet, font_set, NULL);
+    else
+      preedit_args = XVaCreateNestedList(dummy, XNArea, &preedit_area, XNSpotLocation,
+                                         &preedit_spot, XNFontSet, font_set, NULL);
 
     xic = XCreateIC(xim, XNInputStyle, xim_style, XNClientWindow, w, XNPreeditAttributes,
                     preedit_args, XNStatusAttributes, status_args, NULL);
