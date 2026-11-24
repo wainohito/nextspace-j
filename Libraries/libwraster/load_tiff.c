@@ -161,8 +161,9 @@ RImage *RLoadTIFF(const char *file, int index)
   /* get info */
   info = RTiffGetInfo(tif);
 
-  if (info->width < 1 || info->height < 1) {
+  if (info == NULL || info->width < 1 || info->height < 1) {
     RErrorCode = RERR_BADIMAGEFILE;
+    free(info);
     TIFFClose(tif);
     return NULL;
   }
@@ -177,17 +178,24 @@ RImage *RLoadTIFF(const char *file, int index)
   if (!data) {
     RErrorCode = RERR_NOMEMORY;
   } else {
-    image = RCreateImage(info->width, info->height, info->extraSamples);
-    if (!TIFFReadRGBAImageOriented(tif, info->width, info->height, data, ORIENTATION_TOPLEFT, 0)) {
+    /* TIFFReadRGBAImage always returns 4 bytes (RGBA) per pixel, so the
+       image must always have an alpha channel: an RGB image is only 3 bytes
+       per pixel and the memcpy below would overflow it (heap corruption,
+       e.g. Workspace crashing on RGB-only application icons). */
+    image = RCreateImage(info->width, info->height, True);
+    if (!image) {
+      /* RErrorCode set by RCreateImage */
+    } else if (!TIFFReadRGBAImageOriented(tif, info->width, info->height, data, ORIENTATION_TOPLEFT, 0)) {
       RErrorCode = RERR_BADIMAGEFILE;
       RReleaseImage(image);
       image = NULL;
-    } else if (data) {
+    } else {
       memcpy(image->data, data, info->width * info->height * sizeof(uint32_t));
     }
     _TIFFfree(ptr);
   }
 
+  free(info);
   TIFFClose(tif);
 
   return image;
