@@ -616,8 +616,19 @@ static int byte_order(void)
   // window's top-left corner, so only a vertical flip is needed.  The spot
   // is placed at the bottom of the insertion point (baseline-ish).
   baseRect = [self convertRect:ipRect toView:nil];
-  p.x = NSMinX(baseRect);
-  p.y = NSHeight([window frame]) - NSMinY(baseRect);
+  {
+    // Window base coordinates -> X client window coordinates.  This is the
+    // inverse of -[XGServer _XWinRectToOSWinRect:for:]: the NSWindow frame
+    // includes WM decoration offsets which the X window does not.
+    gswindow_device_t *windev = [XGServer _windowWithTag:[window windowNumber]];
+    float l = 0, r = 0, t = 0, b = 0;
+
+    if (windev == NULL)
+      return;
+    [displayServer styleoffsets:&l:&r:&t:&b:windev->win_attrs.window_style:windev->ident];
+    p.x = NSMinX(baseRect) - l;
+    p.y = NSHeight(windev->xframe) - (NSMinY(baseRect) - b);
+  }
 
   if (getenv("GS_XIM_DEBUG"))
     NSLog(@"XIM spot: ip=%@ base=%@ -> %@", NSStringFromPoint(insertionPoint),
