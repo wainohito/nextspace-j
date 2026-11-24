@@ -327,11 +327,11 @@
 - (void)updateOutputMatrix
 {
   if ([executeTypeBtn indexOfSelectedItem] == EXEC_IN_BACKGROUND) {
-    [[outputMatrix cellWithTag:0] setTitle:@"Discard Output"];
-    [[outputMatrix cellWithTag:1] setTitle:@"Return Output"];
+    [[outputMatrix cellWithTag:0] setTitle:_(@"Discard Output")];
+    [[outputMatrix cellWithTag:1] setTitle:_(@"Return Output")];
   } else {
-    [[outputMatrix cellWithTag:0] setTitle:@"Idle Window"];
-    [[outputMatrix cellWithTag:1] setTitle:@"New Window"];
+    [[outputMatrix cellWithTag:0] setTitle:_(@"Idle Window")];
+    [[outputMatrix cellWithTag:1] setTitle:_(@"New Window")];
   }
 }
 - (void)updateShellMatrix
@@ -523,7 +523,7 @@
 {
   NSSavePanel *savePanel = [NSSavePanel savePanel];
 
-  [savePanel setTitle:@"Save Services"];
+  [savePanel setTitle:_(@"Save Services")];
   [savePanel setShowsHiddenFiles:NO];
 
   // Accessory view

@@ -2950,19 +2950,19 @@ static int handled_mask = (NSDragOperationCopy | NSDragOperationPrivate | NSDrag
 {
   NSString *itemTitle = [menuItem title];
 
-  if ([itemTitle isEqualToString:@"Clear Buffer"] && (curr_sb_depth <= 0)) {
+  if ([itemTitle isEqualToString:_(@"Clear Buffer")] && (curr_sb_depth <= 0)) {
     return NO;
   }
-  if ([itemTitle isEqualToString:@"Copy"] && (selection.length <= 0)) {
+  if ([itemTitle isEqualToString:_(@"Copy")] && (selection.length <= 0)) {
     return NO;
   }
-  if ([itemTitle isEqualToString:@"Paste Selection"] && (selection.length <= 0)) {
+  if ([itemTitle isEqualToString:_(@"Paste Selection")] && (selection.length <= 0)) {
     return NO;
   }
-  if ([itemTitle isEqualToString:@"Copy Font"]) {
+  if ([itemTitle isEqualToString:_(@"Copy Font")]) {
     // TODO
   }
-  if ([itemTitle isEqualToString:@"Paste Font"]) {
+  if ([itemTitle isEqualToString:_(@"Paste Font")]) {
     NSPasteboard *pb = [NSPasteboard pasteboardWithName:NSFontPboard];
     if ([pb dataForType:NSFontPboardType] == nil) {
       return NO;

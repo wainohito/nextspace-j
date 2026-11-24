@@ -37,7 +37,7 @@ Terminal_OBJC_FILES = \
 	TerminalFinder.m \
 	TerminalIcon.m \
 
-Terminal_LANGUAGES = English
+Terminal_LANGUAGES = English Japanese
 Terminal_LOCALIZED_RESOURCE_FILES = \
 	Localizable.strings \
 	Terminal.gorm \

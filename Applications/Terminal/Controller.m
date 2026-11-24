@@ -131,7 +131,7 @@
 
   [panel setCanChooseDirectories:NO];
   [panel setAllowsMultipleSelection:NO];
-  [panel setTitle:@"Open Shell"];
+  [panel setTitle:_(@"Open Shell")];
   [panel setShowsHiddenFiles:NO];
 
   if ((sessionDir = [Defaults sessionsDirectory]) == nil) {
@@ -232,7 +232,7 @@
     return;
 
   panel = [NXTSavePanel savePanel];
-  [panel setTitle:@"Save As"];
+  [panel setTitle:_(@"Save As")];
   [panel setShowsHiddenFiles:NO];
 
   // Accessory view
@@ -345,11 +345,11 @@
   if ([self terminalWindowForWindow:[NSApp keyWindow]] == nil) {
     // NSLog(@"Controller: Validate menu: %@: key window is not Terminal",
     //       menuTitle);
-    if ([itemTitle isEqualToString:@"Save"])
+    if ([itemTitle isEqualToString:_(@"Save")])
       return NO;
-    if ([itemTitle isEqualToString:@"Save As..."])
+    if ([itemTitle isEqualToString:_(@"Save As...")])
       return NO;
-    if ([itemTitle isEqualToString:@"Set Title..."])
+    if ([itemTitle isEqualToString:_(@"Set Title...")])
       return NO;
 
     if ([menuTitle isEqualToString:@"Font"])

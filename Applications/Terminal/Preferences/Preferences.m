@@ -68,15 +68,15 @@ static Preferences *shared = nil;
   self = shared = [super init];
 
   prefModules = @{
-    [ActivityPrefs name] : [ActivityPrefs new],
-    [ColorsPrefs name] : [ColorsPrefs new],
-    [DisplayPrefs name] : [DisplayPrefs new],
-    [LinuxPrefs name] : [LinuxPrefs new],
-    [ShellPrefs name] : [ShellPrefs new],
-    [StartupPrefs name] : [StartupPrefs new],
-    [TitleBarPrefs name] : [TitleBarPrefs new],
-    [SelectionPrefs name] : [SelectionPrefs new],
-    [WindowPrefs name] : [WindowPrefs new]
+    _([ActivityPrefs name]) : [ActivityPrefs new],
+    _([ColorsPrefs name]) : [ColorsPrefs new],
+    _([DisplayPrefs name]) : [DisplayPrefs new],
+    _([LinuxPrefs name]) : [LinuxPrefs new],
+    _([ShellPrefs name]) : [ShellPrefs new],
+    _([StartupPrefs name]) : [StartupPrefs new],
+    _([TitleBarPrefs name]) : [TitleBarPrefs new],
+    _([SelectionPrefs name]) : [SelectionPrefs new],
+    _([WindowPrefs name]) : [WindowPrefs new]
   };
   [prefModules retain];
 
