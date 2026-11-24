@@ -1,0 +1,6 @@
+#!/bin/sh
+# LogoutHook (~/Library/Preferences/.NextSpace/Login): stop tray programs so
+# they don't survive on the login screen and get re-managed at next login.
+pkill -x wmsystemtray
+pkill -x pasystray
+exit 0

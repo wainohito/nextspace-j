@@ -202,7 +202,13 @@ static void _validateWindowsItems(WMenu *windows_menu, WWindow *wwin)
 {
   WMenuItem *item;
   WWindow *focused_win = wwin->screen->focused_window;
-  
+
+  /* No focused window yet, e.g. while windows that already exist (dockapps
+     such as wmsystemtray) are managed at startup. */
+  if (focused_win == NULL || windows_menu == NULL) {
+    return;
+  }
+
   /* Update menu entries according to focused window state */
   if (focused_win->flags.shaded) {
     item = wMenuItemWithTitle(windows_menu, _("Shade Window"));
