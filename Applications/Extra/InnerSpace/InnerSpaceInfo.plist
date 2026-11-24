@@ -1,0 +1,15 @@
+{
+    ApplicationDescription = "No description avaliable!";
+    ApplicationIcon = "InnerSpace.tiff";
+    ApplicationName = InnerSpace;
+    ApplicationRelease = 1;
+    Copyright = "No license specified!";
+    CopyrightDescription = "Released under ...";
+    FullVersionID = 1;
+    NOTE = "Automatically generated!";
+    NSExecutable = InnerSpace;
+    NSIcon = "InnerSpace.tiff";
+    NSMainNibFile = "InnerSpace.gorm";
+    NSPrincipalClass = NSApplication;
+    NSRole = Application;
+}

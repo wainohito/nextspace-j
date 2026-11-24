@@ -1,0 +1,58 @@
+#!/bin/perl
+
+$BASE_DIR = $ARGV[0];
+
+if (! -d $BASE_DIR) {
+  print("E:directory not specified\n");
+  exit 1;
+}
+
+if (! -f "$BASE_DIR/filelist.txt") {
+  print("E:index is not ready\n");
+  exit 1;
+}
+
+sub f_basename {
+	my ($c) = @_;
+	my @a = split ('/', $c);
+	return pop (@a);
+}
+
+sub f_dirname {
+	my ($c) = @_;
+	my @a = split ('/', $c);
+	pop (@a);
+	return join ('/', @a);
+}
+
+open(IN, "$BASE_DIR/filelist.txt");
+
+$last = "";
+$root = "";
+while(<IN>) {
+  chomp();
+
+  my $t = substr($_, 0, 2);
+  if ($t eq "R:") {
+    $root = substr($_, 2);
+    $name = f_basename($root);
+
+    print(STDOUT "T:$root\t$name\n");
+  }
+  elsif ($t eq "P:") {
+    $p = substr($_, 2);
+    $path = $root . "/" . $p;
+    $dir  = f_dirname($p);
+    $name = f_basename($path);
+
+    if ($last ne $dir) {
+      $p = f_dirname($path);
+      print(STDOUT "T:$p\t$dir\n");
+    }
+    $last = $dir;
+
+    print(STDOUT "P:$path\t$name\n");
+  }
+}
+
+close(IN);

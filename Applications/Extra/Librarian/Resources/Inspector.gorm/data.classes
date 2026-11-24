@@ -1,0 +1,27 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "addFolder:",
+	    "changeFilter:",
+	    "rebuild:",
+	    "removeFolder:"
+	);
+	Super = NSObject;
+    };
+    Inspector = {
+	Actions = (
+	    "rebuild:",
+	    "addFolder:",
+	    "removeFolder:",
+	    "changeFilter:"
+	);
+	Outlets = (
+	    window,
+	    pathsTable,
+	    filterField,
+	    statusField
+	);
+	Super = NSObject;
+    };
+}

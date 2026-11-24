@@ -1,0 +1,144 @@
+{
+    APPLICATIONICON = "ImageViewer.tiff";
+    "APP_DOCUMENT_BASED" = NO;
+    "APP_TYPE" = GORM;
+    "BUILDER_TARGETS" = (
+	all,
+	install,
+	uninstall,
+	clean,
+	distclean,
+	dist
+    );
+    "BUNDLE_IDENTIFIER" = "";
+    "CLASS_FILES" = (
+	"AppController.m",
+	"Document.m",
+	"InspectorPanel.m",
+	"ImageView.m",
+	"AppController+scripting.m",
+	"Document+scripting.m",
+	"FullScreenWindow.m"
+    );
+    COMPILEROPTIONS = "";
+    CPPOPTIONS = "";
+    "CREATION_DATE" = "2022-09-13 12:09:30 +0000";
+    "DOCU_FILES" = (
+    );
+    FRAMEWORKS = (
+    );
+    "HEADER_FILES" = (
+	"AppController.h",
+	"Document.h",
+	"InspectorPanel.h",
+	"STScriptingSupport.h",
+	"ImageView.h",
+	"FullScreenWindow.h"
+    );
+    IMAGES = (
+	"GenericImage.tiff",
+	"GIFImage.tiff",
+	"JPEGImage.tiff",
+	"NotImageable.tiff",
+	"PNGImage.tiff",
+	"TIFFImage.tiff",
+	"XPMImage.tiff",
+	"ImageViewer.tiff"
+    );
+    INSTALLDIR = "$(HOME)/GNUstep";
+    INTERFACES = (
+	"ImageViewer.gorm",
+	"Document.gorm",
+	"Inspector.gorm"
+    );
+    LANGUAGE = English;
+    LIBRARIES = (
+	"gnustep-base",
+	"gnustep-gui"
+    );
+    LINKEROPTIONS = "-lX11";
+    "LOCALIZED_RESOURCES" = (
+    );
+    MAININTERFACE = "ImageViewer.gorm";
+    MAKEFILEDIR = "$(GNUSTEP_MAKEFILES)";
+    "OBJC_COMPILEROPTIONS" = "";
+    "OTHER_RESOURCES" = (
+	"ScriptingInfo.plist",
+	"ApplicationScripting.xlp"
+    );
+    "OTHER_SOURCES" = (
+	"ImageViewer_main.m",
+	"STScriptingSupport.m"
+    );
+    "PRINCIPAL_CLASS" = NSApplication;
+    "PROJECT_AUTHORS" = (
+    );
+    "PROJECT_COPYRIGHT" = "Copyright (C) 200x";
+    "PROJECT_COPYRIGHT_DESC" = "Released under ...";
+    "PROJECT_CREATOR" = Parallels;
+    "PROJECT_DESCRIPTION" = "No description avaliable!";
+    "PROJECT_DOCUMENTTYPES" = (
+	{
+	    NSIcon = "GIFImage.tiff";
+	    NSUnixExtensions = (
+		gif
+	    );
+	},
+	{
+	    NSIcon = "PNGImage.tiff";
+	    NSUnixExtensions = (
+		png
+	    );
+	},
+	{
+	    NSIcon = "JPEGImage.tiff";
+	    NSUnixExtensions = (
+		jpg
+	    );
+	},
+	{
+	    NSIcon = "JPEGImage.tiff";
+	    NSUnixExtensions = (
+		jpeg
+	    );
+	},
+	{
+	    NSIcon = "TIFFImage.tiff";
+	    NSUnixExtensions = (
+		tif
+	    );
+	},
+	{
+	    NSIcon = "TIFFImage.tiff";
+	    NSUnixExtensions = (
+		tiff
+	    );
+	}
+    );
+    "PROJECT_GROUP" = "No group avaliable!";
+    "PROJECT_MAINTAINER" = Parallels;
+    "PROJECT_NAME" = ImageViewer;
+    "PROJECT_RELEASE" = "0.1";
+    "PROJECT_SUMMARY" = "No summary avaliable!";
+    "PROJECT_TYPE" = Application;
+    "PROJECT_URL" = "";
+    "SEARCH_HEADER_DIRS" = (
+    );
+    "SEARCH_LIB_DIRS" = (
+    );
+    SUBPROJECTS = (
+    );
+    "SUPPORTING_FILES" = (
+	"GNUmakefile.preamble",
+	GNUmakefile,
+	"GNUmakefile.postamble",
+	"ImageViewerInfo.plist"
+    );
+    "USER_LANGUAGES" = (
+	English,
+	German,
+	Spanish,
+	French,
+	Italian
+    );
+}

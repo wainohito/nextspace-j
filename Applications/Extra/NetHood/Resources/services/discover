@@ -1,0 +1,65 @@
+#!/bin/perl
+
+use URI::Escape;
+
+sub list_smb_shares {
+  my ($a, $p) = @_;
+  my $x = 0;
+  open(X, "gio list -u smb://$a:$p |");
+  while(<X>) {
+    chomp();
+    s/\/\._/\//;
+    $u = $_;
+    $s = uri_unescape($u);
+    print("S:$s\nT:Microsoft Windows Network\nU:$u\n");
+    $x++;
+  }
+  if (!$x) {
+    print("S:$a\nT:Microsoft Windows Network\nU:smb://$a:$p\n");
+  }
+  close(X);
+}
+
+sub xtoc {
+  my ($x) = @_;
+  return chr($x);
+}
+
+sub unescape {
+  my ($s) = @_;
+  $s =~ s/\\(\d\d\d)/xtoc($1)/ge;
+  $s =~ s/\\\././g;
+  return $s;
+}
+
+open(IN, "avahi-browse -l -p -a --resolve -t|");
+while(<IN>) {
+  chomp();
+  if ($_ =~ /^=;/) {
+    @a = split(';',$_);
+    $i = $a[2];
+    $n = unescape ($a[3]);
+    $t = unescape ($a[4]);
+    $a = $a[7];
+    $p = $a[8];
+
+    next if ($i ne "IPv4");
+
+    if ($t eq "Microsoft Windows Network") {
+      list_smb_shares($a, $p);
+    }
+    elsif ($t eq "WebDAV File Share") {
+      print ("S:$n\nT:$t\nU:$a:$p\n");
+    }
+    elsif ($t eq "SSH Remote Terminal") {
+      print ("S:$n\nT:$t\nU:ssh://$a:$p\n");
+    }
+    elsif ($t eq "SFTP File Transfer") {
+      print ("S:$n\nT:$t\nU:sftp://$a:$p\n");
+    }
+    else {
+      print ("S:$n\nT:$t\nU:$a:$p\n");
+    }
+  }
+}
+close(IN);

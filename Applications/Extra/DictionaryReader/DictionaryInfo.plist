@@ -1,0 +1,36 @@
+{
+    ApplicationDescription = "A Dict client for GNUstep";
+    ApplicationIcon = Dictionary.tiff;
+    ApplicationName = Dictionary;
+    ApplicationRelease = 0.2;
+    Authors = (
+	"Guenther Noack <guenther@unix-ag.uni-kl.de>",
+	"Chris B. Vetter"
+    );
+    Copyright = "Copyright (C) 2006 Guenther Noack";
+    CopyrightDescription = "Released under the terms of the GNU General Public Licence.";
+    NSIcon = Dictionary.tiff;
+    NSTypes = (
+    );
+    CFBundleURLTypes = (
+	{
+	    CFBundleURLName = "dict protocol";
+	    CFBundleURLSchemes = (
+		dict
+	    );
+	}
+    );
+    NSServices = (
+      {
+        NSPortName = Dictionary;
+        NSMessage = lookupInDictionary;
+        NSSendTypes = (NSStringPboardType);
+        NSKeyEquivalent = {
+          default = D;
+        };
+        NSMenuItem = {
+          default = "Look Up in Dictionary";
+         };
+      }
+    );
+}
