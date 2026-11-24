@@ -1733,6 +1733,12 @@ void wWindowFocus(WWindow *wwin, WWindow *owin)
 
   wwin->flags.focused = 1;
 
+  /* A focused fullscreen window covers the main menu and the Dock. */
+  if (wwin->flags.fullscreen && WINDOW_LEVEL(wwin) != WMFullscreenWindowLevel) {
+    ChangeStackingLevel(wwin->frame->core, WMFullscreenWindowLevel);
+    wRaiseFrame(wwin->frame->core);
+  }
+
   wWindowResetMouseGrabs(wwin);
 
   if (wwin->screen->notificationCenter) {
@@ -1825,6 +1831,12 @@ void wWindowUnfocus(WWindow *wwin)
   }
 
   wwin->flags.focused = 0;
+
+  /* An unfocused fullscreen window must not cover other applications. */
+  if (wwin->flags.fullscreen && WINDOW_LEVEL(wwin) == WMFullscreenWindowLevel) {
+    ChangeStackingLevel(wwin->frame->core, NSNormalWindowLevel);
+  }
+
   wWindowResetMouseGrabs(wwin);
   if (wwin->screen->notificationCenter) {
     CFNotificationCenterPostNotification(wwin->screen->notificationCenter,

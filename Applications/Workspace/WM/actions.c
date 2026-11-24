@@ -812,7 +812,8 @@ void wFullscreenWindow(WWindow *wwin)
 
   wWindowConfigureBorders(wwin);
 
-  ChangeStackingLevel(wwin->frame->core, NSNormalWindowLevel);
+  /* Above the main menu and the Dock while focused (see wWindowFocus/Unfocus) */
+  ChangeStackingLevel(wwin->frame->core, WMFullscreenWindowLevel);
   wRaiseFrame(wwin->frame->core);
 
   wwin->bfs_geometry.x = wwin->frame_x;
@@ -846,6 +847,8 @@ void wUnfullscreenWindow(WWindow *wwin)
     ChangeStackingLevel(wwin->frame->core, NSSunkenWindowLevel);
   else if (WFLAGP(wwin, floating))
     ChangeStackingLevel(wwin->frame->core, NSFloatingWindowLevel);
+  else
+    ChangeStackingLevel(wwin->frame->core, NSNormalWindowLevel);
 
   wWindowConfigure(wwin, wwin->bfs_geometry.x, wwin->bfs_geometry.y, wwin->bfs_geometry.width,
                    wwin->bfs_geometry.height);

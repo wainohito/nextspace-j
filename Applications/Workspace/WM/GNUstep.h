@@ -54,6 +54,7 @@ enum {
   NSTornOffMenuWindowLevel = 10,     // --------  // 5      // 3        _NET_WM_WINDOW_TYPE_MENU
   NSMainMenuWindowLevel    = 20,     // 20        // 7      // 20       _NET_WM_WINDOW_TYPE_TOOLBAR
   NSStatusWindowLevel      = 21,     // --------  // 8      // 21       _NET_WM_WINDOW_TYPE_DOCK
+  WMFullscreenWindowLevel  = 50,     // focused fullscreen window: above menus/Dock, below panels
   NSModalPanelWindowLevel  = 100,    // --------  // 9      // 100      _NET_WM_WINDOW_TYPE_NORMAL (!)
   NSPopUpMenuWindowLevel   = 101,    // --------  // 10     // 101      _NET_WM_WINDOW_TYPE_TOOLTIP or _DIALOG
   NSScreenSaverWindowLevel = 1000    // --------  // 12     // 1000     -------
