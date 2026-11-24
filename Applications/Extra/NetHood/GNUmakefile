@@ -32,11 +32,13 @@ NetHood_APPLICATION_ICON = neighbor.tiff
 # Resource files
 #
 NetHood_RESOURCE_FILES = \
-Resources/NetHood.gorm \
 Resources/neighbor.tiff \
 Resources/services \
 Resources/ApplicationScripting.xlp \
-Resources/ScriptingInfo.plist 
+Resources/ScriptingInfo.plist
+
+NetHood_LANGUAGES = English Japanese
+NetHood_LOCALIZED_RESOURCE_FILES += NetHood.gorm
 
 
 #

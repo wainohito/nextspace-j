@@ -60,7 +60,7 @@ Resources/Dictionaries/jargon/jargon.index \
 Resources/Dictionaries/jargon/jargon.dict \
 
 
-Dictionary_LANGUAGES = English
+Dictionary_LANGUAGES = English Japanese
 
 Dictionary_LOCALIZED_RESOURCE_FILES = \
 DictionaryReader.gorm \

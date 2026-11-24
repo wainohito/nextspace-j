@@ -32,9 +32,6 @@ ImageViewer_APPLICATION_ICON = ImageViewer.tiff
 # Resource files
 #
 ImageViewer_RESOURCE_FILES = \
-Resources/ImageViewer.gorm \
-Resources/Document.gorm \
-Resources/Inspector.gorm \
 Resources/GenericImage.tiff \
 Resources/GIFImage.tiff \
 Resources/JPEGImage.tiff \
@@ -44,7 +41,10 @@ Resources/TIFFImage.tiff \
 Resources/XPMImage.tiff \
 Resources/ImageViewer.tiff \
 Resources/ScriptingInfo.plist \
-Resources/ApplicationScripting.xlp 
+Resources/ApplicationScripting.xlp
+
+ImageViewer_LANGUAGES = English Japanese
+ImageViewer_LOCALIZED_RESOURCE_FILES += ImageViewer.gorm Document.gorm Inspector.gorm
 
 
 #

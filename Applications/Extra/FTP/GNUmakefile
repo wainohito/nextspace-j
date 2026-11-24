@@ -32,11 +32,12 @@ FTP_APPLICATION_ICON = FTP_icon_gs.tif
 # Resource files
 #
 FTP_RESOURCE_FILES = \
-Resources/FTP.gorm \
-Resources/GetName.gorm \
 Resources/FTP_icon_gs.tif \
 Resources/arrow_left.tiff \
-Resources/arrow_right.tiff 
+Resources/arrow_right.tiff
+
+FTP_LANGUAGES = English Japanese
+FTP_LOCALIZED_RESOURCE_FILES += FTP.gorm GetName.gorm Localizable.strings
 
 
 #

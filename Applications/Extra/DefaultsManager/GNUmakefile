@@ -32,12 +32,12 @@ DefaultsManager_APPLICATION_ICON = Icon.tiff
 # Resource files
 #
 DefaultsManager_RESOURCE_FILES = \
-Resources/DefaultsManager.gorm \
-Resources/Defaults.gorm \
-Resources/Domains.gorm \
 Resources/Icon.tiff \
 Resources/Defaults.plist \
-Resources/Localizable.strings 
+Resources/Localizable.strings
+
+DefaultsManager_LANGUAGES = English Japanese
+DefaultsManager_LOCALIZED_RESOURCE_FILES += DefaultsManager.gorm Defaults.gorm Domains.gorm
 
 
 #

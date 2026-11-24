@@ -32,9 +32,9 @@ NotMon_APPLICATION_ICON =
 # Resource files
 #
 NotMon_RESOURCE_FILES = \
-Resources/NotMon.gorm \
-Resources/Message.gorm \
-Resources/Console.gorm 
+
+NotMon_LANGUAGES = English Japanese
+NotMon_LOCALIZED_RESOURCE_FILES += NotMon.gorm Message.gorm Console.gorm
 
 
 #

@@ -32,7 +32,6 @@ BatMon_APPLICATION_ICON = batmon-icon.tiff
 # Resource files
 #
 BatMon_RESOURCE_FILES = \
-Resources/batmon.gorm \
 Resources/batmon-icon.tiff \
 Resources/battery-caution.tiff \
 Resources/battery-empty.tiff \
@@ -44,7 +43,10 @@ Resources/plugout.tiff \
 Resources/ScriptingInfo.plist \
 Resources/ApplicationScripting.xlp \
 Resources/LICENSE \
-Resources/README 
+Resources/README
+
+BatMon_LANGUAGES = English Japanese
+BatMon_LOCALIZED_RESOURCE_FILES += batmon.gorm
 
 
 #

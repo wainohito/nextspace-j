@@ -34,8 +34,10 @@ VolMon_APPLICATION_ICON = VolMon.tiff
 VolMon_RESOURCE_FILES = \
 Resources/ApplicationScripting.xlp \
 Resources/ScriptingInfo.plist \
-Resources/VolMon.gorm \
-Resources/VolMon.tiff 
+Resources/VolMon.tiff
+
+VolMon_LANGUAGES = English Japanese
+VolMon_LOCALIZED_RESOURCE_FILES += VolMon.gorm
 
 
 #

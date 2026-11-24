@@ -19,7 +19,7 @@ EdenMath_OBJC_FILES = \
 EdenMath_RESOURCE_FILES = \
 	EdenMath.tiff \
 
-EdenMath_LANGUAGES = English
+EdenMath_LANGUAGES = English Japanese
 
 EdenMath_LOCALIZED_RESOURCE_FILES = \
 	MainMenu.gorm

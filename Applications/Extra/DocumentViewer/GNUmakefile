@@ -32,13 +32,13 @@ DocViewer_APPLICATION_ICON = DocViewer.tiff
 # Resource files
 #
 DocViewer_RESOURCE_FILES = \
-Resources/DocViewer.gorm \
-Resources/PdfDocument.gorm \
-Resources/Preferences.gorm \
 Resources/PDFImage.tiff \
 Resources/DocViewer.tiff \
 Resources/page.tiff \
-Resources/default.css 
+Resources/default.css
+
+DocViewer_LANGUAGES = English Japanese
+DocViewer_LOCALIZED_RESOURCE_FILES += DocViewer.gorm PdfDocument.gorm Preferences.gorm
 
 
 #
@@ -69,7 +69,7 @@ DocViewer_main.m
 
 # HTML viewing needs the WebKit framework from gs-webbrowser: make html=yes
 ifeq ($(html),yes)
-DocViewer_RESOURCE_FILES += Resources/HtmlDocument.gorm
+DocViewer_LOCALIZED_RESOURCE_FILES += HtmlDocument.gorm
 DocViewer_HEADER_FILES += HtmlDocument.h HtmlView.h
 DocViewer_OBJC_FILES += HtmlDocument.m HtmlView.m
 ADDITIONAL_OBJCFLAGS += -DDOCVIEWER_HTML

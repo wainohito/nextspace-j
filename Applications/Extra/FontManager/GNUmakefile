@@ -26,7 +26,7 @@ FontManager_OBJC_FILES = \
 
 
 FontManager_LANGUAGES = \
-  English
+  English Japanese
 
 FontManager_LOCALIZED_RESOURCE_FILES = \
   MainMenu.gorm \

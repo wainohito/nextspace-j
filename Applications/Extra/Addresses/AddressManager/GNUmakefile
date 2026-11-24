@@ -24,7 +24,7 @@ Addresses_LOCALIZED_RESOURCE_FILES=\
 			AddressManager.gorm \
 			Localizable.strings \
 			ISOCountryCodes.dict
-Addresses_LANGUAGES=Dutch English French German Spanish
+Addresses_LANGUAGES=Dutch English French German Spanish Japanese
 Addresses_OBJCFLAGS=-I../Frameworks -Wall
 #AddressManager_LDFLAGS=\
 	-L../Frameworks/AddressView/AddressView.framework/$(GNUSTEP_TARGET_LDIR) \

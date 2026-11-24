@@ -38,16 +38,16 @@ sdlvncviewer.subproj
 # Resource files
 #
 RemoteView_RESOURCE_FILES = \
-Resources/RemoteView.gorm \
-Resources/VNCDisplay.gorm \
-Resources/RDPDisplay.gorm \
 Resources/../sdlvncviewer.subproj/obj/sdlvncviewer \
 Resources/RemoteView.tiff \
 Resources/connect \
 Resources/ssh.term \
 Resources/telnet.term \
 Resources/uart.term \
-Resources/connect_rdp 
+Resources/connect_rdp
+
+RemoteView_LANGUAGES = English Japanese
+RemoteView_LOCALIZED_RESOURCE_FILES += RemoteView.gorm VNCDisplay.gorm RDPDisplay.gorm
 
 
 #

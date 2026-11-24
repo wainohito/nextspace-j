@@ -32,19 +32,16 @@ Sketch_APPLICATION_ICON = Sketch.tiff
 # Resource files
 #
 Sketch_RESOURCE_FILES = \
-Resources/Sketch.gorm \
-Resources/DrawWindow.gorm \
-Resources/ToolPalette.gorm \
-Resources/Inspector.gorm \
-Resources/GridPanel.gorm \
-Resources/Preferences.gorm \
 Resources/Arrow.tiff \
 Resources/Circle.tiff \
 Resources/Cross.tiff \
 Resources/Line.tiff \
 Resources/Rectangle.tiff \
 Resources/TextGraphic.tiff \
-Resources/Sketch.tiff 
+Resources/Sketch.tiff
+
+Sketch_LANGUAGES = English Japanese
+Sketch_LOCALIZED_RESOURCE_FILES += Sketch.gorm DrawWindow.gorm ToolPalette.gorm Inspector.gorm GridPanel.gorm Preferences.gorm
 
 
 #

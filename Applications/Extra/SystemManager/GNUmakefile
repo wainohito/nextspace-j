@@ -32,12 +32,12 @@ SystemManager_APPLICATION_ICON = SystemManager.tiff
 # Resource files
 #
 SystemManager_RESOURCE_FILES = \
-Resources/SystemManager.gorm \
-Resources/SystemWindow.gorm \
-Resources/Console.gorm \
 Resources/SystemManager.tiff \
 Resources/commands \
-Resources/Tasks 
+Resources/Tasks
+
+SystemManager_LANGUAGES = English Japanese
+SystemManager_LOCALIZED_RESOURCE_FILES += SystemManager.gorm SystemWindow.gorm Console.gorm
 
 
 #

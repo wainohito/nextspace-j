@@ -32,7 +32,7 @@ Affiche_HEADERS = Affiche.h  ColorView.h Constants.h LabelWidget.h Note.h NoteIn
 # The Resource files to be copied into the app's resources directory
 Affiche_RESOURCE_FILES = AfficheInfo.plist Images/Affiche.tiff Images/buttons_blue.tiff Images/resize_blue.tiff Images/buttons_green.tiff Images/resize_green.tiff Images/buttons_gray.tiff Images/resize_gray.tiff Images/buttons_purple.tiff Images/resize_purple.tiff Images/buttons_yellow.tiff Images/resize_yellow.tiff
 
-Affiche_LANGUAGES = English French Lojban German Spanish Swedish
+Affiche_LANGUAGES = English French Lojban German Spanish Swedish Japanese
 
 Affiche_LOCALIZED_RESOURCE_FILES = Localizable.strings
 

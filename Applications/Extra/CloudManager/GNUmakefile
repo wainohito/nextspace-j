@@ -32,10 +32,11 @@ CloudManager_APPLICATION_ICON = CloudManager.tiff
 # Resource files
 #
 CloudManager_RESOURCE_FILES = \
-Resources/CloudManager.gorm \
-Resources/RCloneSetup.gorm \
 Resources/CloudManager.tiff \
-Resources/services 
+Resources/services
+
+CloudManager_LANGUAGES = English Japanese
+CloudManager_LOCALIZED_RESOURCE_FILES += CloudManager.gorm RCloneSetup.gorm
 
 
 #

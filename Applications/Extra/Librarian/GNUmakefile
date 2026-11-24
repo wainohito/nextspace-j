@@ -32,15 +32,15 @@ Librarian_APPLICATION_ICON = Icon.tiff
 # Resource files
 #
 Librarian_RESOURCE_FILES = \
-Resources/Librarian.gorm \
-Resources/Document.gorm \
-Resources/Inspector.gorm \
 Resources/Icon.tiff \
 Resources/Books.tiff \
 Resources/chapter.tiff \
 Resources/commands \
 Resources/ScriptingInfo.plist \
-Resources/ApplicationScripting.xlp 
+Resources/ApplicationScripting.xlp
+
+Librarian_LANGUAGES = English Japanese
+Librarian_LOCALIZED_RESOURCE_FILES += Librarian.gorm Document.gorm Inspector.gorm
 
 
 #

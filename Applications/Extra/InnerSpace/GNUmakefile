@@ -40,11 +40,13 @@ Boxes.subproj
 # Resource files
 #
 InnerSpace_RESOURCE_FILES = \
-Resources/InnerSpace.gorm \
 Resources/InnerSpace.tiff \
 Black.subproj/Black.InnerSpace \
 Boxes.subproj/Boxes.InnerSpace \
-NickSpace.subproj/NickSpace.InnerSpace 
+NickSpace.subproj/NickSpace.InnerSpace
+
+InnerSpace_LANGUAGES = English Japanese
+InnerSpace_LOCALIZED_RESOURCE_FILES += InnerSpace.gorm
 
 
 #

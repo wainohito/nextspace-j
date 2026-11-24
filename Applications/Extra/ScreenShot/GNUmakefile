@@ -32,12 +32,14 @@ ScreenShot_APPLICATION_ICON = ScreenShot.tiff
 # Resource files
 #
 ScreenShot_RESOURCE_FILES = \
-Resources/ScreenShot.gorm \
 Resources/ScreenShot.tiff \
 Resources/takeshot \
 Resources/ApplicationScripting.xlp \
 Resources/ScriptingInfo.plist \
-Resources/capture 
+Resources/capture
+
+ScreenShot_LANGUAGES = English Japanese
+ScreenShot_LOCALIZED_RESOURCE_FILES += ScreenShot.gorm
 
 
 #

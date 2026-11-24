@@ -72,25 +72,25 @@
 
 - (void) installAll: (id)sender
 {
-	if ([[installButton title] isEqualToString:@"Install All"])
+	if ([[installButton title] isEqualToString:NSLocalizedString(@"Install All", @"")])
 	{
-		[installButton setTitle:@"Uninstall All"];
+		[installButton setTitle:NSLocalizedString(@"Uninstall All", @"")];
 	}
 	else
 	{
-		[installButton setTitle:@"Install All"];
+		[installButton setTitle:NSLocalizedString(@"Install All", @"")];
 	}
 }
 
 - (void) install: (id)sender
 {
-	if ([[installButton title] isEqualToString:@"Install"])
+	if ([[installButton title] isEqualToString:NSLocalizedString(@"Install", @"")])
 	{
-		[installButton setTitle:@"Uninstall"];
+		[installButton setTitle:NSLocalizedString(@"Uninstall", @"")];
 	}
 	else
 	{
-		[installButton setTitle:@"Install"];
+		[installButton setTitle:NSLocalizedString(@"Install", @"")];
 	}
 }
 

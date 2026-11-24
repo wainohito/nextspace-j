@@ -32,16 +32,16 @@ Player_APPLICATION_ICON = icon.tiff
 # Resource files
 #
 Player_RESOURCE_FILES = \
-Resources/Player.gorm \
-Resources/MediaDocument.gorm \
-Resources/VideoDocument.gorm \
 Resources/file_au.tiff \
 Resources/file_snd.tiff \
 Resources/icon.tiff \
 Resources/file_video.tiff \
 Resources/playerview \
 Resources/ScriptingInfo.plist \
-Resources/ApplicationScripting.xlp 
+Resources/ApplicationScripting.xlp
+
+Player_LANGUAGES = English Japanese
+Player_LOCALIZED_RESOURCE_FILES += Player.gorm MediaDocument.gorm VideoDocument.gorm
 
 
 #

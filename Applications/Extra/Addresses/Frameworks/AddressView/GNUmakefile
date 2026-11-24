@@ -25,7 +25,7 @@ AddressView_RESOURCE_FILES=\
 			Labels.dict ISOCodeMapping.dict AddressLayouts.dict
 
 AddressView_LOCALIZED_RESOURCE_FILES=Localizable.strings
-AddressView_LANGUAGES=Dutch English French German Spanish
+AddressView_LANGUAGES=Dutch English French German Spanish Japanese
 
 AddressView_OBJCFLAGS=-I..
 AddressView_LDFLAGS=-L..

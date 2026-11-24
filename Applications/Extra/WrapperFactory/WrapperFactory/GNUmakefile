@@ -42,7 +42,7 @@ WrapperFactory_RESOURCE_FILES = \
 	Icons/DesktopEntry.tiff \
 	launcher.sh
 
-WrapperFactory_LANGUAGES = English
+WrapperFactory_LANGUAGES = English Japanese
 
 WrapperFactory_LOCALIZED_RESOURCE_FILES = Localizable.strings \
 	Launcher.gorm \

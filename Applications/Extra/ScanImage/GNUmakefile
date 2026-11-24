@@ -32,9 +32,11 @@ ScanImage_APPLICATION_ICON = ScanImage.tiff
 # Resource files
 #
 ScanImage_RESOURCE_FILES = \
-Resources/ScanImage.gorm \
 Resources/ScanImage.tiff \
-Resources/services 
+Resources/services
+
+ScanImage_LANGUAGES = English Japanese
+ScanImage_LOCALIZED_RESOURCE_FILES += ScanImage.gorm
 
 
 #
