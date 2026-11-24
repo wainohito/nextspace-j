@@ -106,7 +106,11 @@ static CGFloat SKTGraphicHandleHalfWidth = 6.0f / 2.0f;
 
     // We don't want KVO autonotification for these properties. Because the setters for all of them invoke -setBounds:, and this class is KVO-compliant for "bounds," and we declared that the values of these properties depend on "bounds," we would up end up with double notifications for them. That would probably be unnoticable, but it's a little wasteful. Something you have to think about with codependent mutable properties like these (regardless of what notification mechanism you're using).
     BOOL automaticallyNotifies;
-    if ([[NSSet setWithObjects:SKTGraphicXPositionKey, SKTGraphicYPositionKey, SKTGraphicWidthKey, SKTGraphicHeightKey, nil] containsObject:key]) {
+    // GNUstep: KVO's automatic setter replacement does not pass struct
+    // arguments (NSRect, NSPoint) correctly, so "bounds" (and SKTLine's
+    // points, whose setters go through -setBounds:) are notified manually.
+    if ([[NSSet setWithObjects:SKTGraphicXPositionKey, SKTGraphicYPositionKey, SKTGraphicWidthKey, SKTGraphicHeightKey,
+                              SKTGraphicBoundsKey, @"beginPoint", @"endPoint", nil] containsObject:key]) {
 	automaticallyNotifies = NO;
     } else {
 	automaticallyNotifies = [super automaticallyNotifiesObserversForKey:key];
@@ -719,8 +723,11 @@ static CGFloat SKTGraphicHandleHalfWidth = 6.0f / 2.0f;
 
 - (void)setBounds:(NSRect)bounds {
 
-    // Simple.
+    // Automatic KVO notification is disabled for "bounds" (see
+    // +automaticallyNotifiesObserversForKey:), so notify manually.
+    [self willChangeValueForKey:SKTGraphicBoundsKey];
     _bounds = bounds;
+    [self didChangeValueForKey:SKTGraphicBoundsKey];
 
 }
 
