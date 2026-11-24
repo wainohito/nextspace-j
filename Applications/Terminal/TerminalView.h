@@ -146,6 +146,11 @@ struct selection_range {
   CGFloat INV_FG_H;
   CGFloat INV_FG_S;
   CGFloat INV_FG_B;
+
+  /* Input method (XIM on-the-spot) composition text drawn at the cursor */
+  NSString *markedText;
+  NSUInteger markedCaret;
+  NSPoint lastIMSpot;
 }
 
 - initWithPreferences:(id)preferences;
@@ -194,6 +199,14 @@ struct selection_range {
 - (void)updateColors:(Defaults *)prefs;
 - (void)setNeedsLazyDisplayInRect:(NSRect)r;
 
+@end
+
+@interface TerminalView (InputMethod)
+- (void)setMarkedText:(id)aString selectedRange:(NSRange)selRange;
+- (BOOL)hasMarkedText;
+- (NSRange)markedRange;
+- (void)unmarkText;
+- (void)updateInputMethodSpot:(BOOL)force;
 @end
 
 @interface TerminalView (scrolling)

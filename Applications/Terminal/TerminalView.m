@@ -30,6 +30,7 @@
 
 #import <AppKit/AppKit.h>
 #import <GNUstepBase/Unicode.h>
+#import <GNUstepGUI/GSDisplayServer.h>
 #import <SystemKit/OSEFileSystemMonitor.h>
 
 #import "TerminalWindow.h"
@@ -811,6 +812,10 @@ static void set_foreground(NSGraphicsContext *gc, unsigned char color, unsigned 
     shouldDrawCursor = NO;
   }
 
+  if ([markedText length] > 0) {
+    [self _drawMarkedText];
+  }
+
   NSDebugLLog(@"draw", @"total_draw=%i", total_draw);
 
   draw_all = 1;
@@ -1292,12 +1297,248 @@ static BOOL isEastAsianWide(unichar ch)
 
 - (BOOL)becomeFirstResponder
 {
+  [self updateInputMethodSpot:YES];
   return YES;
 }
 
 - (BOOL)resignFirstResponder
 {
   return YES;
+}
+
+@end
+
+
+#pragma mark - Input method
+
+//------------------------------------------------------------------------------
+//--- Input method (XIM on-the-spot) composition text
+//------------------------------------------------------------------------------
+
+/* The display server (libs-back XGServer) moves the input method's spot,
+   i.e. where the candidate window appears. */
+@interface NSObject (TerminalInputMethodSpot)
+- (BOOL)setPreeditSpot:(NSPoint *)p;
+@end
+
+static int utf8FromUnichar(unichar uch, char *buf)
+{
+  if (uch >= 0x800) {
+    buf[0] = 0xe0 | (uch >> 12);
+    buf[1] = 0x80 | ((uch >> 6) & 0x3f);
+    buf[2] = 0x80 | (uch & 0x3f);
+    buf[3] = 0;
+    return 3;
+  } else if (uch >= 0x80) {
+    buf[0] = 0xc0 | (uch >> 6);
+    buf[1] = 0x80 | (uch & 0x3f);
+    buf[2] = 0;
+    return 2;
+  }
+  buf[0] = uch;
+  buf[1] = 0;
+  return 1;
+}
+
+@implementation TerminalView (InputMethod)
+
+/* Cell where character `index` of the marked text starts.  The marked text
+   begins at the cursor and wraps at the right edge like typed text. */
+- (void)_markedTextCellForIndex:(NSUInteger)index x:(int *)px y:(int *)py
+{
+  int x = cursor_x, y = cursor_y;
+  NSUInteger i, len = [markedText length];
+
+  for (i = 0; i < index && i < len; i++) {
+    int w = [self relativeWidthOfCharacter:[markedText characterAtIndex:i]];
+    if (x + w > screen_width) {
+      x = 0;
+      y++;
+    }
+    x += w;
+  }
+  if (i < len) {
+    int w = [self relativeWidthOfCharacter:[markedText characterAtIndex:i]];
+    if (x + w > screen_width) {
+      x = 0;
+      y++;
+    }
+  } else if (x >= screen_width) {
+    x = 0;
+    y++;
+  }
+  *px = x;
+  *py = y;
+}
+
+- (NSRect)_rectForCellX:(int)x Y:(int)y width:(int)w
+{
+  return NSMakeRect(x * fx + border_x, (screen_height - 1 - y + curr_sb_position) * fy + border_y,
+                    w * fx, fy);
+}
+
+- (void)_invalidateMarkedTextArea
+{
+  int x, y;
+  NSRect r;
+
+  if ([markedText length] == 0)
+    return;
+  [self _markedTextCellForIndex:[markedText length] x:&x y:&y];
+  r = [self _rectForCellX:0 Y:y width:screen_width];
+  r = NSUnionRect(r, [self _rectForCellX:0 Y:cursor_y width:screen_width]);
+  r.origin.x = 0;
+  r.size.width = NSWidth([self bounds]);
+  [self setNeedsDisplayInRect:r];
+}
+
+- (void)_drawMarkedText
+{
+  NSGraphicsContext *cur = GSCurrentContext();
+  NSUInteger i, len = [markedText length];
+  NSDictionary *attrs = nil;
+  char buf[8];
+  int x, y;
+
+  [font set];
+  for (i = 0; i < len; i++) {
+    unichar ch = [markedText characterAtIndex:i];
+    int w = [self relativeWidthOfCharacter:ch];
+    NSRect cell;
+
+    [self _markedTextCellForIndex:i x:&x y:&y];
+    if (y >= screen_height)
+      break;
+    cell = [self _rectForCellX:x Y:y width:w];
+
+    DPSsethsbcolor(cur, WIN_BG_H, WIN_BG_S, WIN_BG_B);
+    NSRectFill(cell);
+    DPSsethsbcolor(cur, TEXT_NORM_H, TEXT_NORM_S, TEXT_NORM_B);
+    if (ch != ' ') {
+      if (font_encoding == NSUTF8StringEncoding) {
+        utf8FromUnichar(ch, buf);
+        DPSmoveto(cur, NSMinX(cell) + fx0, NSMinY(cell) + fy0);
+        DPSshow(cur, buf);
+      } else {
+        if (attrs == nil) {
+          attrs = @{
+            NSFontAttributeName : font,
+            NSForegroundColorAttributeName : [NSColor colorWithCalibratedHue:TEXT_NORM_H
+                                                                  saturation:TEXT_NORM_S
+                                                                  brightness:TEXT_NORM_B
+                                                                       alpha:1.0]
+          };
+        }
+        [[NSString stringWithCharacters:&ch length:1]
+               drawAtPoint:NSMakePoint(NSMinX(cell) + fx0, NSMinY(cell) + fy0 + [font descender])
+            withAttributes:attrs];
+      }
+    }
+    // Underline marks the text as not yet committed.
+    NSRectFill(NSMakeRect(NSMinX(cell), NSMinY(cell), NSWidth(cell), 1));
+  }
+
+  // Caret inside the composition.
+  [self _markedTextCellForIndex:markedCaret x:&x y:&y];
+  if (y < screen_height) {
+    NSRect cell = [self _rectForCellX:x Y:y width:1];
+    [cursorColor set];
+    NSRectFill(NSMakeRect(NSMinX(cell), NSMinY(cell), 2, NSHeight(cell)));
+  }
+}
+
+- (void)setMarkedText:(id)aString selectedRange:(NSRange)selRange
+{
+  NSString *str = [aString isKindOfClass:[NSAttributedString class]] ? [aString string] : aString;
+
+  [self _invalidateMarkedTextArea];  // old text
+  ASSIGNCOPY(markedText, ([str length] > 0) ? str : nil);
+  markedCaret = MIN(selRange.location, [markedText length]);
+  if (markedText == nil) {
+    // Composition finished or cancelled: restore the cells under it.
+    shouldDrawCursor = YES;
+    [self setNeedsDisplayInRect:[self _rectForCellX:0 Y:cursor_y width:screen_width]];
+  }
+  [self _invalidateMarkedTextArea];  // new text
+  [self updateInputMethodSpot:NO];
+}
+
+- (BOOL)hasMarkedText
+{
+  return [markedText length] > 0;
+}
+
+- (NSRange)markedRange
+{
+  if ([markedText length] == 0)
+    return NSMakeRange(NSNotFound, 0);
+  return NSMakeRange(0, [markedText length]);
+}
+
+- (void)unmarkText
+{
+  [self setMarkedText:@"" selectedRange:NSMakeRange(0, 0)];
+}
+
+- (NSArray *)validAttributesForMarkedText
+{
+  return @[];
+}
+
+/* Tell the input method where the caret is so that its candidate window
+   appears next to the text being composed (not at the window's corner). */
+- (void)updateInputMethodSpot:(BOOL)force
+{
+  NSWindow *window = [self window];
+  id server = GSCurrentServer();
+  NSRect frame, content, cell;
+  NSPoint p;
+  int x, y;
+
+  if (window == nil || ![window isKeyWindow] || [window firstResponder] != self ||
+      ![server respondsToSelector:@selector(setPreeditSpot:)] || fx <= 0 || fy <= 0) {
+    return;
+  }
+
+  [self _markedTextCellForIndex:markedCaret x:&x y:&y];
+  if (y >= screen_height)
+    y = screen_height - 1;
+  cell = [self _rectForCellX:x Y:y width:1];
+
+  // View -> window base coordinates (origin at the frame's bottom-left).
+  p = [self convertPoint:NSMakePoint(NSMinX(cell), NSMinY(cell) + fy0) toView:nil];
+  // Window base -> X client window coordinates (origin at the content's
+  // top-left; the frame includes the window manager's decorations).
+  frame = [window frame];
+  content = [NSWindow contentRectForFrameRect:frame styleMask:[window styleMask]];
+  p.x -= NSMinX(content) - NSMinX(frame);
+  p.y = NSHeight(content) - (p.y - (NSMinY(content) - NSMinY(frame)));
+  p.y += [[NSUserDefaults standardUserDefaults] floatForKey:@"GSXIMSpotYOffset"];
+  p.x = floor(p.x);
+  p.y = floor(p.y);
+
+  if (!force && NSEqualPoints(p, lastIMSpot))
+    return;
+  lastIMSpot = p;
+  [server setPreeditSpot:&p];
+}
+
+- (void)_windowDidBecomeKey:(NSNotification *)n
+{
+  [self updateInputMethodSpot:YES];
+}
+
+- (void)viewDidMoveToWindow
+{
+  [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:NSWindowDidBecomeKeyNotification
+                                                object:nil];
+  if ([self window] != nil) {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_windowDidBecomeKey:)
+                                                 name:NSWindowDidBecomeKeyNotification
+                                               object:[self window]];
+  }
 }
 
 @end
@@ -1880,6 +2121,10 @@ static BOOL isEastAsianWide(unichar ch)
     SCREEN(current_x, current_y).attr |= 0x80;
     ADD_DIRTY(cursor_x, cursor_y, 1, 1);
     shouldDrawCursor = YES;
+    if ([markedText length] > 0) {
+      [self setNeedsDisplay:YES];
+    }
+    [self updateInputMethodSpot:NO];
   }
 
   NSDebugLLog(@"term", @"done (%i %i) (%i %i)\n", dirty.x0, dirty.y0, dirty.x1, dirty.y1);
@@ -2432,6 +2677,7 @@ static int handled_mask = (NSDragOperationCopy | NSDragOperationPrivate | NSDrag
   DESTROY(additionalWordCharacters);
   DESTROY(font);
   DESTROY(boldFont);
+  DESTROY(markedText);
 
   DESTROY(childTerminalName);
   DESTROY(xtermTitle);
