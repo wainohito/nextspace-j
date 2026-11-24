@@ -1,0 +1,9 @@
+# Install as /etc/apt/preferences.d/nextspace
+# NextSpace ships its own GNUstep (/Library, /usr/NextSpace). Debian's
+# GNUstep runtime has the same library sonames (libgnustep-base.so.1.31) and
+# service units (gdomap, gdnc, gpbs), so never let apt install it, not even as
+# a dependency of another package.
+Explanation: keep Debian GNUstep away from NextSpace
+Package: gnustep* libgnustep* *-gnustep* libobjc2* libwraster* libdispatch-dev libdispatch0
+Pin: release *
+Pin-Priority: -1
