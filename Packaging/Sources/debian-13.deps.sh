@@ -154,3 +154,49 @@ APPS_RUN_DEPS="
 #    libpam0g 
 #xserver-xorg-input-kbd
 #xserver-xorg-input-mouse
+
+#--- Debian 13 / japanese branch additions (used by Packaging/Debian13/install.sh)
+# Japanese environment: fonts and fcitx5 + Mozc input method
+JAPANESE_DEPS="
+    task-japanese
+    fonts-noto-cjk
+    fonts-noto-cjk-extra
+    fonts-vlgothic
+    fcitx5
+    fcitx5-mozc
+    fcitx5-frontend-all
+    fcitx5-config-qt
+    im-config
+"
+# Input mode / volume in the Dock (Window Maker dockapp + tray icons)
+TRAY_DEPS="
+    wmsystemtray
+    pasystray
+"
+# Applications/Extra (gs-desktop apps, PDFKit, TerminalKit, WebBrowser)
+EXTRA_APPS_BUILD_DEPS="
+    libxtst-dev
+    libsdl2-dev
+    libvncserver-dev
+    libdbus-1-dev
+    libfreetype-dev
+"
+EXTRA_APPS_RUN_DEPS="
+    vlc-bin
+    vlc-plugin-base
+    vlc-plugin-video-output
+    scrot
+    slop
+    ffmpeg
+    sane-utils
+    avahi-utils
+    recollcmd
+    poppler-utils
+    unrtf
+    rclone
+    freerdp3-x11
+    xdotool
+    python3
+    firefox-esr
+    chromium
+"

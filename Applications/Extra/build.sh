@@ -11,6 +11,7 @@ export CC=${CC:-clang} CXX=${CXX:-clang++}
 cd Frameworks/TerminalKit
 make
 sudo -E sh -c ". /Developer/Makefiles/GNUstep.sh; make install GNUSTEP_INSTALLATION_DOMAIN=LOCAL"
+sudo ldconfig
 cd ../..
 
 # PDFKit (needed by DocumentViewer)

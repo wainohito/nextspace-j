@@ -1,0 +1,64 @@
+# NEXTSPACE 日本語環境 for Debian 13 (trixie)
+
+このブランチ (`japanese`) の NEXTSPACE を、Debian 13 に依存パッケージから
+まとめてビルド・インストールするためのスクリプトです。
+
+## 使い方
+
+Debian 13 を最小構成 (デスクトップ環境なし) でインストールし、sudo グループの
+一般ユーザーでログインして実行します。
+
+```
+sudo apt install git
+git clone -b japanese <このリポジトリ> nextspace
+cd nextspace/Packaging/Debian13
+./install.sh
+```
+
+途中で sudo のパスワードを聞かれます。終わったら再起動すると NEXTSPACE の
+ログイン画面 (Login.app) が出ます。
+
+段階を指定して実行することもできます。
+
+```
+./install.sh --list            # 段階の一覧
+./install.sh extra user        # 指定した段階だけ
+./install.sh --from nextspace  # その段階から最後まで
+```
+
+| 段階 | 内容 |
+|---|---|
+| deps | Debian 版 GNUstep を入れない apt 設定、ビルド・実行に必要なパッケージ |
+| core | libdispatch, CoreFoundation, libobjc2, gnustep-make, libwraster, libs-base, libs-gui (日本語訳・インライン入力パッチ込み), libs-back |
+| nextspace | Frameworks と NEXTSPACE のアプリ (Login, Workspace, Preferences など) |
+| extra | Applications/Extra: gs-desktop 由来のアプリ、WebBrowser、Firefox/Chromium の .app |
+| system | 環境設定からのタイムゾーン変更 (sudoers)、fcitx5 用の環境変数 |
+| user | 実行したユーザーのホーム: NEXTSPACE の初期設定、日本語 UI・フォント、インライン入力、fcitx5 の XIM 設定、トレイ (wmsystemtray/pasystray) の自動起動 |
+
+core と nextspace は `Packaging/Sources` の各スクリプト (0〜9) を順番に呼び出す
+だけなので、部品ごとの作り直しは従来どおりそれらを直接実行できます。
+
+## この環境に含まれるもの
+
+- 日本語化: Workspace (ウインドウマネージャのメニュー含む), Preferences, Terminal,
+  TextEdit, Review, OpenUp, TimeMon, GNUstep 本体, Applications/Extra のアプリ
+  (訳語は `Localization/Japanese/*.json`)
+- fcitx5 + Mozc のインライン入力 (GNUstep アプリでも変換中の文字を入力欄に表示)
+- Dock の入力モード・音量表示 (wmsystemtray + pasystray)
+- 不具合修正: libwraster の TIFF 読み込み (Workspace が落ちる), Terminal の全角文字幅,
+  スクロールバーの描画跡, 全画面ウインドウの上にメニューが残る, dockapp 起動時の
+  Workspace クラッシュ ほか
+
+## apt での更新について
+
+NEXTSPACE は `/usr/NextSpace`, `/Library`, `/Applications` などに入り、apt の管理外
+なので、apt の更新で上書きされることはありません。Debian 版の GNUstep が依存関係で
+入るとライブラリが衝突するため、`/etc/apt/preferences.d/nextspace` で導入を禁止して
+います (deps 段階で設定)。
+
+## 元に戻すとき
+
+`Packaging/Sources/nextspace_uninstall.sh` を参照してください。この手順で追加した
+ファイル: `/etc/apt/preferences.d/nextspace`, `/etc/sudoers.d/nextspace-timezone`,
+`/etc/environment` の fcitx 用の行, `~/.local/bin/nextspace-autostart`,
+`~/.local/bin/nextspace-logout`, `~/.config/fcitx5/conf/xim.conf`。
