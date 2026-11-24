@@ -1,0 +1,10 @@
+#!/bin/sh
+# Started from ~/Library/Preferences/.NextSpace/Login (SessionScript) before
+# Workspace. Waits for Workspace (window manager) and starts tray programs.
+(
+  sleep 6
+  pgrep -x wmsystemtray >/dev/null || wmsystemtray &
+  sleep 1
+  pgrep -x pasystray >/dev/null || pasystray &
+) >/dev/null 2>&1 </dev/null &
+exit 0
