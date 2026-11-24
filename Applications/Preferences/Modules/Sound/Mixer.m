@@ -410,7 +410,7 @@ static NSLock *browserLock = nil;
 - (void)setMode:(id)sender
 {
   if ([[sender selectedItem] tag] == PlaybackMode) {
-    [deviceBox setTitle:@"Output"];
+    [deviceBox setTitle:NSLocalizedString(@"Output", @"")];
     [appVolumeMuteImg setImage:[self imageNamed:@"volMute"]];
     [appVolumeLoudImg setImage:[self imageNamed:@"volLoud"]];
     [deviceVolumeMuteImg setImage:[self imageNamed:@"volMute"]];

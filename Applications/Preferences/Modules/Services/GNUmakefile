@@ -34,7 +34,7 @@ $(BUNDLE_NAME)_RESOURCE_FILES = \
 # Languages
 #
 $(BUNDLE_NAME)_LANGUAGES = \
-	English
+	English Japanese
 
 #
 # Interface GUI

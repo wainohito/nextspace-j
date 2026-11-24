@@ -9,7 +9,7 @@ $(BUNDLE_NAME)_PRINCIPAL_CLASS = Keyboard
 $(BUNDLE_NAME)_STANDARD_INSTALL = no
 
 Keyboard_LANGUAGES = \
-	English
+	English Japanese
 
 Keyboard_LOCALIZED_RESOURCE_FILES = \
 	Keyboard.gorm \

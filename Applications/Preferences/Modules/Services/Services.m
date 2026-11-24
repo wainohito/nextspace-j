@@ -205,14 +205,14 @@ static NSBundle *bundle = nil;
     NSDictionary *svc = [[browser selectedCellInColumn:col] representedObject];
     NSString *menuItem = [svc valueForKeyPath:@"NSMenuItem.default"];
     if ([disabledServices doesContain:menuItem]) {
-      [actionButton setTitle:@"Enable"];
+      [actionButton setTitle:NSLocalizedString(@"Enable", @"")];
     } else {
-      [actionButton setTitle:@"Disable"];
+      [actionButton setTitle:NSLocalizedString(@"Disable", @"")];
     }
     [actionButton setEnabled:YES];
   } else {
     [actionButton setEnabled:NO];
-    [actionButton setTitle:@"Disable"];
+    [actionButton setTitle:NSLocalizedString(@"Disable", @"")];
   }
 }
 

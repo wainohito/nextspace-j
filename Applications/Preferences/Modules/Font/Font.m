@@ -241,13 +241,16 @@ static NSPanel *fontPanel = nil;
   };
   [defaultValues retain];
 
+  // Keys must match the (localized) titles of fontCategoryPopUp items.
+#define FCL(s) NSLocalizedStringFromTableInBundle(s, @"Localizable", [NSBundle bundleForClass:[self class]], @"")
   fontCategories = @{
-    @"Application Font" : @"NSUserFont",
-    @"Fixed Pitch Font" : @"NSUserFixedPitchFont",
-    @"System Font" : @"NSFont",
-    @"Bold System Font" : @"NSBoldFont",
-    @"Tool Tips Font" : @"NSToolTipsFont"
+    FCL(@"Application Font") : @"NSUserFont",
+    FCL(@"Fixed Pitch Font") : @"NSUserFixedPitchFont",
+    FCL(@"System Font") : @"NSFont",
+    FCL(@"Bold System Font") : @"NSBoldFont",
+    FCL(@"Tool Tips Font") : @"NSToolTipsFont"
   };
+#undef FCL
   [fontCategories retain];
 
   return self;

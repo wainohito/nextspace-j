@@ -19,7 +19,7 @@ $(BUNDLE_NAME)_RESOURCE_FILES = \
 	Resources/bundle.registry
 
 $(BUNDLE_NAME)_LANGUAGES = \
-	English
+	English Japanese
 $(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= Display.gorm
 
 -include GNUmakefile.preamble

@@ -19,7 +19,7 @@ $(BUNDLE_NAME)_HEADERS= \
 	Password.h
 
 $(BUNDLE_NAME)_LANGUAGES = \
-	English
+	English Japanese
 
 $(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= \
 	Password.gorm

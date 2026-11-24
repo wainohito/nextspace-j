@@ -445,8 +445,8 @@ static OSEDefaults *defaults = nil;
   
   [layoutShortcutBtn setAutoenablesItems:NO];
   [layoutShortcutBtn removeAllItems];
-  [layoutShortcutBtn addItemWithTitle:@"None"];
-  [[layoutShortcutBtn itemWithTitle:@"None"] setRepresentedObject:@""];
+  [layoutShortcutBtn addItemWithTitle:NSLocalizedString(@"None", @"")];
+  [[layoutShortcutBtn itemWithTitle:NSLocalizedString(@"None", @"")] setRepresentedObject:@""];
 
   for (NSString *k in [layoutSwitchKeys allKeys])
     {
@@ -470,7 +470,7 @@ static OSEDefaults *defaults = nil;
       [shortcut release];
     }
   else
-    [layoutShortcutBtn selectItemWithTitle:@"None"];
+    [layoutShortcutBtn selectItemWithTitle:NSLocalizedString(@"None", @"")];
 
   // Refresh defaults with actual X11 settings
   [[OSEDefaults globalUserDefaults] setObject:options forKey:OSEKeyboardOptions];
@@ -643,8 +643,8 @@ static OSEDefaults *defaults = nil;
   aDict = [[NSDictionary alloc] initWithContentsOfFile:aFile];
   
   [composeKeyBtn removeAllItems];
-  [composeKeyBtn addItemWithTitle:@"None"];
-  [[composeKeyBtn itemWithTitle:@"None"] setRepresentedObject:@"compose:"];
+  [composeKeyBtn addItemWithTitle:NSLocalizedString(@"None", @"")];
+  [[composeKeyBtn itemWithTitle:NSLocalizedString(@"None", @"")] setRepresentedObject:@"compose:"];
   for (NSString *k in [aDict allKeys])
     {
       [composeKeyBtn addItemWithTitle:k];
@@ -662,7 +662,7 @@ static OSEDefaults *defaults = nil;
     }
   else
     {
-      [composeKeyBtn selectItemWithTitle:@"None"];
+      [composeKeyBtn selectItemWithTitle:NSLocalizedString(@"None", @"")];
     }
   [opt release];
   

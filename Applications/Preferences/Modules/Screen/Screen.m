@@ -176,7 +176,7 @@
 
   display = [systemScreen displayWithName:selectedBox.displayName];
 
-  if ([[sender title] isEqualToString:@"Disable"]) {
+  if ([[sender title] isEqualToString:NSLocalizedString(@"Disable", @"")]) {
     [systemScreen deactivateDisplay:display];
   } else {
     [systemScreen activateDisplay:display];

@@ -308,7 +308,7 @@ int PAMConversation(int num_msg,
     [[view window] makeFirstResponder:secureField];
     
     [infoField setStringValue:@""];
-    [okButton setTitle:@"Ok"];
+    [okButton setTitle:NSLocalizedString(@"Ok", @"")];
     [cancelButton setEnabled:YES];
  
     pam_q = dispatch_queue_create("ns.preferences.pam", NULL);  
@@ -359,7 +359,7 @@ int PAMConversation(int num_msg,
                                                 userInfo:nil
                                                  repeats:NO];
   }
-  [okButton setTitle:@"Change"];
+  [okButton setTitle:NSLocalizedString(@"Change", @"")];
   [cancelButton setEnabled:NO];
   [okButton setEnabled:YES];
   state = PAMStart;

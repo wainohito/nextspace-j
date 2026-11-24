@@ -21,7 +21,7 @@ $(BUNDLE_NAME)_HEADERS= \
 	Mixer.h
 
 $(BUNDLE_NAME)_LANGUAGES = \
-	English
+	English Japanese
 
 $(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= \
 	Sound.gorm \

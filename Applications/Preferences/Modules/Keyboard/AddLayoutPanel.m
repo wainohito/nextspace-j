@@ -56,8 +56,8 @@
   [browser selectRow:0 inColumn:0];
   [browser setTarget:self];
   [browser setAction:@selector(click:)];
-  [browser setTitle:@"Language" ofColumn:0];
-  [browser setTitle:@"Variant" ofColumn:1];
+  [browser setTitle:NSLocalizedString(@"Language", @"") ofColumn:0];
+  [browser setTitle:NSLocalizedString(@"Variant", @"") ofColumn:1];
   [browser setTakesTitleFromPreviousColumn:NO];
   // [browser addColumn];
   // [browser scrollColumnToVisible:0];
@@ -142,7 +142,7 @@
 {
   NSString *info, *layoutTitle;
   
-  [browser setTitle:@"Variant" ofColumn:1];
+  [browser setTitle:NSLocalizedString(@"Variant", @"") ofColumn:1];
   
   layoutTitle = [[browser selectedCellInColumn:0] title];
   

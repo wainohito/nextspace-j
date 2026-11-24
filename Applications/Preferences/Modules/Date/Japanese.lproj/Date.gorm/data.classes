@@ -1,0 +1,60 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    Calendar = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSView;
+    };
+    Date = {
+	Actions = (
+	    "change24Hour:",
+	    "selectRegionAction:",
+	    "changeCalendarDate:"
+	);
+	Outlets = (
+	    window,
+	    view,
+	    timeZoneSelectorView,
+	    timeZoneRegionSelectorPopUpButton,
+	    clockView,
+	    hour24Button,
+	    timeField,
+	    monthField,
+	    yearField,
+	    calendarView
+	);
+	Super = NSObject;
+    };
+    FirstResponder = {
+	Actions = (
+	    "change24Hour:",
+	    "changeCalendarDate:",
+	    "selectRegionAction:"
+	);
+	Super = NSObject;
+    };
+    NXTClockView = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSView;
+    };
+    Time = {
+	Actions = (
+	);
+	Outlets = (
+	    timeZoneScrollView
+	);
+	Super = NSScrollView;
+    };
+    TimeView = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSView;
+    };
+}

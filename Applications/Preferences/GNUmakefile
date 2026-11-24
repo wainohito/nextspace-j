@@ -49,7 +49,7 @@ $(APP_NAME)_RESOURCE_FILES = \
 #
 # Localization
 #
-$(APP_NAME)_LANGUAGES = English
+$(APP_NAME)_LANGUAGES = English Japanese
 $(APP_NAME)_LOCALIZED_RESOURCE_FILES = \
 	Preferences.gorm \
 	PrefsWindow.gorm \

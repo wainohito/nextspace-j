@@ -119,7 +119,7 @@
   
   [prefsViewBox setContentView:view];
   [view setNeedsDisplay:YES];
-  [window setTitle:buttonCaption];
+  [window setTitle:NSLocalizedString(buttonCaption, @"")];
        
   currentModule = module;
 }
