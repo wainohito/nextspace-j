@@ -48,10 +48,46 @@
   [super dealloc];
 }
 
+// The Owner/Group/Others column titles in Expert.gorm are laid out with a
+// 41pt pitch while the permission grid below has 43pt columns, so titles
+// drift left.  Center them on the grid columns (x = 81, 124, 167).
+static void collectHeaderLabels(NSView *v, NSMutableArray *out)
+{
+  for (NSView *s in [v subviews]) {
+    if ([s isKindOfClass:[NSTextField class]] && NSMinY([s frame]) == 94 &&
+        [(NSTextField *)s alignment] == NSCenterTextAlignment) {
+      [out addObject:s];
+    }
+    collectHeaderLabels(s, out);
+  }
+}
+
+- (void)_alignPermissionTitles
+{
+  NSMutableArray *labels = [NSMutableArray array];
+  const CGFloat centers[3] = {81, 124, 167};
+
+  collectHeaderLabels(view, labels);
+  if ([labels count] != 3) {
+    return;
+  }
+  [labels sortUsingComparator:^NSComparisonResult(NSView *a, NSView *b) {
+    return (NSMinX([a frame]) < NSMinX([b frame])) ? NSOrderedAscending : NSOrderedDescending;
+  }];
+  for (int i = 0; i < 3; i++) {
+    NSView *l = labels[i];
+    NSRect f = [l frame];
+    f.origin.x = centers[i] - NSWidth(f) / 2;
+    [l setFrame:f];
+  }
+}
+
 - (void)awakeFromNib
 {
   [view retain];
   [window release];
+
+  [self _alignPermissionTitles];
 
   [sortByBtn setRefusesFirstResponder:YES];
   [showHiddenFilesBtn setRefusesFirstResponder:YES];
