@@ -27,6 +27,8 @@
 
 #include <AppKit/AppKitExceptions.h>
 #include <AppKit/NSApplication.h>
+#include <AppKit/NSAttributedString.h>
+#include <AppKit/NSFont.h>
 #include <AppKit/NSView.h>
 #include <AppKit/NSWindow.h>
 #include <Foundation/NSArray.h>
@@ -628,6 +630,16 @@ static int byte_order(void)
     [displayServer styleoffsets:&l:&r:&t:&b:windev->win_attrs.window_style:windev->ident];
     p.x = NSMinX(baseRect) - l;
     p.y = NSHeight(windev->xframe) - (NSMinY(baseRect) - b);
+  }
+  {
+    // Like xterm, put the spot on the text baseline rather than the bottom
+    // of the line.  GSXIMSpotYOffset (pixels, + = down) allows fine tuning.
+    NSFont *font = [[self typingAttributes] objectForKey:NSFontAttributeName];
+    if (font == nil)
+      font = [self font];
+    if (font != nil)
+      p.y += [font descender];  // descender is negative
+    p.y += [[NSUserDefaults standardUserDefaults] floatForKey:@"GSXIMSpotYOffset"];
   }
 
   if (getenv("GS_XIM_DEBUG"))
