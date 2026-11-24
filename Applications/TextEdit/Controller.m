@@ -197,7 +197,7 @@
    * NextStep and Mac OS does this automagicaly as part of nib/xib loading process
    * once Gorm offers similar possibility, this code can be removed
    */
-  NSMenu *f =[[[[[NSApp mainMenu] itemWithTitle:@"Format"] submenu] itemWithTitle:@"Font"] submenu];
+  NSMenu *f =[[[[[NSApp mainMenu] itemWithTitle:_(@"Format")] submenu] itemWithTitle:_(@"Font")] submenu];
   [[NSFontManager sharedFontManager] setFontMenu:f];
 }
 

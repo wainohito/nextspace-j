@@ -1,0 +1,39 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "changePlainTextFont:",
+	    "changeRichTextFont:",
+	    "miscChanged:",
+	    "revert:",
+	    "revertToDefault:",
+	    "showPanel:"
+	);
+	Super = NSObject;
+    };
+    Preferences = {
+	Actions = (
+	    "showPanel:",
+	    "revert:",
+	    "ok:",
+	    "revertToDefault:",
+	    "miscChanged:",
+	    "changeRichTextFont:",
+	    "changePlainTextFont:",
+	    "changeFont:"
+	);
+	Outlets = (
+	    deleteBackupMatrix,
+	    saveFilesWritableButton,
+	    richTextMatrix,
+	    showPageBreaksButton,
+	    tabWidthField,
+	    richTextFontNameField,
+	    plainTextFontNameField,
+	    windowWidthField,
+	    windowHeightField,
+	    plainTextEncodingPopup
+	);
+	Super = NSObject;
+    };
+}

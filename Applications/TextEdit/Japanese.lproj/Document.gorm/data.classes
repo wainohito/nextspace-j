@@ -1,0 +1,22 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    Document = {
+	Outlets = (
+	    scrollView
+	);
+	Super = NSObject;
+    };
+    NSResponder = {
+	Actions = (
+	    "deselectAll:",
+	    "selectAll:",
+	    "selectText:"
+	);
+	Super = NSObject;
+    };
+    Object = {
+    };
+    ScalingScrollView = {
+	Super = NSView;
+    };
+}

@@ -29,7 +29,7 @@ TextEdit_LOCALIZED_RESOURCE_FILES= \
 	FindPanel.strings \
 	Localizable.strings
 
-TextEdit_LANGUAGES= English
+TextEdit_LANGUAGES= English Japanese
 
 #
 # Source
