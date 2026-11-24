@@ -400,5 +400,21 @@
 "You cannot rename a group to \"All\",\nsince that name is reserved by the system.": "グループ名を「すべて」には\nできません (システムで予約されています)。",
 "You cannot rename this group to \"%@\",\nsince a group of that name already exists.": "同じ名前のグループがあるため、\n「%@」には変更できません。",
 "You have made changes to the database.\nShould these changes be saved?": "データベースが変更されています。\n保存しますか?",
-"ZIP Code": "郵便番号"
+"ZIP Code": "郵便番号",
+"Beginpoint": "始点",
+"Endpoint": "終点",
+"Bounds": "範囲",
+"Fill Color": "塗りの色",
+"Filling": "塗り",
+"Hide Grid Options": "グリッドのオプションを隠す",
+"Hide Inspector": "インスペクタを隠す",
+"Hide Ruler": "ルーラを隠す",
+"Hide Tools": "ツールを隠す",
+"Show Ruler": "ルーラを表示",
+"Horizontal Flipping": "左右反転",
+"Vertical Flipping": "上下反転",
+"Stroke Color": "線の色",
+"Stroke Width": "線の太さ",
+"Stroking": "線",
+"Text": "テキスト"
 }

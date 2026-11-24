@@ -53,8 +53,9 @@ static NSString *SKTAppAutosavingDelayPreferenceKey = @"autosavingDelay";
 // Conformance to the NSObject(NSApplicationNotifications) informal protocol.
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
 
-    // The tool palette should always show up right away.
-    [self showOrHideToolPalette:self];
+    // The tool palette should always show up right away. Don't toggle: the
+    // palette window may already be visible when its nib is loaded.
+    [[SKTToolPaletteController sharedToolPaletteController] showWindow:self];
 }
 
 

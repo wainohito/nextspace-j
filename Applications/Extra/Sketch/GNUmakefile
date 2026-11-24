@@ -41,7 +41,8 @@ Resources/TextGraphic.tiff \
 Resources/Sketch.tiff
 
 Sketch_LANGUAGES = English Japanese
-Sketch_LOCALIZED_RESOURCE_FILES += Sketch.gorm DrawWindow.gorm ToolPalette.gorm Inspector.gorm GridPanel.gorm Preferences.gorm
+Sketch_LOCALIZED_RESOURCE_FILES += Sketch.gorm DrawWindow.gorm ToolPalette.gorm Inspector.gorm GridPanel.gorm Preferences.gorm \
+	Localizable.strings SKTAppDelegate.strings SKTGraphicView.strings UndoStrings.strings
 
 
 #
