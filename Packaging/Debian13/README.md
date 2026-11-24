@@ -10,7 +10,7 @@ Debian 13 を最小構成 (デスクトップ環境なし) でインストール
 
 ```
 sudo apt install git
-git clone -b japanese <このリポジトリ> nextspace
+git clone https://github.com/wainohito/nextspace-j.git nextspace
 cd nextspace/Packaging/Debian13
 ./install.sh
 ```

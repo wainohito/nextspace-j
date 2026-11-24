@@ -1,35 +1,55 @@
-# NEXTSPACE
+# NEXTSPACE 日本語版 (Debian 13)
 
-[![Fedora 39](https://github.com/trunkmaster/nextspace/actions/workflows/sources_fedora.yml/badge.svg)](https://github.com/trunkmaster/nextspace/actions/workflows/fedora-39.yml) [![Ubuntu 22.04](https://github.com/trunkmaster/nextspace/actions/workflows/sources_ubuntu.yml/badge.svg)](https://github.com/trunkmaster/nextspace/actions/workflows/sources_ubuntu.yml) [![Debian 12](https://github.com/trunkmaster/nextspace/actions/workflows/sources_debian.yml/badge.svg)](https://github.com/trunkmaster/nextspace/actions/workflows/sources_debian.yml)
+[NEXTSPACE](https://github.com/trunkmaster/nextspace) は、Linux 上で
+[NeXTSTEP](https://ja.wikipedia.org/wiki/NEXTSTEP) の見た目と操作感を再現する
+デスクトップ環境です。このリポジトリはその個人用フォークで、**日本語で快適に使える
+こと**と **Debian 13 (trixie) への導入**を目的に機能を追加しています。
 
-NEXTSPACE is a desktop environment that brings a [NeXTSTEP](https://en.wikipedia.org/wiki/NeXTSTEP) look and feel to Linux. I try to keep the user experience as close as possible to the original NeXT OS. It is developed according to the ["OpenStep User Interface Guidelines"](http://www.gnustep.org/resources/documentation/OpenStepUserInterfaceGuidelines.pdf).
+本家の説明 (英語) は [README.en.md](README.en.md) にあります。
 
-> An explanation of the NeXTSTEP / NextStep naming convention is discussed in further detail [here](Documentation/OpenStep%20Confusion.md).
+![NEXTSPACE](Documentation/NEXTSPACE_Screenshot.png)
 
-![NEXTSPACE example](Documentation/NEXTSPACE_Screenshot.png)
+## このフォークで追加したもの
 
-I want to create a fast, elegant, reliable, and easy to use desktop environment with maximum attention to user experience (usability) and visual maturity. I would like it to become a platform where applications will be running with a taste of NeXT's OS. Core applications such as Login, Workspace, and Preferences are the base for future application development and examples of visual style and application integration methods.
+- **日本語化**: Workspace (ウインドウマネージャのメニューを含む)、Preferences、
+  Terminal、TextEdit、Review、OpenUp、TimeMon、GNUstep 本体、追加アプリ。
+  環境設定の「言語」で Japanese を選べます。
+- **日本語のインライン入力**: fcitx5 + Mozc で、変換中の文字を入力欄の中に表示します
+  (GNUstep アプリ、Terminal とも)。変換候補も入力位置に出ます。
+- **Dock の入力モード・音量表示**: wmsystemtray + pasystray。クリックで入力モードを
+  切り替えられます。
+- **追加アプリ** (`Applications/Extra`): [GNUstep Desktop](https://github.com/onflapp/gs-desktop)
+  のアプリを移植し、日本語化しました。住所録、付箋、電卓、辞書、PDF ビューア、
+  音楽・動画プレーヤー、スクリーンショット、ドローなどです。
+- **WebBrowser.app**: NeXT 風のウインドウで Chromium を使うブラウザ。
+  Firefox.app と Chromium.app も `/Applications` から起動できます。
+- **不具合修正**: TIFF 読み込みで Workspace が落ちる問題、Terminal の全角文字幅、
+  全画面ウインドウの上にメニューが残る問題など。
 
-NEXTSPACE is not just a set of applications tightly integrated to each other. It is a core OS with frameworks, mouse cursors, fonts, colors, animations, and everything I think will help users to be effective and happy.
+## インストール
 
-[Brief introduction](Applications.md) to core NEXTSPACE applications contains some details and screenshots.
+Debian 13 をデスクトップ環境なし (CLI のみ) でインストールし、sudo を使える一般
+ユーザーで次を実行します。
 
-## Why?
-1. I like the look, feel, and design principles of NeXTSTEP.
-2. I believe it will become an interesting environment for developers and comfortable (fast, easy to use, feature-rich) for users.
+```
+sudo apt install git
+git clone https://github.com/wainohito/nextspace-j.git nextspace
+cd nextspace/Packaging/Debian13
+./install.sh
+```
 
-Unlike other 'real' and 'serious' projects, I have not yet defined a target audience for NEXTSPACE. I intentionally left aside modern UI design trends (fancy animations, shadows, gray blurry lines, flat controls, acid colors, transparency). I like the accurate, clear, grayish, and "boring" UI that helps, not hinder, to get my job done.
+依存パッケージのインストールから、ビルド、日本語の初期設定までを1本のスクリプトで
+行います。詳しい手順と、各段階の内容は
+[Packaging/Debian13/README.md](Packaging/Debian13/README.md) を見てください。
 
-## Not planned
-* Porting to other Linux distributions and operating systems. For now, I want a fast, accurate, and stable version for RedHat-based Linux distributions. Currently these are Fedora, CentOS Stream 9, Rocky Linux 9 and Alma Linux 9. However, NEXTSPACE was designed to be portable and thus this point may be changed in future.
-* GNOME, KDE, macOS rival in terms of visual effects, modern design principles, look and feel.
-* Implementing a macOS-like desktop paradigm. There is another good place for this -- see [Étoilé](http://etoileos.com).
+> **注意**: まっさらな Debian 13 での通しのテストはまだ済んでいません。
 
-## Installing
-There are several methods of NEXTSPACE installation:
-1. Get release builds [here](https://github.com/trunkmaster/nextspace/releases). At the time of writing there are RPM builds for CentOS 7, 8 and Fedora31. As of CentOS 7 EOL in 2024, no more CentOS builds will be created in the future. RPM packages will built for latest release of Fedora. Optionally may be created builds for stable Debian release and packed as a tarball.
-2. Make own build of packages. Installation is based off CentOS 7's minimal install, you can find [full directions in the installation guide](https://github.com/trunkmaster/nextspace/wiki/Install-Guide).
-3. Install it from source with help of build scripts (tested on Debian, Ubuntu LTS and Fedora). Please follow [build instructions](https://github.com/trunkmaster/nextspace/blob/master/Packaging/Sources/README.md) if you've choose this way.
+## ブランチ
 
-## For developers
-For those who are eager to know "How it's done?" can find information on development tasks, goals, solutions, implementation details, and build instructions on the [Wiki](https://github.com/trunkmaster/nextspace/wiki).
+- `japanese` (既定): このフォークの変更をすべて含むブランチ
+- `master`: 本家 [trunkmaster/nextspace](https://github.com/trunkmaster/nextspace) と同じ内容
+
+## ライセンス
+
+本家 NEXTSPACE と同じです ([LICENSE](LICENSE))。`Applications/Extra` の追加アプリの
+ライセンスは [Applications/Extra/README.md](Applications/Extra/README.md) を見てください。
