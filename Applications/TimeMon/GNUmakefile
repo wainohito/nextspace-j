@@ -22,8 +22,11 @@ TimeMon_C_FILES = \
 	loadave.c
 
 # The Resource files to be copied into the app's resources directory
+TimeMon_LANGUAGES = English Japanese
+TimeMon_LOCALIZED_RESOURCE_FILES = \
+	TimeMon.gorm
+
 TimeMon_RESOURCE_FILES = \
-	English.lproj/TimeMon.gorm \
 	TM-app.tiff \
 	TimeMonP.tiff \
 	README.rtf

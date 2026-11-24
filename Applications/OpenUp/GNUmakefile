@@ -16,7 +16,7 @@ OpenUp_APPLICATION_ICON = application.tiff
 #
 # Resource files
 #
-OpenUp_LANGUAGES = English
+OpenUp_LANGUAGES = English Japanese
 OpenUp_LOCALIZED_RESOURCE_FILES = OpenUp.gorm Localizable.strings
 OpenUp_RESOURCE_FILES = \
 defaults.plist \

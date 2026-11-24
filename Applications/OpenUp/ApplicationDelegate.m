@@ -206,6 +206,16 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
 {
   [NSApp setServicesProvider:self];
+
+  // Localized gorms saved by gormtool may lose the "NSServicesMenu" name:
+  // make sure the Services submenu is still registered.
+  if ([NSApp servicesMenu] == nil) {
+    NSMenu *services = [[[NSApp mainMenu]
+        itemWithTitle:NSLocalizedString(@"Services", @"")] submenu];
+    if (services != nil) {
+      [NSApp setServicesMenu:services];
+    }
+  }
 }
 
 // - (void)setupUserDefaults;

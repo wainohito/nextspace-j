@@ -34,14 +34,14 @@
                                                 backing:NSBackingStoreBuffered
                                                   defer:YES];
     [preferences setMinSize:NSMakeSize(260, 280)];
-    [preferences setTitle:@"Preferences"];
+    [preferences setTitle:NSLocalizedString(@"Preferences", @"")];
     [preferences setDelegate:self];
     [preferences setReleasedWhenClosed:NO];
     [preferences center];
     [preferences setFrameAutosaveName:@"Preferences"];
 
     box = [[NSBox alloc] init];
-    [box setTitle:@"Image Cache"];
+    [box setTitle:NSLocalizedString(@"Image Cache", @"")];
     [box setFrameFromContentFrame:NSMakeRect(16, 180, 228, 64)];
     [[preferences contentView] addSubview:box];
     RELEASE(box);
@@ -70,7 +70,7 @@
 
     rect = NSMakeRect(32, 144, 220, 15);
     openRecursive = [[NSButton alloc] initWithFrame:rect];
-    [openRecursive setTitle:@"Open path recursively"];
+    [openRecursive setTitle:NSLocalizedString(@"Open path recursively", @"")];
     [openRecursive setButtonType:NSSwitchButton];
     [openRecursive setBordered:NO];
     [openRecursive setTarget:self];

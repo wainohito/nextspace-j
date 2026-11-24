@@ -346,7 +346,7 @@
     NSImage *pausedImage = [NSImage imageNamed:@"TimeMonP"];
     NSImage *pausedStipple = [NSApp applicationIconImage];
       
-    [pauseMenuCell setTitle:@"Continue"];
+    [pauseMenuCell setTitle:NSLocalizedString(@"Continue", @"")];
     [te invalidate];
     te = nil;
       
@@ -359,7 +359,7 @@
   } 
   else {
     float f;
-    [pauseMenuCell setTitle:@"Pause"];
+    [pauseMenuCell setTitle:NSLocalizedString(@"Pause", @"")];
     f = [defaults floatForKey:@"UpdatePeriod"];
     f = MAX(f, MINPERIOD);
     [periodText setFloatValue:f];
