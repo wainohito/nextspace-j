@@ -41,12 +41,12 @@ rm -rf _build 2>/dev/null
 mkdir -p _build
 cd _build
 
-C_FLAGS="-Wno-error=unused-but-set-variable"
+C_FLAGS="-Wno-error=unused-but-set-variable -Wno-error=cast-function-type-mismatch -Wno-error=sign-conversion -Wno-error=sign-compare -Wno-error=imcompatible-pointer-types"
 $CMAKE_CMD .. \
 	-DCMAKE_C_COMPILER=${C_COMPILER} \
 	-DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
-	-DCMAKE_C_FLAGS=${C_FLAGS} \
-	-DCMAKE_CXX_FLAGS=${C_FLAGS} \
+	-DCMAKE_C_FLAGS="${C_FLAGS}" \
+	-DCMAKE_CXX_FLAGS="${C_FLAGS}" \
 	-DCMAKE_INSTALL_PREFIX=/usr/NextSpace \
 	-DCMAKE_INSTALL_LIBDIR=/usr/NextSpace/lib \
 	-DCMAKE_INSTALL_MANDIR=/usr/NextSpace/Documentation/man \

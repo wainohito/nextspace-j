@@ -100,7 +100,6 @@
   setenv("LOGNAME", user->pw_name, 1);
   setenv("HOME", user->pw_dir, 1);
   setenv("SHELL", user->pw_shell, 1);
-  setenv("LC_CTYPE", "en_US.UTF-8", 1);
   setenv("DISPLAY", ":0", 1);
 
   setenv("XDG_RUNTIME_DIR", [[NSString stringWithFormat:@"/run/user/%i", user->pw_uid] cString], 1);
