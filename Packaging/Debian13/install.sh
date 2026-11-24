@@ -57,6 +57,10 @@ stage_deps() {
        $GNUSTEP_GUI_DEPS $GNUSTEP_GUI_RUN_DEPS $BACK_ART_DEPS $BACK_ART_RUN_DEPS \
        $FRAMEWORKS_BUILD_DEPS $FRAMEWORKS_RUN_DEPS $APPS_BUILD_DEPS $APPS_RUN_DEPS \
        $JAPANESE_DEPS $TRAY_DEPS $EXTRA_APPS_BUILD_DEPS $EXTRA_APPS_RUN_DEPS
+
+  info "Install security updates (Firefox, Chromium, ...) automatically"
+  sudo apt-get install -y unattended-upgrades
+  sudo install -m 644 "$EXTRA_DIR/apt-20auto-upgrades" /etc/apt/apt.conf.d/20auto-upgrades
 }
 
 run_sources() {
@@ -112,6 +116,9 @@ stage_user() {
     $d write NSGlobalDomain $k NotoSansCJKjp-Bold
   done
   $d write NSGlobalDomain NSUserFixedPitchFont NotoSansMonoCJKjp-Regular
+
+  info "Window manager: attributes for WebBrowser.app's embedded Chromium windows"
+  python3 -I "$EXTRA_DIR/wm-window-attributes.py"
 
   info "fcitx5: XIM on-the-spot style"
   mkdir -p "$HOME/.config/fcitx5/conf"

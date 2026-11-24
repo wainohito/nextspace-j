@@ -1,0 +1,10 @@
+// Install as /etc/apt/apt.conf.d/20auto-upgrades
+// Refresh package lists and install security updates every day
+// (unattended-upgrades; Debian-Security origin by default).  This keeps
+// Firefox and Chromium current: Debian ships each new upstream security
+// release of both browsers through trixie-security.
+// NextSpace itself lives outside apt (/usr/NextSpace, /Library,
+// /Applications) and Debian's GNUstep is pinned away
+// (/etc/apt/preferences.d/nextspace), so these updates don't touch it.
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";

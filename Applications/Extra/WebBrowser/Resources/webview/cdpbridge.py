@@ -211,9 +211,39 @@ class Bridge:
     def chrome_args(self):
         return [self.chrome, "--user-data-dir=" + self.profile, "--no-first-run",
                 "--no-default-browser-check", "--disable-session-crashed-bubble",
-                "--disable-features=Translate"]
+                "--disable-features=Translate",
+                # The --app windows are reparented into WebBrowser.app's
+                # windows.  Until then the window manager maps them as normal
+                # windows: put them off screen so nothing flashes, and give
+                # them their own WM class so the WM shows no appicon for them
+                # (WMWindowAttributes.plist: WebBrowserView).
+                "--class=WebBrowserView", "--window-position=-10000,-10000",
+                "--window-size=640,480"]
+
+    def forget_window_placement(self):
+        """Chromium restores an --app window at its last saved position,
+        which overrides --window-position: drop the saved positions so the
+        page windows start off screen (see chrome_args)."""
+        prefs = os.path.join(self.profile, "Default", "Preferences")
+        try:
+            with open(prefs) as f:
+                data = json.load(f)
+        except (OSError, ValueError):
+            return
+        browser = data.get("browser")
+        if not isinstance(browser, dict) or "app_window_placement" not in browser:
+            return
+        del browser["app_window_placement"]
+        tmp = prefs + ".tmp"
+        try:
+            with open(tmp, "w") as f:
+                json.dump(data, f, separators=(",", ":"))
+            os.replace(tmp, prefs)
+        except OSError:
+            pass
 
     def start_chrome(self):
+        self.forget_window_placement()
         portfile = os.path.join(self.profile, "DevToolsActivePort")
         try:
             os.unlink(portfile)

@@ -28,7 +28,7 @@ cd nextspace/Packaging/Debian13
 
 | 段階 | 内容 |
 |---|---|
-| deps | Debian 版 GNUstep を入れない apt 設定、ビルド・実行に必要なパッケージ |
+| deps | Debian 版 GNUstep を入れない apt 設定、ビルド・実行に必要なパッケージ、セキュリティ更新の自動適用 |
 | core | libdispatch, CoreFoundation, libobjc2, gnustep-make, libwraster, libs-base, libs-gui (日本語訳・インライン入力パッチ込み), libs-back |
 | nextspace | Frameworks と NEXTSPACE のアプリ (Login, Workspace, Preferences など) |
 | extra | Applications/Extra: gs-desktop 由来のアプリ、WebBrowser、Firefox/Chromium の .app |
@@ -56,9 +56,14 @@ NEXTSPACE は `/usr/NextSpace`, `/Library`, `/Applications` などに入り、ap
 入るとライブラリが衝突するため、`/etc/apt/preferences.d/nextspace` で導入を禁止して
 います (deps 段階で設定)。
 
+Firefox (firefox-esr) と Chromium は Debian のパッケージをそのまま使い、
+`/Applications` の Firefox.app / Chromium.app はそれを起動するだけです。Debian は両ブラウザ
+の新しいセキュリティリリースを trixie-security で随時配布するので、deps 段階で
+unattended-upgrades を入れ、`/etc/apt/apt.conf.d/20auto-upgrades` で毎日自動適用します。
+
 ## 元に戻すとき
 
 `Packaging/Sources/nextspace_uninstall.sh` を参照してください。この手順で追加した
-ファイル: `/etc/apt/preferences.d/nextspace`, `/etc/sudoers.d/nextspace-timezone`,
+ファイル: `/etc/apt/preferences.d/nextspace`, `/etc/apt/apt.conf.d/20auto-upgrades`, `/etc/sudoers.d/nextspace-timezone`,
 `/etc/environment` の fcitx 用の行, `~/.local/bin/nextspace-autostart`,
 `~/.local/bin/nextspace-logout`, `~/.config/fcitx5/conf/xim.conf`。
