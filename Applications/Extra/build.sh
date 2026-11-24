@@ -7,6 +7,12 @@ cd "$(dirname "$0")"
 . /Developer/Makefiles/GNUstep.sh
 export CC=${CC:-clang} CXX=${CXX:-clang++}
 
+# TerminalKit (from gs-terminal; needed by CloudManager, NotMon, SystemManager)
+cd Frameworks/TerminalKit
+make
+sudo -E sh -c ". /Developer/Makefiles/GNUstep.sh; make install GNUSTEP_INSTALLATION_DOMAIN=LOCAL"
+cd ../..
+
 # PDFKit (needed by DocumentViewer)
 cd Frameworks/PDFKit
 [ -f GNUmakefile ] || ./configure

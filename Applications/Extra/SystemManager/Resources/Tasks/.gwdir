@@ -1,0 +1,22 @@
+{
+    "fsn_info_type" = <*I0>;
+    "hligh_table_col" = <*I0>;
+    iconposition = <*I2>;
+    iconsize = <*I48>;
+    labeltxtsize = <*I12>;
+    lastselection = (
+    );
+    "list_view_columns" = {
+	0 = {
+	    identifier = <*I0>;
+	    minwidth = <*R80>;
+	    position = <*I0>;
+	    width = <*R335>;
+	};
+    };
+    shelfdicts = (
+    );
+    shelfheight = <*R2>;
+    singlenode = <*BY>;
+    viewtype = List;
+}

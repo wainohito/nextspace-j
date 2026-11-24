@@ -1,0 +1,54 @@
+#!/bin/perl
+
+if ($ARGV[0] eq "status") {
+  $s = $ARGV[1];
+  open(IN, "systemctl status $s|");
+  while(<IN>) {
+    chomp();
+    print("$_\n");
+  }
+  close(IN);
+}
+elsif ($ARGV[0] eq "list") {
+  $t = $ARGV[1];
+  $s = $ARGV[2];
+  $f = $ARGV[3];
+  
+  if ($t eq "all") {
+    $t = "--all";
+  }
+  else {
+    $t = "--all --type=$t";
+  }
+
+  if ($s eq "all") {
+    $s = "";
+  }
+  else {
+    $s = "--state=$s";
+  }
+
+  open(IN, "systemctl $s $t |");
+  while(<IN>) {
+    chomp();
+    #print("[$_]\n");
+    if (/^  UNIT /) {
+      next;
+    }
+    if (/^. (.*?)\s+(.*?)\s+(.*?)\s+(.*?)\s+(.*?)$/) {
+      $found = 0;
+      $line = "$1\t$2\t$3\t$4\t$5";
+      if ($f eq "") {
+        $found = 1;
+      }
+      elsif ($1 =~ /$f/i || $5 =~ /$f/i) {
+        $found = 1;
+      }
+
+      if ($found) {
+        print("$line\n");
+      }
+    }
+  }
+  close(IN);
+}

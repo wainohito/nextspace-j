@@ -10,6 +10,7 @@ SUBPROJECTS = \
 	Addresses \
 	Affiche \
 	BatMon \
+	CloudManager \
 	Calculator \
 	DefaultsManager \
 	DictionaryReader \
@@ -21,11 +22,13 @@ SUBPROJECTS = \
 	InnerSpace \
 	Librarian \
 	NetHood \
+	NotMon \
 	Player \
 	RemoteView \
 	ScanImage \
 	ScreenShot \
 	Sketch \
+	SystemManager \
 	VolMon \
 	WrapperFactory
 

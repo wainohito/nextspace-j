@@ -1,0 +1,15 @@
+#!/bin/sh
+
+VNC="/usr/bin/x11vnc"
+if ! [ -x "$VNC" ];then
+  echo "make sure you have x11vnc installed"
+  exit 1
+fi
+
+echo "no password set"
+
+ip -o -4 a | awk '{print $4}' | grep -v 127.0.0.1
+
+/usr/bin/x11vnc -nopw -solid darkblue -norc -q
+
+exit 0

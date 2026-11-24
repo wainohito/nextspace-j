@@ -1,0 +1,29 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "actionButton:"
+	);
+	Super = NSObject;
+    };
+    MessageController = {
+	Actions = (
+	    "actionButton:"
+	);
+	Outlets = (
+	    panel,
+	    panelInfo,
+	    panelTitle,
+	    closeAction,
+	    openAction
+	);
+	Super = NSObject;
+    };
+    MessageWindow = {
+	Actions = (
+	);
+	Outlets = (
+	);
+	Super = NSPanel;
+    };
+}
