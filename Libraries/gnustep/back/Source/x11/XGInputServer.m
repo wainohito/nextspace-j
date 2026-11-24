@@ -28,6 +28,8 @@
 
 #include "config.h"
 
+#include <AppKit/NSApplication.h>
+#include <AppKit/NSTextInputClient.h>
 #include <AppKit/NSView.h>
 #include <AppKit/NSWindow.h>
 #include <Foundation/NSData.h>
@@ -55,6 +57,127 @@
 @end
 
 #define BUF_LEN 255
+
+
+/* ----------------------------------------------------------------------
+   On-the-spot (XIMPreeditCallbacks) support: the composition text is shown
+   inside the focused text view as marked text (NSTextInput protocol).
+*/
+static NSMutableString *preeditBuffer = nil;
+static NSUInteger preeditCaret = 0;
+
+static id preeditTarget(void)
+{
+  id target = [[NSApp keyWindow] firstResponder];
+
+  if ([target respondsToSelector:@selector(setMarkedText:selectedRange:)])
+    return target;
+  return nil;
+}
+
+static void preeditDeliver(void)
+{
+  id target = preeditTarget();
+
+  if (target == nil)
+    return;
+  if (preeditCaret > [preeditBuffer length])
+    preeditCaret = [preeditBuffer length];
+  [target setMarkedText:[NSString stringWithString:preeditBuffer]
+          selectedRange:NSMakeRange(preeditCaret, 0)];
+}
+
+static NSString *stringFromXIMText(XIMText *text)
+{
+  if (text == NULL || text->length == 0)
+    return @"";
+  if (text->encoding_is_wchar) {
+    if (text->string.wide_char == NULL)
+      return nil;
+    {
+      NSMutableString *str = [NSMutableString string];
+      unsigned short i;
+      for (i = 0; i < text->length; i++) {
+        wchar_t wc = text->string.wide_char[i];
+        if (wc > 0xFFFF) {
+          unichar pair[2] = {0xD800 + ((wc - 0x10000) >> 10), 0xDC00 + ((wc - 0x10000) & 0x3FF)};
+          [str appendString:[NSString stringWithCharacters:pair length:2]];
+        } else {
+          unichar c = (unichar)wc;
+          [str appendString:[NSString stringWithCharacters:&c length:1]];
+        }
+      }
+      return str;
+    }
+  }
+  if (text->string.multi_byte == NULL)
+    return nil;  // feedback-only change
+  {
+    NSString *str = [NSString stringWithUTF8String:text->string.multi_byte];
+    if (str == nil)
+      str = [NSString stringWithCString:text->string.multi_byte];
+    return str;
+  }
+}
+
+static int preeditStartCallback(XIC ic, XPointer client_data, XPointer call_data)
+{
+  if (preeditBuffer == nil)
+    preeditBuffer = [NSMutableString new];
+  [preeditBuffer setString:@""];
+  preeditCaret = 0;
+  return -1;  // no length limit
+}
+
+static void preeditDoneCallback(XIC ic, XPointer client_data, XPointer call_data)
+{
+  if ([preeditBuffer length] > 0) {
+    [preeditBuffer setString:@""];
+    preeditCaret = 0;
+    preeditDeliver();
+  }
+}
+
+static void preeditDrawCallback(XIC ic, XPointer client_data,
+                                XIMPreeditDrawCallbackStruct *call_data)
+{
+  NSUInteger first, length, total;
+  NSString *inserted;
+
+  if (preeditBuffer == nil)
+    preeditBuffer = [NSMutableString new];
+
+  total = [preeditBuffer length];
+  first = MIN((NSUInteger)MAX(call_data->chg_first, 0), total);
+  length = MIN((NSUInteger)MAX(call_data->chg_length, 0), total - first);
+  inserted = stringFromXIMText(call_data->text);
+
+  if (inserted == nil) {
+    // Only the feedback (highlight) changed: keep the text.
+    inserted = [preeditBuffer substringWithRange:NSMakeRange(first, length)];
+  }
+  [preeditBuffer replaceCharactersInRange:NSMakeRange(first, length) withString:inserted];
+  preeditCaret = (NSUInteger)MAX(call_data->caret, 0);
+
+  if (getenv("GS_XIM_DEBUG"))
+    NSLog(@"XIM: preedit draw first=%d len=%d caret=%d -> '%@'", call_data->chg_first,
+          call_data->chg_length, call_data->caret, preeditBuffer);
+  preeditDeliver();
+}
+
+static void preeditCaretCallback(XIC ic, XPointer client_data,
+                                 XIMPreeditCaretCallbackStruct *call_data)
+{
+  if (call_data->direction == XIMAbsolutePosition) {
+    preeditCaret = (NSUInteger)MAX(call_data->position, 0);
+    preeditDeliver();
+  }
+  call_data->position = (int)preeditCaret;
+}
+
+static void statusNoopCallback(XIC ic, XPointer client_data, XPointer call_data)
+{
+}
 
 @implementation XGInputServer
 
@@ -205,36 +328,43 @@
   return YES;
 }
 
-static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style)
+/* Score an input style offered by the input method server for the style
+   requested by the user (GSXIMInputMethodStyle).  The preedit part matters
+   most; any status part we can handle is accepted (we draw no status). */
+static int styleScore(XIMStyle style, XIMStyle requested)
 {
-  if (a == xim_requested_style)
-    return a;
-  if (b == xim_requested_style)
-    return b;
+  XIMStyle pre = style & (XIMPreeditArea | XIMPreeditCallbacks | XIMPreeditPosition |
+                          XIMPreeditNothing | XIMPreeditNone);
+  XIMStyle st = style & (XIMStatusArea | XIMStatusCallbacks | XIMStatusNothing | XIMStatusNone);
+  int score;
 
-  // N.B. We don't support OnTheSpotStyle so it is omitted here
+  if (pre == (requested & (XIMPreeditArea | XIMPreeditCallbacks | XIMPreeditPosition |
+                           XIMPreeditNothing | XIMPreeditNone)))
+    score = 100;
+  else if (pre == XIMPreeditPosition)
+    score = 60;
+  else if (pre == XIMPreeditCallbacks)
+    score = 50;
+  else if (pre == XIMPreeditArea)
+    score = 40;
+  else if (pre == XIMPreeditNothing)
+    score = 20;
+  else if (pre == XIMPreeditNone)
+    score = 10;
+  else
+    return 0;
 
-  if (a == OverTheSpotStyle)
-    return a;
-  if (b == OverTheSpotStyle)
-    return b;
-
-  if (a == OffTheSpotStyle)
-    return a;
-  if (b == OffTheSpotStyle)
-    return b;
-
-  if (a == RootWindowStyle)
-    return a;
-  if (b == RootWindowStyle)
-    return b;
-
-  if (a == NoneStyle)
-    return a;
-  if (b == NoneStyle)
-    return b;
-
-  return 0;
+  if (st == XIMStatusNothing)
+    score += 5;
+  else if (st == XIMStatusNone)
+    score += 4;
+  else if (st == XIMStatusArea)
+    score += 3;
+  else if (st == XIMStatusCallbacks)
+    score += 2;
+  else
+    return 0;
+  return score;
 }
 
 - (int)ximStyleInit
@@ -270,9 +400,17 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
     return 0;
   }
 
-  for (i = 0; i < styles->count_styles; i++) {
-    xim_style = betterStyle(xim_style, styles->supported_styles[i], xim_requested_style);
+  {
+    int best = 0;
+    for (i = 0; i < styles->count_styles; i++) {
+      int score = styleScore(styles->supported_styles[i], xim_requested_style);
+      if (score > best) {
+        best = score;
+        xim_style = styles->supported_styles[i];
+      }
+    }
   }
+  NSDebugLLog(@"XIM", @"XIM: using input style 0x%lx", xim_style);
   XFree(styles);
 
   if (xim_style == 0) {
@@ -341,9 +479,48 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
 {
   XIC xic = NULL;
 
-  if (xim_style == RootWindowStyle || xim_style == NoneStyle) {
+  if (xim_style & XIMPreeditCallbacks) {
+    static XIMCallback startCB = {NULL, (XIMProc)preeditStartCallback};
+    static XIMCallback doneCB = {NULL, (XIMProc)preeditDoneCallback};
+    static XIMCallback drawCB = {NULL, (XIMProc)preeditDrawCallback};
+    static XIMCallback caretCB = {NULL, (XIMProc)preeditCaretCallback};
+    static XIMCallback statusCB = {NULL, (XIMProc)statusNoopCallback};
+    XPoint spot = {0, 0};
+    XVaNestedList preedit_args;
+    XVaNestedList status_args = NULL;
+
+    preedit_args = XVaCreateNestedList(0, XNPreeditStartCallback, &startCB,
+                                       XNPreeditDoneCallback, &doneCB,
+                                       XNPreeditDrawCallback, &drawCB,
+                                       XNPreeditCaretCallback, &caretCB,
+                                       XNSpotLocation, &spot, NULL);
+    if (xim_style & XIMStatusCallbacks) {
+      status_args = XVaCreateNestedList(0, XNStatusStartCallback, &statusCB,
+                                        XNStatusDoneCallback, &statusCB,
+                                        XNStatusDrawCallback, &statusCB, NULL);
+      xic = XCreateIC(xim, XNInputStyle, xim_style, XNClientWindow, w, XNFocusWindow, w,
+                      XNPreeditAttributes, preedit_args, XNStatusAttributes, status_args, NULL);
+    } else {
+      xic = XCreateIC(xim, XNInputStyle, xim_style, XNClientWindow, w, XNFocusWindow, w,
+                      XNPreeditAttributes, preedit_args, NULL);
+    }
+    if (xic == NULL) {
+      // Some servers reject XNSpotLocation for callbacks: retry without it.
+      XFree(preedit_args);
+      preedit_args = XVaCreateNestedList(0, XNPreeditStartCallback, &startCB,
+                                         XNPreeditDoneCallback, &doneCB,
+                                         XNPreeditDrawCallback, &drawCB,
+                                         XNPreeditCaretCallback, &caretCB, NULL);
+      xic = XCreateIC(xim, XNInputStyle, xim_style, XNClientWindow, w, XNFocusWindow, w,
+                      XNPreeditAttributes, preedit_args,
+                      status_args ? XNStatusAttributes : NULL, status_args, NULL);
+    }
+    XFree(preedit_args);
+    if (status_args)
+      XFree(status_args);
+  } else if (!(xim_style & (XIMPreeditArea | XIMPreeditPosition))) {
     xic = XCreateIC(xim, XNInputStyle, xim_style, XNClientWindow, w, NULL);
-  } else if (xim_style == OffTheSpotStyle || xim_style == OverTheSpotStyle) {
+  } else {
     Display *dpy = [XGServer xDisplay];
     XFontSet font_set;
     char **missing_charset;
@@ -405,15 +582,19 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
     // For OverTheSpot only the spot location matters.  Sending XNArea makes
     // some servers (fcitx5) anchor the preedit to the area origin (0,0),
     // i.e. the window's top-left corner, ignoring the spot.
-    if (xim_style == OverTheSpotStyle)
+    if (xim_style & XIMPreeditPosition)
       preedit_args = XVaCreateNestedList(dummy, XNSpotLocation, &preedit_spot,
                                          XNFontSet, font_set, NULL);
     else
       preedit_args = XVaCreateNestedList(dummy, XNArea, &preedit_area, XNSpotLocation,
                                          &preedit_spot, XNFontSet, font_set, NULL);
 
-    xic = XCreateIC(xim, XNInputStyle, xim_style, XNClientWindow, w, XNPreeditAttributes,
-                    preedit_args, XNStatusAttributes, status_args, NULL);
+    if (xim_style & XIMStatusArea)
+      xic = XCreateIC(xim, XNInputStyle, xim_style, XNClientWindow, w, XNPreeditAttributes,
+                      preedit_args, XNStatusAttributes, status_args, NULL);
+    else
+      xic = XCreateIC(xim, XNInputStyle, xim_style, XNClientWindow, w, XNPreeditAttributes,
+                      preedit_args, NULL);
 
     if (preedit_args) {
       XFree(preedit_args);
@@ -425,11 +606,6 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
     }
     if (font_set)
       XFreeFontSet(dpy, font_set);
-  } else if (xim_style == OnTheSpotStyle) {
-    NSLog(@"XIM: GNUstep doesn't support 'OnTheSpot'.\n"
-          @"Fallback to RootWindow style.");
-    xim_style = RootWindowStyle;
-    xic = XCreateIC(xim, XNInputStyle, xim_style, XNClientWindow, w, NULL);
   }
 
 finish:
@@ -476,14 +652,14 @@ finish:
 - (NSString *)inputMethodStyle
 {
   if (num_xics > 0) {
-    if (xim_style == RootWindowStyle)
-      return @"RootWindow";
-    else if (xim_style == OffTheSpotStyle)
-      return @"OffTheSpot";
-    else if (xim_style == OverTheSpotStyle)
-      return @"OverTheSpot";
-    else if (xim_style == OnTheSpotStyle)
+    if (xim_style & XIMPreeditCallbacks)
       return @"OnTheSpot";
+    else if (xim_style & XIMPreeditPosition)
+      return @"OverTheSpot";
+    else if (xim_style & XIMPreeditArea)
+      return @"OffTheSpot";
+    else if (xim_style & XIMPreeditNothing)
+      return @"RootWindow";
   }
   return nil;
 }
@@ -586,7 +762,7 @@ finish:
 
 - (BOOL)preeditSpot:(NSPoint *)p
 {
-  if ([self currentIC] != NULL && (xim_style & XIMPreeditPosition)) {
+  if ([self currentIC] != NULL && (xim_style & (XIMPreeditPosition | XIMPreeditCallbacks))) {
     XPoint spot;
     int dummy = 0;
     XVaNestedList arglist = NULL;
@@ -665,7 +841,7 @@ finish:
 
 - (BOOL)setPreeditSpot:(NSPoint *)p
 {
-  if ([self currentIC] != NULL && (xim_style & XIMPreeditPosition)) {
+  if ([self currentIC] != NULL && (xim_style & (XIMPreeditPosition | XIMPreeditCallbacks))) {
     XPoint spot;
     int dummy = 0;
     XVaNestedList arglist = NULL;

@@ -601,7 +601,8 @@ static int byte_order(void)
 
   if (window == nil || ![displayServer respondsToSelector:@selector(inputMethodStyle)])
     return;
-  if (![[displayServer inputMethodStyle] isEqual:@"OverTheSpot"])
+  if (![[displayServer inputMethodStyle] isEqual:@"OverTheSpot"] &&
+      ![[displayServer inputMethodStyle] isEqual:@"OnTheSpot"])
     return;
 
   // Insertion point rectangle in the text view's (flipped) coordinates.

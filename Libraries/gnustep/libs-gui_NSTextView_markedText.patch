@@ -1,0 +1,89 @@
+--- a/Source/NSTextView.m	2026-11-24 21:36:30.108207406 +0900
++++ b/Source/NSTextView.m	2026-11-24 21:36:30.128206846 +0900
+@@ -2104,18 +2104,66 @@
+   return _markedRange;
+ }
+ 
++/* Input method composition (preedit) text.  aString replaces the current
++   marked text, or the selection if there is none; selRange is relative to
++   aString and becomes the selection (the input method's caret).  An empty
++   aString removes the marked text. */
+ - (void) setMarkedText: (id)aString 
+          selectedRange: (NSRange)selRange
+ {
++  NSString *string;
++  NSRange replaceRange;
++  NSMutableDictionary *attrs;
+   NSAttributedString *as;
++  NSUInteger length;
++
++  if (_layoutManager == nil)
++    return;
++
++  string = [aString isKindOfClass: [NSAttributedString class]]
++    ? [(NSAttributedString *)aString string] : (NSString *)aString;
++  if (string == nil)
++    string = @"";
++  length = [string length];
++
++  if ([self hasMarkedText])
++    replaceRange = NSIntersectionRange(_markedRange,
++                                       NSMakeRange(0, [_textStorage length]));
++  else if (length == 0)
++    return;
++  else
++    replaceRange = [self rangeForUserTextChange];
+ 
+-  _markedRange = selRange;
++  if (replaceRange.location == NSNotFound)
++    return;
+ 
+-  as = [[NSAttributedString alloc] initWithString: aString
+-                                   attributes: [self markedTextAttributes]];
+-  [self replaceCharactersInRange: selRange
+-        withAttributedString: as];
++  attrs = [NSMutableDictionary dictionaryWithDictionary:
++                                 _layoutManager->_typingAttributes];
++  [attrs addEntriesFromDictionary: [self markedTextAttributes]];
++  if ([attrs objectForKey: NSUnderlineStyleAttributeName] == nil)
++    [attrs setObject: [NSNumber numberWithInteger: NSUnderlineStyleSingle]
++              forKey: NSUnderlineStyleAttributeName];
++
++  as = [[NSAttributedString alloc] initWithString: string attributes: attrs];
++  [_textStorage beginEditing];
++  [_textStorage replaceCharactersInRange: replaceRange
++                    withAttributedString: as];
++  [_textStorage endEditing];
+   DESTROY(as);
++
++  if (length == 0)
++    {
++      _markedRange = NSMakeRange(NSNotFound, 0);
++      [self setSelectedRange: NSMakeRange(replaceRange.location, 0)];
++    }
++  else
++    {
++      _markedRange = NSMakeRange(replaceRange.location, length);
++      if (NSMaxRange(selRange) > length)
++        selRange = NSMakeRange(length, 0);
++      [self setSelectedRange: NSMakeRange(replaceRange.location + selRange.location,
++                                          selRange.length)];
++    }
+ }
+ 
+ - (BOOL) hasMarkedText
+@@ -2203,6 +2251,14 @@
+   NSString *string;
+   BOOL isAttributed;
+ 
++  /* Committed input method text replaces the composition (marked) text. */
++  if ([self hasMarkedText])
++    {
++      insertRange = NSIntersectionRange(_markedRange,
++                                        NSMakeRange(0, [_textStorage length]));
++      _markedRange = NSMakeRange(NSNotFound, 0);
++    }
++
+   if (insertRange.location == NSNotFound)
+     {
+       NSBeep();
