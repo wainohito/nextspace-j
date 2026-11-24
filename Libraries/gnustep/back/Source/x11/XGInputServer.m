@@ -349,7 +349,10 @@ static XIMStyle betterStyle(XIMStyle a, XIMStyle b, XIMStyle xim_requested_style
     // N.B. Because some input methods fail to provide a default font set,
     // we have to do it by ourselves.
     ns_font_size = [self fontSize:&font_size];
-    sprintf(base_font_name, "*medium-r-normal--%s*", [ns_font_size cString]);
+    // Trailing ",*" lets Xlib pick any font for charsets (e.g. JIS X 0208)
+    // not covered by the first pattern; fcitx5/ibus draw preedit themselves.
+    snprintf(base_font_name, sizeof(base_font_name),
+             "-*-*-medium-r-normal--%s-*-*-*-*-*-*-*,*", [ns_font_size cString]);
     font_set = XCreateFontSet(dpy, base_font_name, &missing_charset, &num_missing_charset, NULL);
     if (!font_set) {
       goto finish;
