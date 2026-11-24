@@ -26,3 +26,15 @@ extra-apps, adapted to use the browsers' normal profiles and key settings)
 make Firefox and Chromium launchable from /Applications and the Dock, with a
 GNUstep menu and an "Open URL" service. They are plain bundles that run
 `/Library/bin/GSWrapper_Launcher` (WrapperFactory); build.sh copies them.
+
+## WebBrowser
+
+From [gs-webbrowser](https://github.com/onflapp/gs-webbrowser) (ddf2808, MIT):
+a GNUstep browser window (NeXT style toolbar, menus, services) with an
+embedded Chromium page.  The original Chrome App bridge no longer works
+(current Chromium denies the `<webview>` element), so
+`Resources/webview/cdpbridge.py` replaces it: it speaks the same line protocol
+to WebBrowser.app and drives Chromium (`--app` windows, own profile in
+~/Library/WebBrowser) through the Chrome DevTools Protocol, using only the
+Python standard library.  Set a home page in Preferences (or
+`defaults write WebBrowser AppHomeURL <url>`) to open a window at launch.

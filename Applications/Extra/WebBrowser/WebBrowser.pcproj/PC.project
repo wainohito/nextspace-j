@@ -1,0 +1,153 @@
+{
+    APPLICATIONICON = "WebBrowser.tiff";
+    "APP_DOCUMENT_BASED" = NO;
+    "APP_TYPE" = GORM;
+    "BUILDER_TARGETS" = (
+	all,
+	install,
+	uninstall,
+	clean,
+	distclean,
+	dist
+    );
+    "BUILDER_VERBOSE" = YES;
+    "BUNDLE_IDENTIFIER" = "";
+    "CLASS_FILES" = (
+	"AppController.m",
+	"Document.m",
+	"Preferences.m",
+	"common.m",
+	"XEmbeddedView.m",
+	"ChromeWebView.m",
+	"ExternalWebView.m",
+	"ChromeController.m",
+	"FindPanel.m",
+	"DownloadPanel.m",
+	"LinkPanel.m",
+	"BrowserWindow.m",
+	"BrowserApp.m",
+	"LocalFileServer.m",
+	"LinkIcon.m",
+	"Document+scripting.m",
+	"STScriptingSupport.m",
+	"AppController+scripting.m"
+    );
+    COMPILEROPTIONS = "";
+    CPPOPTIONS = "";
+    "CREATION_DATE" = "2020-07-22 12:15:43 +0300";
+    "DOCU_FILES" = (
+    );
+    FRAMEWORKS = (
+    );
+    "HEADER_FILES" = (
+	"AppController.h",
+	"Document.h",
+	"Preferences.h",
+	"common.h",
+	"XEmbeddedView.h",
+	"xembed.h",
+	"ChromeWebView.h",
+	"ExternalWebView.h",
+	"ChromeController.h",
+	"FindPanel.h",
+	"DownloadPanel.h",
+	"LinkPanel.h",
+	"BrowserWindow.h",
+	"BrowserApp.h",
+	"LocalFileServer.h",
+	"LinkIcon.h",
+	"STScriptingSupport.h"
+    );
+    IMAGES = (
+	"Home.tiff",
+	"Left.tiff",
+	"Right.tiff",
+	"WebBrowser.tiff",
+	"url.tiff",
+	"html.tiff"
+    );
+    INSTALLDIR = "$(HOME)/GNUstep";
+    INTERFACES = (
+	"WebBrowser.gorm",
+	"Document.gorm",
+	"Preferences.gorm",
+	"FindPanel.gorm",
+	"DownloadPanel.gorm",
+	"LinkPanel.gorm"
+    );
+    LANGUAGE = English;
+    LIBRARIES = (
+	"gnustep-base",
+	"gnustep-gui"
+    );
+    LINKEROPTIONS = "-lX11 -ldispatch";
+    "LOCALIZED_RESOURCES" = (
+    );
+    MAININTERFACE = "WebBrowser.gorm";
+    MAKEFILEDIR = "$(GNUSTEP_MAKEFILES)";
+    "OBJC_COMPILEROPTIONS" = "";
+    "OTHER_RESOURCES" = (
+	webview,
+	"ApplicationScripting.xlp",
+	"ScriptingInfo.plist"
+    );
+    "OTHER_SOURCES" = (
+	"WebBrowser_main.m",
+	"xembed.c"
+    );
+    "PRINCIPAL_CLASS" = BrowserApp;
+    "PROJECT_AUTHORS" = (
+    );
+    "PROJECT_COPYRIGHT" = "Copyright (C) 200x";
+    "PROJECT_COPYRIGHT_DESC" = "Released under ...";
+    "PROJECT_CREATOR" = root;
+    "PROJECT_DESCRIPTION" = "No description avaliable!";
+    "PROJECT_DOCUMENTTYPES" = (
+	{
+	    NSIcon = "html.tiff";
+	    NSUnixExtensions = (
+		html
+	    );
+	},
+	{
+	    NSIcon = "url.tiff";
+	    NSUnixExtensions = (
+		url
+	    );
+	}
+    );
+    "PROJECT_GROUP" = "No group avaliable!";
+    "PROJECT_MAINTAINER" = root;
+    "PROJECT_NAME" = WebBrowser;
+    "PROJECT_RELEASE" = "0.1";
+    "PROJECT_SUMMARY" = "No summary avaliable!";
+    "PROJECT_TYPE" = Application;
+    "PROJECT_URL" = "";
+    "SEARCH_HEADER_DIRS" = (
+    );
+    "SEARCH_LIB_DIRS" = (
+    );
+    SUBPROJECTS = (
+    );
+    "SUPPORTING_FILES" = (
+	"GNUmakefile.preamble",
+	GNUmakefile,
+	"GNUmakefile.postamble",
+	"WebBrowserInfo.plist",
+	"Info.plist"
+    );
+    "USER_LANGUAGES" = (
+	English,
+	Ukrainian,
+	German,
+	Dutch,
+	Spanish,
+	French,
+	Italian,
+	Slovak,
+	Hungarian,
+	Russian,
+	TraditionalChinese,
+	Korean
+    );
+}

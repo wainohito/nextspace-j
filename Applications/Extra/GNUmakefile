@@ -30,6 +30,7 @@ SUBPROJECTS = \
 	Sketch \
 	SystemManager \
 	VolMon \
+	WebBrowser \
 	WrapperFactory
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make

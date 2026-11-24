@@ -416,5 +416,20 @@
 "Stroke Color": "線の色",
 "Stroke Width": "線の太さ",
 "Stroking": "線",
-"Text": "テキスト"
+"Text": "テキスト",
+"Custom Browser Agent": "カスタムユーザエージェント",
+"Download": "ダウンロード",
+"Home Location URL": "ホームページの URL",
+"Link": "リンク",
+"New Window": "新規ウインドウ",
+"Open In New Window": "新規ウインドウで開く",
+"Page": "ページ",
+"Save Bookmark...": "ブックマークを保存...",
+"Search URL": "検索 URL",
+"Show Debug...": "デバッグを表示...",
+"Show on launch": "起動時に表示",
+"Toggle FullScreen": "フルスクリーン切り替え",
+"Waiting for Chrome to load": "Chromium の起動を待っています",
+"Zoom Reset": "実寸表示",
+"enter address or text to search for": "アドレスまたは検索語を入力"
 }
