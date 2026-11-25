@@ -130,6 +130,10 @@ stage_user() {
   $d write NSGlobalDomain NSToolTipsFontSize 11
   $d write NSGlobalDomain NSSmallFontSize 10
   $d write NSGlobalDomain NSMiniFontSize 9
+  # Terminal: VL Gothic (a real monospaced Japanese font; full-width
+  # characters are exactly two cells wide)
+  $d write Terminal TerminalFont VL-Gothic-Regular
+  $d write Terminal TerminalFontSize 14
 
   info "Window manager: Japanese fonts, tray in the Dock, window attributes"
   python3 -I "$EXTRA_DIR/wm-setup.py"
