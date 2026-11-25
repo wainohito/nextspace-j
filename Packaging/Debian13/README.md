@@ -44,7 +44,7 @@ cd nextspace/Packaging/Debian13
 | core | libdispatch, CoreFoundation, libobjc2, gnustep-make, libwraster, libs-base, libs-gui (日本語訳・インライン入力パッチ込み), libs-back |
 | nextspace | Frameworks と NEXTSPACE のアプリ (Login, Workspace, Preferences など) |
 | extra | Applications/Extra: gs-desktop 由来のアプリ、WebBrowser、Firefox/Chromium の .app |
-| system | root 用の NEXTSPACE 初期設定 (Login.app 用)、環境設定からのタイムゾーン変更 (sudoers)、fcitx5 用の環境変数 |
+| system | root 用の NEXTSPACE 初期設定 (Login.app 用)、環境設定からのタイムゾーン変更 (sudoers)、systemd の停止待ち時間 15 秒、fcitx5 用の環境変数 |
 | user | 実行したユーザーのホーム: NEXTSPACE の初期設定、日本語 UI・フォント (スムージング、ウインドウタイトルなど WM の日本語フォント)、Dock に Firefox・Chromium・WebBrowser・トレイ、インライン入力、fcitx5 の XIM 設定、トレイ (wmsystemtray/pasystray) の自動起動 |
 
 core と nextspace は `Packaging/Sources` の各スクリプト (0〜9) を順番に呼び出す
@@ -76,6 +76,6 @@ unattended-upgrades を入れ、`/etc/apt/apt.conf.d/20auto-upgrades` で毎日�
 ## 元に戻すとき
 
 `Packaging/Sources/nextspace_uninstall.sh` を参照してください。この手順で追加した
-ファイル: `/etc/apt/preferences.d/nextspace`, `/etc/apt/apt.conf.d/20auto-upgrades`, `/etc/sudoers.d/nextspace-timezone`,
+ファイル: `/etc/apt/preferences.d/nextspace`, `/etc/apt/apt.conf.d/20auto-upgrades`, `/etc/sudoers.d/nextspace-timezone`, `/etc/systemd/{system,user}.conf.d/nextspace-timeout.conf`,
 `/etc/environment` の fcitx 用の行, `~/.local/bin/nextspace-autostart`,
 `~/.local/bin/nextspace-logout`, `~/.config/fcitx5/conf/xim.conf`。

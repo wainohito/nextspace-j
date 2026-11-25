@@ -96,6 +96,13 @@ stage_system() {
        /etc/sudoers.d/nextspace-timezone
   sudo visudo -c -f /etc/sudoers.d/nextspace-timezone
 
+  info "systemd: stop timeout 15 s (shutdown no longer waits 1 min 30 s)"
+  for d in system user; do
+    sudo install -D -m 644 "$EXTRA_DIR/systemd-timeout.conf" \
+         /etc/systemd/$d.conf.d/nextspace-timeout.conf
+  done
+  sudo systemctl daemon-reexec
+
   info "fcitx5 for all applications (/etc/environment)"
   for kv in XMODIFIERS=@im=fcitx GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx; do
     grep -q "^${kv%%=*}=" /etc/environment 2>/dev/null || echo "$kv" | sudo tee -a /etc/environment >/dev/null
