@@ -1,4 +1,6 @@
-# Works for Debian 12 and Ubuntu 22.04
+# Debian 13 (trixie).  Package names follow trixie (64-bit time_t "t64"
+# library names, libicu76, libtiff6, libjpeg62-turbo): the Debian 12 /
+# Ubuntu 22.04 names in debian-12.deps.sh do not exist in trixie.
 
 BUILD_TOOLS="
     curl
@@ -22,8 +24,8 @@ GNUSTEP_MAKE_DEPS="
 RUNTIME_RUN_DEPS="
     libbsd0
     libuuid1
-    libcurl4
-    libcurl3-gnutls
+    libcurl4t64
+    libcurl3t64-gnutls
     libavahi-compat-libdnssd1
     zsh
     plymouth
@@ -43,9 +45,9 @@ WRASTER_DEPS="
 "
 WRASTER_RUN_DEPS="
     libgif7
-    libjpeg8
-    libtiff5
-    libpng16-16
+    libjpeg62-turbo
+    libtiff6
+    libpng16-16t64
     libwebp7
     libxpm4
     libxmu6
@@ -66,10 +68,10 @@ GNUSTEP_BASE_RUN_DEPS="
     libavahi-client3
     libxml2
     libxslt1.1
-    libicu70
+    libicu76
     libicu-dev
-    libgnutls30
-    libcups2
+    libgnutls30t64
+    libcups2t64
 "
 #--- gnustep-gui
 GNUSTEP_GUI_DEPS="
@@ -94,7 +96,7 @@ BACK_ART_RUN_DEPS="
     libfreetype6
     libxcursor1
     libxfixes3
-    libxt6
+    libxt6t64
     libxrandr2
 "
 #--- Frameworks
@@ -109,8 +111,8 @@ FRAMEWORKS_BUILD_DEPS="
     libpulse-dev
 "
 FRAMEWORKS_RUN_DEPS="
-    libmagic1
-    libglib2.0-0
+    libmagic1t64
+    libglib2.0-0t64
     dbus
     libdbus-1-3
     udisks2
