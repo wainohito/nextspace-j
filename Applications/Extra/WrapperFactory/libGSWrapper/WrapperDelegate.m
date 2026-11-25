@@ -241,6 +241,55 @@
     }
 }
 
+- (void)wrappedAppWillHide
+{
+  [wrappedApp hideWrappedApp];
+}
+
+- (void)applicationDidUnhide:(NSNotification*)not
+{
+  /* Unhidden from the Dock: bring the wrapped application back as well. */
+  [wrappedApp activateWrappedApp];
+}
+
+/* GSWrapper.plist: InfoVersionCommand = shell command printing the wrapped
+   application's version (first line is shown as its release). */
+- (NSDictionary *)wrappedAppInfoPanelOptions
+{
+  NSString *cmd = [properties objectForKey:@"InfoVersionCommand"];
+  NSMutableDictionary *info;
+  NSString *name;
+
+  if (!wrappedApp || !cmd)
+    return nil;
+  name = [[NSApp applicationName] stringByDeletingPathExtension];
+  info = [NSMutableDictionary dictionaryWithObject:name forKey:@"ApplicationName"];
+  NS_DURING
+    {
+      NSTask *task = [NSTask new];
+      NSPipe *pipe = [NSPipe pipe];
+      NSString *out;
+      [task setLaunchPath:@"/bin/sh"];
+      [task setArguments:[NSArray arrayWithObjects:@"-c", cmd, nil]];
+      [task setStandardOutput:pipe];
+      [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
+      [task launch];
+      out = [[[NSString alloc] initWithData:[[pipe fileHandleForReading] readDataToEndOfFile]
+                                   encoding:NSUTF8StringEncoding] autorelease];
+      [task waitUntilExit];
+      [task release];
+      out = [[[out componentsSeparatedByString:@"\n"] objectAtIndex:0]
+              stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+      if ([out length]) {
+        [info setObject:out forKey:@"ApplicationRelease"];
+        [info setObject:out forKey:@"FullVersionID"];
+      }
+    }
+  NS_HANDLER
+  NS_ENDHANDLER
+  return info;
+}
+
 - (void)wrappedAppDidBecomeActive
 {
   [NSApp setSuppressActivation:YES];

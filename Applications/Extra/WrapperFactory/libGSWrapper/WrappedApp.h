@@ -46,6 +46,10 @@
 - (WrappedWin*) wrappedWindowForID:(Window) wid;
 /** YES while a managed window of the wrapped class exists. */
 - (BOOL) hasWindows;
+/** Ask the window manager to hide the wrapped application (all its windows). */
+- (void) hideWrappedApp;
+/** Ask the window manager to show and focus a window of the wrapped application. */
+- (void) activateWrappedApp;
 
 @end
 

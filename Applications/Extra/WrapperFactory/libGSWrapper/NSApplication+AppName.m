@@ -60,6 +60,32 @@
 
 @end
 
+@implementation MYApplication (Wrapped)
+
+/* Hide the wrapped application's windows too, not only the wrapper menu. */
+- (void) hide:(id)sender
+{
+    id d = [self delegate];
+    if ([d respondsToSelector:@selector(wrappedAppWillHide)])
+        [d wrappedAppWillHide];
+    [super hide:sender];
+}
+
+/* Show the wrapped application's name and version, not the wrapper's. */
+- (void) orderFrontStandardInfoPanel:(id)sender
+{
+    id d = [self delegate];
+    NSDictionary *info = nil;
+    if ([d respondsToSelector:@selector(wrappedAppInfoPanelOptions)])
+        info = [d wrappedAppInfoPanelOptions];
+    if (info)
+        [self orderFrontStandardInfoPanelWithOptions:info];
+    else
+        [super orderFrontStandardInfoPanel:sender];
+}
+
+@end
+
 @implementation NSApplication (AppName)
 + (NSApplication *) sharedApplication
 {

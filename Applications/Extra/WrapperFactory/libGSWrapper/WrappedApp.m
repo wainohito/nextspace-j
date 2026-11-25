@@ -138,6 +138,61 @@ char *wintitle (Display *disp, Window win) {
   return nil;
 }
 
+- (Window) _firstClientWindow
+{
+  const char *wmclass = [wrappedAppClassName cString];
+  Display *dpy = (Display *)[GSCurrentServer() serverDevice];
+  unsigned long len = 0, i;
+  Window *list, found = None;
+
+  if (!wmclass || !(list = winlist(dpy, &len)))
+    return None;
+  for (i = 0; i < len && found == None; i++) {
+    XClassHint whints;
+    if (XGetClassHint(dpy, list[i], &whints)) {
+      if (whints.res_class && strcmp(whints.res_class, wmclass) == 0)
+        found = list[i];
+      XFree(whints.res_class);
+      XFree(whints.res_name);
+    }
+  }
+  XFree(list);
+  return found;
+}
+
+- (void) _sendClientMessage:(const char *)type to:(Window)win l0:(long)l0
+{
+  Display *dpy = (Display *)[GSCurrentServer() serverDevice];
+  XEvent ev;
+
+  memset(&ev, 0, sizeof(ev));
+  ev.xclient.type = ClientMessage;
+  ev.xclient.window = win;
+  ev.xclient.message_type = XInternAtom(dpy, type, False);
+  ev.xclient.format = 32;
+  ev.xclient.data.l[0] = l0;
+  ev.xclient.data.l[1] = CurrentTime;
+  XSendEvent(dpy, XDefaultRootWindow(dpy), False,
+             SubstructureRedirectMask | SubstructureNotifyMask, &ev);
+  XFlush(dpy);
+}
+
+- (void) hideWrappedApp
+{
+  Window win = [self _firstClientWindow];
+  /* WMFHideApplication (Window Maker / NEXTSPACE WM function 12) */
+  if (win != None)
+    [self _sendClientMessage:"_WINDOWMAKER_WM_FUNCTION" to:win l0:12];
+}
+
+- (void) activateWrappedApp
+{
+  Window win = [self _firstClientWindow];
+  /* source indication 2 (pager): the WM also unhides the application */
+  if (win != None)
+    [self _sendClientMessage:"_NET_ACTIVE_WINDOW" to:win l0:2];
+}
+
 - (BOOL) hasWindows
 {
   const char *wmclass = [wrappedAppClassName cString];
