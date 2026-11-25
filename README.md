@@ -42,7 +42,7 @@ cd nextspace/Packaging/Debian13
 行います。詳しい手順と、各段階の内容は
 [Packaging/Debian13/README.md](Packaging/Debian13/README.md) を見てください。
 
-> **注意**: まっさらな Debian 13 での通しのテストはまだ済んでいません。
+まっさらな Debian 13 (仮想マシン) への通しのインストールで動作を確認しています。
 
 ## ブランチ
 
