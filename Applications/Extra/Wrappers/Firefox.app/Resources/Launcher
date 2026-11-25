@@ -1,20 +1,21 @@
+# Menu actions of Firefox.app's wrapper menu (Launcher.gorm, ShellUIProxy):
+# $1 = action, $2 = X window id (hex, without 0x) for window actions.
+CLASS="Wrapper_Firefox"
+
+key() {  # send a key to the browser window $2 (or its last active one)
+  w="${2:+0x$2}"
+  [ -z "$w" ] && w=$(xdotool search --onlyvisible --class "$CLASS" | tail -1)
+  [ -n "$w" ] && xdotool windowactivate --sync "$w" key --clearmodifiers "$1"
+}
+
 case "$1" in
-  donewpage)
-    firefox --new-window
-    ;;
-  donewtab)
-    firefox --new-tab --url about:newtab
-    ;;
-  dowindowminimize)
-    xdotool windowminimize "0x$2"
-    ;;
-  dowindowactivate)
-    xdotool windowactivate "0x$2"
-    ;;
-  dowindowclose)
-    xdotool windowclose "0x$2"
-    ;;
-  doselectall)
-    xdotool key "ctrl+a" "0x$2"
-    ;;
+  donewpage)        firefox --class "$CLASS" --new-window ;;
+  donewtab)         firefox --class "$CLASS" --new-tab --url about:newtab ;;
+  dowindowminimize) xdotool windowminimize "0x$2" ;;
+  dowindowactivate) xdotool windowactivate "0x$2" ;;
+  dowindowclose)    xdotool windowclose "0x$2" ;;
+  docut)            key ctrl+x "$2" ;;
+  docopy)           key ctrl+c "$2" ;;
+  dopaste)          key ctrl+v "$2" ;;
+  doselectall)      key ctrl+a "$2" ;;
 esac
