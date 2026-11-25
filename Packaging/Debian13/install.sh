@@ -120,9 +120,19 @@ stage_user() {
     $d write NSGlobalDomain $k NotoSansCJKjp-Bold
   done
   $d write NSGlobalDomain NSUserFixedPitchFont NotoSansMonoCJKjp-Regular
+  $d write NSGlobalDomain GSFontAntiAlias YES   # smooth (anti-aliased) text
+  for k in NSFontSize NSBoldFontSize NSUserFontSize NSUserFixedPitchFontSize NSMenuFontSize \
+           NSMenuBarFontSize NSTitleBarFontSize NSPaletteFontSize NSControlContentFontSize \
+           NSLabelFontSize; do
+    $d write NSGlobalDomain $k 12
+  done
+  $d write NSGlobalDomain NSMessageFontSize 14
+  $d write NSGlobalDomain NSToolTipsFontSize 11
+  $d write NSGlobalDomain NSSmallFontSize 10
+  $d write NSGlobalDomain NSMiniFontSize 9
 
-  info "Window manager: attributes for WebBrowser.app's embedded Chromium windows"
-  python3 -I "$EXTRA_DIR/wm-window-attributes.py"
+  info "Window manager: Japanese fonts, tray in the Dock, window attributes"
+  python3 -I "$EXTRA_DIR/wm-setup.py"
 
   info "fcitx5: XIM on-the-spot style"
   mkdir -p "$HOME/.config/fcitx5/conf"

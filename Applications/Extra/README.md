@@ -33,7 +33,7 @@ command line and fails to launch. The browsers' own appicons (a second icon
 at the bottom-left corner) are hidden with `NoAppIcon = YES` for the classes
 Chromium, Firefox-esr and Firefox in
 ~/Library/Preferences/.NextSpace/WMWindowAttributes.plist, set by
-`Packaging/Sources/extra/wm-window-attributes.py` (install.sh user stage).
+`Packaging/Sources/extra/wm-setup.py` (install.sh user stage).
 
 ## WebBrowser
 
@@ -46,6 +46,6 @@ to WebBrowser.app and drives Chromium (`--app` windows, own profile in
 ~/Library/WebBrowser) through the Chrome DevTools Protocol, using only the
 Python standard library.  The page windows start off screen with WM class
 `WebBrowserView` until they are reparented, so they don't flash on screen;
-`Packaging/Sources/extra/wm-window-attributes.py` gives that class no appicon
+`Packaging/Sources/extra/wm-setup.py` gives that class no appicon
 in WMWindowAttributes.plist.  Set a home page in Preferences (or
 `defaults write WebBrowser AppHomeURL <url>`) to open a window at launch.
