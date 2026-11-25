@@ -18,7 +18,7 @@
                 default = "";
             };
 	    NSMenuItem = {
-		default = "ScreenShot/Selection";
+		Japanese = "ScreenShot/\U9078\U629E\U7BC4\U56F2"; default = "ScreenShot/Selection";
 	    };
 	    NSMessage = grabScreenShot;
 	    NSPortName = ScreenShot;
@@ -32,7 +32,7 @@
                 default = "";
             };
 	    NSMenuItem = {
-		default = "ScreenShot/Window";
+		Japanese = "ScreenShot/\U30A6\U30A4\U30F3\U30C9\U30A6"; default = "ScreenShot/Window";
 	    };
 	    NSMessage = grabScreenShot;
 	    NSPortName = ScreenShot;

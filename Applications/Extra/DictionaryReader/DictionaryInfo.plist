@@ -29,7 +29,7 @@
           default = D;
         };
         NSMenuItem = {
-          default = "Look Up in Dictionary";
+          Japanese = "\U8F9E\U66F8\U3067\U8ABF\U3079\U308B"; default = "Look Up in Dictionary";
          };
       }
     );

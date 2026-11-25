@@ -24,7 +24,7 @@
       NSSendTypes = ( NSStringPboardType );
       NSReturnTypes = ( NSStringPboardType );
       NSMenuItem = {
-        default = "OpenUp/Open Archive";
+        Japanese = "OpenUp/\U30A2\U30FC\U30AB\U30A4\U30D6\U3092\U958B\U304F"; default = "OpenUp/Open Archive";
       };
       NSTimeout = 25000;
       NSKeyEquivalent = {

@@ -14,7 +14,7 @@
         NSMessage = newNote;
         NSSendTypes = (NSStringPboardType);
         NSMenuItem = {
-          default = "Make Note";
+          Japanese = "\U4ED8\U7B8B\U3092\U4F5C\U6210"; default = "Make Note";
 	  English = "Make Note";
 	  French = "Créer note";
 	  German = "Notiz erstellen";

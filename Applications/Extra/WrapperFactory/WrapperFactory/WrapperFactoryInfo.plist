@@ -38,7 +38,7 @@
       NSMessage = createWrapperForExecutable;
       NSSendTypes = (NSFilenamesPboardType);
       NSMenuItem = {
-        default = "WrapperFactory/Create Wrapper...";
+        Japanese = "WrapperFactory/\U30E9\U30C3\U30D1\U30FC\U3092\U4F5C\U6210..."; default = "WrapperFactory/Create Wrapper...";
       };
     },
     {
@@ -46,7 +46,7 @@
       NSMessage = editWrapper;
       NSSendTypes = (NSFilenamesPboardType);
       NSMenuItem = {
-        default = "WrapperFactory/Edit Wrapper...";
+        Japanese = "WrapperFactory/\U30E9\U30C3\U30D1\U30FC\U3092\U7DE8\U96C6..."; default = "WrapperFactory/Edit Wrapper...";
       };
     }
   );

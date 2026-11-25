@@ -27,7 +27,7 @@
 		default = O;
 	    };
 	    NSMenuItem = {
-		default = OpenURL;
+		Japanese = "WebBrowser \U3067 URL \U3092\U958B\U304F"; default = OpenURL;
 	    };
 	    NSMessage = openURL;
 	    NSPortName = WebBrowser;
@@ -41,7 +41,7 @@
 		default = S;
 	    };
 	    NSMenuItem = {
-		default = "WebBrowser/Search Selection";
+		Japanese = "WebBrowser/\U9078\U629E\U90E8\U5206\U3092\U691C\U7D22"; default = "WebBrowser/Search Selection";
 	    };
 	    NSMessage = searchSelectionService;
 	    NSPortName = WebBrowser;

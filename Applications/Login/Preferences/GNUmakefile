@@ -7,9 +7,11 @@ $(BUNDLE_NAME)_PRINCIPAL_CLASS = Login
 $(BUNDLE_NAME)_STANDARD_INSTALL = no
 
 $(BUNDLE_NAME)_LANGUAGES = \
-	English
+	English \
+	Japanese
 
 $(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= \
+	Localizable.strings \
 	Login.gorm
 
 $(BUNDLE_NAME)_RESOURCE_FILES = \

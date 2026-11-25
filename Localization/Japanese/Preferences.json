@@ -48,7 +48,8 @@
 "Fixed Pitch Font",
 "System Font",
 "Bold System Font",
-"Tool Tips Font"
+"Tool Tips Font",
+"Login Window Preferences"
 ],
 " Mute": " 消音",
 "24-Hour ": "24 時間制 ",
@@ -199,5 +200,15 @@
 "Ok": "OK",
 "Change": "変更",
 "Time Zone": "タイムゾーン",
-"Could not change the time zone to %@.": "タイムゾーンを %@ に変更できませんでした。"
+"Could not change the time zone to %@.": "タイムゾーンを %@ に変更できませんでした。",
+"Automatic Screen Saver": "自動スクリーンセーバ",
+"Custom Login UI": "カスタムログイン UI",
+"Custom Screen Saver": "カスタムスクリーンセーバ",
+"Display Host Name": "ホスト名を表示",
+"Login Hook": "ログインフック",
+"Login Window Preferences": "ログインウインドウ",
+"Logout Hook": "ログアウトフック",
+"No Title": "タイトルなし",
+"Off": "オフ",
+"Restore Last Logged In User Name": "前回のユーザ名を表示"
 }
