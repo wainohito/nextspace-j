@@ -3,4 +3,9 @@
 # they don't survive on the login screen and get re-managed at next login.
 pkill -x wmsystemtray
 pkill -x pasystray
+# Input method: fcitx5 is started by the session (SessionScript) and
+# mozc_server ignores SIGTERM from systemd, which made every shutdown wait
+# for the stop timeout.  End them with the session.
+pkill -x fcitx5
+pkill -x mozc_server
 exit 0
