@@ -5,9 +5,9 @@
 WM.plist: Japanese fonts for window titles, menus and icon titles (the
 default fonts have no Japanese glyphs, so titles showed boxes).
 
-WMState.plist: dock wmsystemtray (input method and volume tray icons,
-started by nextspace-autostart) in the Dock instead of leaving it at the
-bottom-left corner.  Run it while you are logged out: the WM saves its
+WMState.plist: Firefox, Chromium, WebBrowser and wmsystemtray (input
+method and volume tray icons, started by nextspace-autostart) in the Dock,
+below TextEdit.  Run it while you are logged out: the WM saves its
 state over this file when the session ends.
 
 WMWindowAttributes.plist (the WM reloads it when it changes):
@@ -59,10 +59,27 @@ WM_FONTS = {
     "LargeDisplayFont": _font("NotoSansCJKjp-Regular", 24),
 }
 
-TRAY = {
-    "AutoLaunch": "No", "BuggyApplication": "No", "Forced": "No", "Lock": "No",
-    "Command": "wmsystemtray", "DropCommand": "wmsystemtray %d",
-    "PasteCommand": "wmsystemtray %s", "Name": "wmsystemtray0.wmsystemtray",
+def _dock_app(name, command, slot):
+    return {"AutoLaunch": "No", "BuggyApplication": "No", "Forced": "No", "Lock": "No",
+            "Name": name, "Command": command, "DropCommand": command + " %d",
+            "PasteCommand": command + " %s", "Position": "0,%d" % slot}
+
+
+# Dock below TextEdit (slot 4), in this order.  Entries with these names are
+# (re)placed here on every run.
+DOCK_APPS = [
+    _dock_app("Firefox.GNUstep", "/Applications/Firefox.app/Firefox", 5),
+    _dock_app("Chromium.GNUstep", "/Applications/Chromium.app/Chromium", 6),
+    _dock_app("WebBrowser.GNUstep", "/Applications/WebBrowser.app/WebBrowser", 7),
+    _dock_app("wmsystemtray0.wmsystemtray", "wmsystemtray", 8),
+]
+DOCK_NAMES = {a["Name"] for a in DOCK_APPS}
+
+# Icons of docked applications that are not running yet.
+ICONS = {
+    "Firefox.GNUstep": "/Applications/Firefox.app/Resources/AppIcon.tiff",
+    "Chromium.GNUstep": "/Applications/Chromium.app/Resources/AppIcon.tiff",
+    "WebBrowser.GNUstep": "/Applications/WebBrowser.app/Resources/WebBrowser.tiff",
 }
 
 
@@ -94,7 +111,15 @@ new = dict(data)
 new.update(WM_FONTS)
 save(path, data, new, "WM.plist")
 
-# WMState.plist: wmsystemtray in the Dock (every per-resolution app list)
+# WMState.plist: browsers and wmsystemtray in the Dock (every per-resolution
+# app list; "Applications" is the fallback when none matches the screen)
+def slot_of(app):
+    try:
+        return int(str(app.get("Position", "")).split(",")[1])
+    except (IndexError, ValueError):
+        return None
+
+
 path = os.path.join(PREFS, "WMState.plist")
 data = load(path)
 dock = data.get("Dock")
@@ -104,25 +129,23 @@ if isinstance(dock, dict):
     for key, apps in dock.items():
         if not key.startswith("Applications") or not isinstance(apps, list):
             continue
-        if any(a.get("Name") == TRAY["Name"] for a in apps):
-            continue
-        used = set()
-        recycler = None
+        height = key[len("Applications"):]
+        last = (int(height) if height.isdigit() else 768) // 64 - 1  # Recycler slot
+        apps = [dict(a) for a in apps if a.get("Name") not in DOCK_NAMES]
         for a in apps:
-            try:
-                n = int(str(a.get("Position", "")).split(",")[1])
-            except (IndexError, ValueError):
-                continue
-            used.add(n)
             if a.get("Name") == "Recycler.GNUstep":
-                recycler = n
-        last = max([n for n in used if n != recycler] or [0])
-        slot = last + 1
-        while slot in used:
-            slot += 1
-        if recycler is not None and slot >= recycler:
-            continue  # no free slot above the Recycler
-        new["Dock"][key] = apps + [dict(TRAY, Position="0,%d" % slot)]
+                a["Position"] = "0,%d" % last
+        used = {slot_of(a) for a in apps}
+        for want in DOCK_APPS:
+            slot = slot_of(want)
+            while slot in used:
+                slot += 1
+            if slot >= last:
+                print("Dock (%s): no room for %s" % (key, want["Name"]))
+                continue
+            used.add(slot)
+            apps.append(dict(want, Position="0,%d" % slot))
+        new["Dock"][key] = apps
     save(path, data, new, "WMState.plist (Dock)")
 else:
     print("WMState.plist: no Dock yet, skipped")
@@ -138,6 +161,9 @@ for key in [k for k in new if k.startswith(STALE_PREFIX)]:
         os.unlink(os.path.join(pixmaps, key + ".tiff"))
     except OSError:
         pass
+for key, icon in ICONS.items():
+    if "Icon" not in new.get(key, {}):
+        new[key] = dict(new.get(key, {}), Icon=icon)
 for key, attrs in ATTRS.items():
     entry = dict(new.get(key, {}))
     entry.update(attrs)

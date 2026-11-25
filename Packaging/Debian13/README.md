@@ -45,7 +45,7 @@ cd nextspace/Packaging/Debian13
 | nextspace | Frameworks と NEXTSPACE のアプリ (Login, Workspace, Preferences など) |
 | extra | Applications/Extra: gs-desktop 由来のアプリ、WebBrowser、Firefox/Chromium の .app |
 | system | root 用の NEXTSPACE 初期設定 (Login.app 用)、環境設定からのタイムゾーン変更 (sudoers)、fcitx5 用の環境変数 |
-| user | 実行したユーザーのホーム: NEXTSPACE の初期設定、日本語 UI・フォント (スムージング、ウインドウタイトルなど WM の日本語フォント)、Dock のトレイ、インライン入力、fcitx5 の XIM 設定、トレイ (wmsystemtray/pasystray) の自動起動 |
+| user | 実行したユーザーのホーム: NEXTSPACE の初期設定、日本語 UI・フォント (スムージング、ウインドウタイトルなど WM の日本語フォント)、Dock に Firefox・Chromium・WebBrowser・トレイ、インライン入力、fcitx5 の XIM 設定、トレイ (wmsystemtray/pasystray) の自動起動 |
 
 core と nextspace は `Packaging/Sources` の各スクリプト (0〜9) を順番に呼び出す
 だけなので、部品ごとの作り直しは従来どおりそれらを直接実行できます。

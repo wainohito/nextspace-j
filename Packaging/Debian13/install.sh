@@ -135,7 +135,7 @@ stage_user() {
   $d write Terminal TerminalFont VL-Gothic-Regular
   $d write Terminal TerminalFontSize 14
 
-  info "Window manager: Japanese fonts, tray in the Dock, window attributes"
+  info "Window manager: Japanese fonts, browsers and tray in the Dock, window attributes"
   python3 -I "$EXTRA_DIR/wm-setup.py"
 
   info "fcitx5: XIM on-the-spot style"
