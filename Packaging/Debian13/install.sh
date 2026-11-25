@@ -147,7 +147,16 @@ stage_user() {
   $d write Terminal TerminalFontSize 14
 
   info "Window manager: Japanese fonts, browsers and tray in the Dock, window attributes"
-  python3 -I "$EXTRA_DIR/wm-setup.py"
+  mkdir -p "$HOME/.local/bin" "$HOME/.local/state/nextspace"
+  install -m 755 "$EXTRA_DIR/wm-setup.py" "$HOME/.local/bin/nextspace-wm-setup"
+  if pgrep -u "$(id -u)" -x Workspace >/dev/null; then
+    # The WM would overwrite its state at logout: apply at the next login
+    # (nextspace-autostart, before Workspace starts).
+    touch "$HOME/.local/state/nextspace/wm-setup-pending"
+    echo "NEXTSPACE is running: window manager settings will be applied at the next login."
+  else
+    "$HOME/.local/bin/nextspace-wm-setup"
+  fi
 
   info "Fonts installed on the system (fontconfig) -> ~/Library/Fonts"
   /usr/local/bin/nextspace-fonts -v || true

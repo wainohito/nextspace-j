@@ -7,8 +7,10 @@ default fonts have no Japanese glyphs, so titles showed boxes).
 
 WMState.plist: Firefox, Chromium, WebBrowser and wmsystemtray (input
 method and volume tray icons, started by nextspace-autostart) in the Dock,
-below TextEdit.  Run it while you are logged out: the WM saves its
-state over this file when the session ends.
+below TextEdit.  The WM writes its state back when the session ends, so
+run this before Workspace starts: install.sh does it when nobody is logged
+in, otherwise nextspace-autostart runs it at the next login
+(~/.local/state/nextspace/wm-setup-pending).
 
 WMWindowAttributes.plist (the WM reloads it when it changes):
 

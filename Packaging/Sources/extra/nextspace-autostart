@@ -6,6 +6,14 @@
 # them available to NEXTSPACE before Workspace and applications start.
 [ -x /usr/local/bin/nextspace-fonts ] && /usr/local/bin/nextspace-fonts >/dev/null 2>&1
 
+# Window manager settings (Dock, fonts, window attributes) requested while a
+# session was running (the WM writes its state back at logout, so they can
+# only be applied before Workspace starts): apply them once now.
+pending="$HOME/.local/state/nextspace/wm-setup-pending"
+if [ -e "$pending" ] && [ -x "$HOME/.local/bin/nextspace-wm-setup" ]; then
+  "$HOME/.local/bin/nextspace-wm-setup" >/dev/null 2>&1 && rm -f "$pending"
+fi
+
 (
   # First login only: a fresh system starts with the sound card muted, and
   # PulseAudio keeps that state.  Unmute the output and set a moderate
