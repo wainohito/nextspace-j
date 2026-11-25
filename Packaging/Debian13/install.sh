@@ -44,6 +44,12 @@ die()  { printf '\033[1;31m%s\033[0m\n' "$*" >&2; exit 1; }
 . /etc/os-release
 [ "$ID" = debian ] && [ "${VERSION_ID%%.*}" = 13 ] || die "This script is for Debian 13 (found $PRETTY_NAME)."
 
+# Keep a log of everything (appended, so re-runs and --from resumes stay in
+# one file).  sudo asks for the password on the terminal, not through the log.
+LOG="$HOME/nextspace-install.log"
+exec > >(tee -a "$LOG") 2>&1
+echo "==== $(date '+%F %T') install.sh $*  (log: $LOG)"
+
 #---------------------------------------------------------------- stages
 stage_deps() {
   info "Keep Debian's GNUstep packages away (apt pin)"
@@ -203,3 +209,5 @@ esac
 echo "Stages to run:$run"
 for s in $run; do "stage_$s"; done
 info "All done:$run"
+echo "Log of this installation: $LOG"
+echo "You can delete it after logging in to NEXTSPACE successfully:  rm $LOG"

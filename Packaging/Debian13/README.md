@@ -27,7 +27,9 @@ cd nextspace/Packaging/Debian13
 ./install.sh
 ```
 
-途中で sudo のパスワードを聞かれます。終わったら再起動すると NEXTSPACE の
+途中で sudo のパスワードを聞かれます。実行の記録は `~/nextspace-install.log` に残ります
+(途中で止まったときの原因調べに使います)。NEXTSPACE にログインできて不要になったら
+`rm ~/nextspace-install.log` で削除してください。終わったら再起動すると NEXTSPACE の
 ログイン画面 (Login.app) が出ます。
 
 段階を指定して実行することもできます。
