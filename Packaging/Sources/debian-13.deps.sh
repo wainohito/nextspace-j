@@ -7,6 +7,11 @@ BUILD_TOOLS="
     clang
     cmake
     git
+    make
+    patch
+    file
+    pkg-config
+    binutils-gold
 "
 #--- libdispatch, libcorefoundation, libobjc2
 RUNTIME_DEPS="
