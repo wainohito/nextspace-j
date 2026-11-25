@@ -1,9 +1,11 @@
 {
     Foundry = "Google";
-    /* Font file comes from Debian's fonts-noto-cjk package. */
+    /* Font file comes from Debian's fonts-noto-cjk package; "#5" selects face 5
+       of the collection, Noto Sans Mono CJK JP (needs the libs-back ART
+       face-index support). */
     Faces = (
         {
-            Files = ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc");
+            Files = ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc#5");
             Name = Regular;
             PostScriptName = "NotoSansMonoCJKjp-Regular";
             Weight = 400;

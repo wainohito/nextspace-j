@@ -76,10 +76,25 @@ static FT_Error ft_get_face(FTC_FaceID fid, FT_Library lib, FT_Pointer data, FT_
   FT_Error err;
   NSArray *rfi = (NSArray *)fid;
   int i, c = [rfi count];
-  const char *face_name = [[rfi objectAtIndex:0] fileSystemRepresentation];
+  NSString *path = [rfi objectAtIndex:0];
+  FT_Long face_index = 0;
+  const char *face_name;
+  NSRange hash = [path rangeOfString:@"#" options:NSBackwardsSearch];
 
-  NSDebugLLog(@"ftfont", @"ft_get_face: %@ '%s'", rfi, face_name);
-  err = FT_New_Face(lib, face_name, 0, pface);
+  /* "file.ttc#N" selects face N of a font collection (e.g. the monospaced
+     Noto Sans Mono CJK JP is face 5 of NotoSansCJK-Regular.ttc). */
+  if (hash.location != NSNotFound && hash.location + 1 < [path length]) {
+    NSString *num = [path substringFromIndex:hash.location + 1];
+    if ([num rangeOfCharacterFromSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]]
+            .location == NSNotFound) {
+      face_index = [num intValue];
+      path = [path substringToIndex:hash.location];
+    }
+  }
+  face_name = [path fileSystemRepresentation];
+
+  NSDebugLLog(@"ftfont", @"ft_get_face: %@ '%s' face %ld", rfi, face_name, (long)face_index);
+  err = FT_New_Face(lib, face_name, face_index, pface);
   if (err) {
     NSLog(@"Error when loading '%@' (%08x)", [rfi objectAtIndex:0], err);
     return err;
