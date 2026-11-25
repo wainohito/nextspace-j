@@ -12,7 +12,8 @@
 #   nextspace Frameworks and applications (Login, Workspace, Preferences...)
 #                                              (Packaging/Sources/8, 9_*.sh)
 #   extra     Applications/Extra: gs-desktop apps, WebBrowser, browser wrappers
-#   system    sudoers rule for time zone changes, input method environment
+#   system    root profile (setup_user_home.sh as root), sudoers rule for
+#             time zone changes, input method environment
 #   user      home directory for the user running this script: NEXTSPACE
 #             profile, Japanese UI and fonts, inline input, fcitx5 XIM,
 #             tray (wmsystemtray/pasystray) autostart
@@ -87,6 +88,9 @@ stage_extra() {
 }
 
 stage_system() {
+  info "NEXTSPACE profile for root (Login.app runs as root)"
+  (cd "$SRC" && sudo -H ./setup_user_home.sh)
+
   info "Time zone changes from Preferences without a password (sudo group)"
   sudo install -m 440 -o root -g root "$EXTRA_DIR/nextspace-timezone.sudoers" \
        /etc/sudoers.d/nextspace-timezone

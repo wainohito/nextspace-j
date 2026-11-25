@@ -8,6 +8,18 @@
 Debian 13 を最小構成 (デスクトップ環境なし) でインストールし、sudo グループの
 一般ユーザーでログインして実行します。
 
+- インストーラのソフトウェアの選択は「SSH サーバ」と「標準システムユーティリティ」
+  だけにします (デスクトップ環境・GNOME などは外す)。
+- インストーラで root のパスワードを空にすると、最初のユーザーが sudo を使えます。
+  root のパスワードを設定した場合は、先に次を実行してください。
+  ```
+  su -
+  apt install sudo
+  usermod -aG sudo <ユーザー名>
+  exit
+  ```
+  (一度ログアウトして入り直すと sudo が使えます)
+
 ```
 sudo apt install git
 git clone https://github.com/wainohito/nextspace-j.git nextspace
@@ -32,7 +44,7 @@ cd nextspace/Packaging/Debian13
 | core | libdispatch, CoreFoundation, libobjc2, gnustep-make, libwraster, libs-base, libs-gui (日本語訳・インライン入力パッチ込み), libs-back |
 | nextspace | Frameworks と NEXTSPACE のアプリ (Login, Workspace, Preferences など) |
 | extra | Applications/Extra: gs-desktop 由来のアプリ、WebBrowser、Firefox/Chromium の .app |
-| system | 環境設定からのタイムゾーン変更 (sudoers)、fcitx5 用の環境変数 |
+| system | root 用の NEXTSPACE 初期設定 (Login.app 用)、環境設定からのタイムゾーン変更 (sudoers)、fcitx5 用の環境変数 |
 | user | 実行したユーザーのホーム: NEXTSPACE の初期設定、日本語 UI・フォント、インライン入力、fcitx5 の XIM 設定、トレイ (wmsystemtray/pasystray) の自動起動 |
 
 core と nextspace は `Packaging/Sources` の各スクリプト (0〜9) を順番に呼び出す
