@@ -2,6 +2,20 @@
 # Started from ~/Library/Preferences/.NextSpace/Login (SessionScript) before
 # Workspace. Waits for Workspace (window manager) and starts tray programs.
 (
+  # First login only: a fresh system starts with the sound card muted, and
+  # PulseAudio keeps that state.  Unmute the output and set a moderate
+  # volume once; later changes by the user are left alone.
+  marker="$HOME/.local/state/nextspace/sound-initialized"
+  if [ ! -e "$marker" ] && command -v pactl >/dev/null; then
+    i=0
+    until pactl info >/dev/null 2>&1 || [ $i -ge 20 ]; do
+      sleep 1; i=$((i + 1))
+    done
+    if pactl set-sink-mute @DEFAULT_SINK@ 0 && pactl set-sink-volume @DEFAULT_SINK@ 50%; then
+      mkdir -p "$(dirname "$marker")" && touch "$marker"
+    fi
+  fi
+
   sleep 6
   pgrep -x wmsystemtray >/dev/null || wmsystemtray &
   sleep 1
