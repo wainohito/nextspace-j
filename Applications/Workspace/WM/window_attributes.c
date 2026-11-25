@@ -98,6 +98,7 @@ static CFStringRef ANoHideOthers = CFSTR("NoHideOthers");
 static CFStringRef ANoMouseBindings = CFSTR("NoMouseBindings");
 static CFStringRef ANoKeyBindings = CFSTR("NoKeyBindings");
 static CFStringRef ANoAppIcon = CFSTR("NoAppIcon");
+static CFStringRef ANoAppMenu = CFSTR("NoAppMenu");
 static CFStringRef AKeepOnTop = CFSTR("KeepOnTop");
 static CFStringRef AKeepOnBottom = CFSTR("KeepOnBottom");
 static CFStringRef AOmnipresent = CFSTR("Omnipresent");
@@ -278,6 +279,9 @@ void wDefaultFillAttributes(const char *instance, const char *class, WWindowAttr
 
   value = get_value(dw, dc, dn, da, ANoAppIcon, No, useGlobalDefault);
   APPLY_VAL(value, no_appicon, ANoAppIcon);
+
+  value = get_value(dw, dc, dn, da, ANoAppMenu, No, useGlobalDefault);
+  APPLY_VAL(value, no_app_menu, ANoAppMenu);
 
   value = get_value(dw, dc, dn, da, ASharedAppIcon, No, useGlobalDefault);
   APPLY_VAL(value, shared_appicon, ASharedAppIcon);

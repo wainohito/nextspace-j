@@ -40,8 +40,10 @@ ATTRS = {
     },
     # Browser windows started by /Applications/Firefox.app / Chromium.app
     # (--class Wrapper_...): the wrapper's appicon in the Dock stands for them.
-    "Wrapper_Firefox": {"NoAppIcon": "YES"},
-    "Wrapper_Chromium": {"NoAppIcon": "YES"},
+    # NoAppMenu: the wrapper shows its own (Japanese) menu for them, so the
+    # WM's application menu for X11 apps would be a second one.
+    "Wrapper_Firefox": {"NoAppIcon": "YES", "NoAppMenu": "YES"},
+    "Wrapper_Chromium": {"NoAppIcon": "YES", "NoAppMenu": "YES"},
 }
 # Attributes set by earlier versions that must go.
 # ("Firefox"/"Chromium" also matched the wrappers' own instance names and hid

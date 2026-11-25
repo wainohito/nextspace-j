@@ -117,6 +117,8 @@ typedef struct {
                                     * is focused */
   unsigned int no_hide_others : 1; /* hide window when doing hideothers */
   unsigned int no_appicon : 1;     /* make app icon */
+  unsigned int no_app_menu : 1;    /* no WM application menu: the app shows
+                                    * its own (e.g. GNUstep wrapper apps) */
 
   unsigned int shared_appicon : 1;
 

@@ -417,8 +417,10 @@ WApplication *wApplicationCreate(WWindow *wwin)
 
   /* Application menu and death handler */
   if (!wapp->flags.is_gnustep) {
-    // Application menu
-    wapp->app_menu = wApplicationMenuCreate(scr, wapp);
+    // Application menu (not for apps whose menu is shown by someone else,
+    // e.g. browsers started by a GNUstep wrapper: NoAppMenu attribute)
+    if (!WFLAGP(wapp->main_wwin, no_app_menu))
+      wapp->app_menu = wApplicationMenuCreate(scr, wapp);
     wapp->appState = (CFMutableDictionaryRef)WMUserDefaultsRead(wapp->appName, false);
     if (wapp->appState) {
       CFRetain(wapp->appState);
