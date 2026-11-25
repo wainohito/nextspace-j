@@ -1,0 +1,20 @@
+{
+    Foundry = "Google";
+    /* Font files come from Debian's fonts-noto-cjk package. */
+    Faces = (
+        {
+            Files = ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc");
+            Name = Regular;
+            PostScriptName = "NotoSansCJKjp-Regular";
+            Weight = 400;
+            RenderHints_hack = 0x010203;
+        },
+        {
+            Files = ("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc");
+            Name = Bold;
+            PostScriptName = "NotoSansCJKjp-Bold";
+            Weight = 700;
+            RenderHints_hack = 0x010203;
+        }
+    );
+}

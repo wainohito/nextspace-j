@@ -1,0 +1,13 @@
+{
+    Foundry = "VLGothic Project";
+    /* Font file comes from Debian's fonts-vlgothic package. */
+    Faces = (
+        {
+            Files = ("/usr/share/fonts/truetype/vlgothic/VL-Gothic-Regular.ttf");
+            Name = Regular;
+            PostScriptName = "VL-Gothic-Regular";
+            Weight = 400;
+            RenderHints_hack = 0x010203;
+        }
+    );
+}
