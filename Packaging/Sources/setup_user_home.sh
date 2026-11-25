@@ -2,7 +2,10 @@
 
 echo "Copying initial settings from $PWD/home"
 if [ -d "$HOME/Library" ];then
-	echo "$HOME/Library exists already, please make sure it is up to date"
+	# ~/Library may already exist only because GNUstep tools ran (e.g. while
+	# building): add the missing default settings, keep existing files.
+	echo "$HOME/Library exists already: adding missing default settings only"
+	cp -Rn /etc/skel/Library/. "$HOME/Library/"
 else
 	cp -R /etc/skel/Library $HOME/
 fi

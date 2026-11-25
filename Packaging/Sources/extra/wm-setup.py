@@ -92,6 +92,12 @@ DOCK_NAMES = {a["Name"] for a in DOCK_APPS}
 
 # Icons of docked applications that are not running yet.
 ICONS = {
+    # Default Dock applications (as in /etc/skel); without them the Dock shows
+    # "?" until each application has run once and its icon is cached.
+    "Preferences.GNUstep": "/Applications/Preferences.app/Resources/English.lproj/Preferences.tiff",
+    "Terminal.GNUstep": "/Applications/Terminal.app/Resources/Terminal.tiff",
+    "TextEdit.GNUstep": "/Applications/TextEdit.app/Resources/Edit.tiff",
+    "TimeMon.GNUstep": "/Applications/TimeMon.app/Resources/TM-app.tiff",
     "Firefox.GNUstep": "/Applications/Firefox.app/Resources/AppIcon.tiff",
     "Chromium.GNUstep": "/Applications/Chromium.app/Resources/AppIcon.tiff",
     "WebBrowser.GNUstep": "/Applications/WebBrowser.app/Resources/WebBrowser.tiff",
@@ -136,6 +142,12 @@ def slot_of(app):
 
 
 path = os.path.join(PREFS, "WMState.plist")
+SKEL = "/etc/skel/Library/Preferences/.NextSpace"
+for name in ("WMState.plist", "WMWindowAttributes.plist"):
+    # Start from the NEXTSPACE defaults when the WM has not written its own.
+    if not os.path.exists(os.path.join(PREFS, name)) and os.path.exists(os.path.join(SKEL, name)):
+        os.makedirs(PREFS, exist_ok=True)
+        shutil.copy(os.path.join(SKEL, name), os.path.join(PREFS, name))
 data = load(path)
 dock = data.get("Dock")
 if isinstance(dock, dict):
@@ -177,7 +189,7 @@ for key in [k for k in new if k.startswith(STALE_PREFIX)]:
     except OSError:
         pass
 for key, icon in ICONS.items():
-    if "Icon" not in new.get(key, {}):
+    if "Icon" not in new.get(key, {}) and os.path.exists(icon):
         new[key] = dict(new.get(key, {}), Icon=icon)
 for key, names in REMOVE.items():
     if isinstance(new.get(key), dict) and any(n in new[key] for n in names):
