@@ -6,14 +6,14 @@
             Files = ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc");
             Name = Regular;
             PostScriptName = "NotoSansCJKjp-Regular";
-            Weight = 400;
+            Weight = 5;
             RenderHints_hack = 0x010203;
         },
         {
             Files = ("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc");
             Name = Bold;
             PostScriptName = "NotoSansCJKjp-Bold";
-            Weight = 700;
+            Weight = 9;
             RenderHints_hack = 0x010203;
         }
     );

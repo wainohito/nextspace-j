@@ -1,6 +1,11 @@
 #!/bin/sh
 # Started from ~/Library/Preferences/.NextSpace/Login (SessionScript) before
 # Workspace. Waits for Workspace (window manager) and starts tray programs.
+
+# Fonts installed since the last login (apt, ~/.local/share/fonts): make
+# them available to NEXTSPACE before Workspace and applications start.
+[ -x /usr/local/bin/nextspace-fonts ] && /usr/local/bin/nextspace-fonts >/dev/null 2>&1
+
 (
   # First login only: a fresh system starts with the sound card muted, and
   # PulseAudio keeps that state.  Unmute the output and set a moderate

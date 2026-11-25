@@ -103,6 +103,10 @@ stage_system() {
   done
   sudo systemctl daemon-reexec
 
+  info "Fonts: nextspace-fonts makes fontconfig's fonts usable in NEXTSPACE"
+  sudo install -m 755 "$EXTRA_DIR/nextspace-fonts" /usr/local/bin/nextspace-fonts
+  sudo install -m 644 "$EXTRA_DIR/apt-99nextspace-fonts" /etc/apt/apt.conf.d/99nextspace-fonts
+
   info "fcitx5 for all applications (/etc/environment)"
   for kv in XMODIFIERS=@im=fcitx GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx; do
     grep -q "^${kv%%=*}=" /etc/environment 2>/dev/null || echo "$kv" | sudo tee -a /etc/environment >/dev/null
@@ -144,6 +148,9 @@ stage_user() {
 
   info "Window manager: Japanese fonts, browsers and tray in the Dock, window attributes"
   python3 -I "$EXTRA_DIR/wm-setup.py"
+
+  info "Fonts installed on the system (fontconfig) -> ~/Library/Fonts"
+  /usr/local/bin/nextspace-fonts -v || true
 
   info "fcitx5: XIM on-the-spot style"
   mkdir -p "$HOME/.config/fcitx5/conf"

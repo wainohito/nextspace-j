@@ -1,0 +1,5 @@
+// Install as /etc/apt/apt.conf.d/99nextspace-fonts
+// After apt installs or removes packages (e.g. fonts-*), refresh the .nfont
+// packages NEXTSPACE uses (~/Library/Fonts/* (auto).nfont) for every user
+// with a NEXTSPACE home.  See /usr/local/bin/nextspace-fonts.
+DPkg::Post-Invoke { "if [ -x /usr/local/bin/nextspace-fonts ]; then /usr/local/bin/nextspace-fonts --all-users; fi; true"; };

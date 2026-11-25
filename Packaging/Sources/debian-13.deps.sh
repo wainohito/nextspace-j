@@ -180,6 +180,7 @@ TRAY_DEPS="
     wmsystemtray
     pasystray
     pulseaudio-utils
+    fontconfig
 "
 # Applications/Extra (gs-desktop apps, PDFKit, TerminalKit, WebBrowser)
 EXTRA_APPS_BUILD_DEPS="

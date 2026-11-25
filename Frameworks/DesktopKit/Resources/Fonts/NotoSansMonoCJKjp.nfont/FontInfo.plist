@@ -8,7 +8,7 @@
             Files = ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc#5");
             Name = Regular;
             PostScriptName = "NotoSansMonoCJKjp-Regular";
-            Weight = 400;
+            Weight = 5;
             RenderHints_hack = 0x010203;
         }
     );
