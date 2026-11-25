@@ -50,7 +50,7 @@ $(APP_NAME)_RESOURCE_FILES = \
 # Localization
 #
 $(APP_NAME)_LANGUAGES = English Japanese
-$(APP_NAME)_LOCALIZED_RESOURCE_FILES = \
+$(APP_NAME)_LOCALIZED_RESOURCE_FILES = Localizable.strings \
 	Preferences.gorm \
 	PrefsWindow.gorm \
 	InfoPanel.gorm \

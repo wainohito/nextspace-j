@@ -36,7 +36,7 @@ Resources/CloudManager.tiff \
 Resources/services
 
 CloudManager_LANGUAGES = English Japanese
-CloudManager_LOCALIZED_RESOURCE_FILES += CloudManager.gorm RCloneSetup.gorm
+CloudManager_LOCALIZED_RESOURCE_FILES += Localizable.strings CloudManager.gorm RCloneSetup.gorm
 
 
 #

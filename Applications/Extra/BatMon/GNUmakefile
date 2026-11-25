@@ -46,7 +46,7 @@ Resources/LICENSE \
 Resources/README
 
 BatMon_LANGUAGES = English Japanese
-BatMon_LOCALIZED_RESOURCE_FILES += batmon.gorm
+BatMon_LOCALIZED_RESOURCE_FILES += Localizable.strings batmon.gorm
 
 
 #

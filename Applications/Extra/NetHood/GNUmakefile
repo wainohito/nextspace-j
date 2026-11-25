@@ -38,7 +38,7 @@ Resources/ApplicationScripting.xlp \
 Resources/ScriptingInfo.plist
 
 NetHood_LANGUAGES = English Japanese
-NetHood_LOCALIZED_RESOURCE_FILES += NetHood.gorm
+NetHood_LOCALIZED_RESOURCE_FILES += Localizable.strings NetHood.gorm
 
 
 #

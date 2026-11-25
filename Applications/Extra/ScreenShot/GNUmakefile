@@ -39,7 +39,7 @@ Resources/ScriptingInfo.plist \
 Resources/capture
 
 ScreenShot_LANGUAGES = English Japanese
-ScreenShot_LOCALIZED_RESOURCE_FILES += ScreenShot.gorm
+ScreenShot_LOCALIZED_RESOURCE_FILES += Localizable.strings ScreenShot.gorm
 
 
 #

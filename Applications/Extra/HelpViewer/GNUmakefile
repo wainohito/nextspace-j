@@ -20,7 +20,7 @@ Resources/Point.tiff Resources/Point2.tiff Resources/Icon-hlpd.tiff \
 HelpViewer.help
 
 HelpViewer_LANGUAGES = English Japanese
-HelpViewer_LOCALIZED_RESOURCE_FILES += GSFindPanel.gorm MainMenu.gorm
+HelpViewer_LOCALIZED_RESOURCE_FILES += Localizable.strings GSFindPanel.gorm MainMenu.gorm
 HelpViewer_MAIN_MODEL_FILE = MainMenu.gorm
 #HelpViewer_PRINCIPAL_CLASS = NSApplication
 

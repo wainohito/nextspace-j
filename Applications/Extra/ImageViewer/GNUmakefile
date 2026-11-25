@@ -44,7 +44,7 @@ Resources/ScriptingInfo.plist \
 Resources/ApplicationScripting.xlp
 
 ImageViewer_LANGUAGES = English Japanese
-ImageViewer_LOCALIZED_RESOURCE_FILES += ImageViewer.gorm Document.gorm Inspector.gorm
+ImageViewer_LOCALIZED_RESOURCE_FILES += Localizable.strings ImageViewer.gorm Document.gorm Inspector.gorm
 
 
 #

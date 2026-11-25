@@ -47,7 +47,7 @@ Resources/uart.term \
 Resources/connect_rdp
 
 RemoteView_LANGUAGES = English Japanese
-RemoteView_LOCALIZED_RESOURCE_FILES += RemoteView.gorm VNCDisplay.gorm RDPDisplay.gorm
+RemoteView_LOCALIZED_RESOURCE_FILES += Localizable.strings RemoteView.gorm VNCDisplay.gorm RDPDisplay.gorm
 
 
 #

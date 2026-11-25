@@ -20,7 +20,7 @@ $(BUNDLE_NAME)_RESOURCE_FILES = \
 
 $(BUNDLE_NAME)_LANGUAGES = \
 	English Japanese
-$(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= Display.gorm
+$(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= Localizable.strings Display.gorm
 
 -include GNUmakefile.preamble
 include $(GNUSTEP_MAKEFILES)/bundle.make

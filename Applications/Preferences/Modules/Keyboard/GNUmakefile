@@ -11,7 +11,7 @@ $(BUNDLE_NAME)_STANDARD_INSTALL = no
 Keyboard_LANGUAGES = \
 	English Japanese
 
-Keyboard_LOCALIZED_RESOURCE_FILES = \
+Keyboard_LOCALIZED_RESOURCE_FILES = Localizable.strings \
 	Keyboard.gorm \
 	AddLayoutPanel.gorm
 

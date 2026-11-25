@@ -23,7 +23,7 @@ TimeMon_C_FILES = \
 
 # The Resource files to be copied into the app's resources directory
 TimeMon_LANGUAGES = English Japanese
-TimeMon_LOCALIZED_RESOURCE_FILES = \
+TimeMon_LOCALIZED_RESOURCE_FILES = Localizable.strings \
 	TimeMon.gorm
 
 TimeMon_RESOURCE_FILES = \

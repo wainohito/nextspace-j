@@ -24,7 +24,7 @@ $(BUNDLE_NAME)_OBJC_FILES= \
   WMPopUp.m
 
 ###$(BUNDLE_NAME)_RESOURCE_FILES=$(wildcard Images/*) $(wildcard Resources/*)
-$(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES=$(notdir $(wildcard English.lproj/*))
+$(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= Localizable.strings $(notdir $(wildcard English.lproj/*))
 $(BUNDLE_NAME)_LANGUAGES=$(basename $(wildcard *.lproj))
 $(BUNDLE_NAME)_STANDARD_INSTALL=no
 

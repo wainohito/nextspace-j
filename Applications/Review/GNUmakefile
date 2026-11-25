@@ -38,7 +38,7 @@ Resources/XPMImage.tiff
 # Localization
 #
 Review_LANGUAGES = English Japanese
-Review_LOCALIZED_RESOURCE_FILES = \
+Review_LOCALIZED_RESOURCE_FILES = Localizable.strings \
 Review.gorm \
 InfoPanel.gorm \
 Inspector.gorm

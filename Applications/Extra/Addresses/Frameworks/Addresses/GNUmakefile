@@ -39,7 +39,7 @@ Addresses_HEADER_FILES= \
 	AddressBook.h
 
 Addresses_RESOURCE_FILES=ScriptingInfo.plist
-Addresses_LOCALIZED_RESOURCE_FILES=PropertiesAndLabels.strings
+Addresses_LOCALIZED_RESOURCE_FILES= Localizable.strings PropertiesAndLabels.strings
 Addresses_LANGUAGES=Dutch English French German Spanish Japanese
 
 -include GNUmakefile.preamble

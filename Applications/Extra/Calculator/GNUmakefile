@@ -21,7 +21,7 @@ EdenMath_RESOURCE_FILES = \
 
 EdenMath_LANGUAGES = English Japanese
 
-EdenMath_LOCALIZED_RESOURCE_FILES = \
+EdenMath_LOCALIZED_RESOURCE_FILES = Localizable.strings \
 	MainMenu.gorm
                                  
 ADDITIONAL_OBJCFLAGS = -Wall -Wno-import

@@ -62,7 +62,7 @@ Resources/Dictionaries/jargon/jargon.dict \
 
 Dictionary_LANGUAGES = English Japanese
 
-Dictionary_LOCALIZED_RESOURCE_FILES = \
+Dictionary_LOCALIZED_RESOURCE_FILES = Localizable.strings \
 DictionaryReader.gorm \
 GSFindPanel.gorm \
 Preferences.gorm

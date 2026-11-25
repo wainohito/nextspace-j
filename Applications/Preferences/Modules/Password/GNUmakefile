@@ -21,7 +21,7 @@ $(BUNDLE_NAME)_HEADERS= \
 $(BUNDLE_NAME)_LANGUAGES = \
 	English Japanese
 
-$(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= \
+$(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= Localizable.strings \
 	Password.gorm
 
 -include GNUmakefile.preamble

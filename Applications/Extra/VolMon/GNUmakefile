@@ -37,7 +37,7 @@ Resources/ScriptingInfo.plist \
 Resources/VolMon.tiff
 
 VolMon_LANGUAGES = English Japanese
-VolMon_LOCALIZED_RESOURCE_FILES += VolMon.gorm
+VolMon_LOCALIZED_RESOURCE_FILES += Localizable.strings VolMon.gorm
 
 
 #

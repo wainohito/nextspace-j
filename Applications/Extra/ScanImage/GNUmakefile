@@ -36,7 +36,7 @@ Resources/ScanImage.tiff \
 Resources/services
 
 ScanImage_LANGUAGES = English Japanese
-ScanImage_LOCALIZED_RESOURCE_FILES += ScanImage.gorm
+ScanImage_LOCALIZED_RESOURCE_FILES += Localizable.strings ScanImage.gorm
 
 
 #

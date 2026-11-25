@@ -34,7 +34,7 @@ NotMon_APPLICATION_ICON =
 NotMon_RESOURCE_FILES = \
 
 NotMon_LANGUAGES = English Japanese
-NotMon_LOCALIZED_RESOURCE_FILES += NotMon.gorm Message.gorm Console.gorm
+NotMon_LOCALIZED_RESOURCE_FILES += Localizable.strings NotMon.gorm Message.gorm Console.gorm
 
 
 #

@@ -37,7 +37,7 @@ Resources/commands \
 Resources/Tasks
 
 SystemManager_LANGUAGES = English Japanese
-SystemManager_LOCALIZED_RESOURCE_FILES += SystemManager.gorm SystemWindow.gorm Console.gorm
+SystemManager_LOCALIZED_RESOURCE_FILES += Localizable.strings SystemManager.gorm SystemWindow.gorm Console.gorm
 
 
 #

@@ -46,7 +46,7 @@ Boxes.subproj/Boxes.InnerSpace \
 NickSpace.subproj/NickSpace.InnerSpace
 
 InnerSpace_LANGUAGES = English Japanese
-InnerSpace_LOCALIZED_RESOURCE_FILES += InnerSpace.gorm
+InnerSpace_LOCALIZED_RESOURCE_FILES += Localizable.strings InnerSpace.gorm
 
 
 #

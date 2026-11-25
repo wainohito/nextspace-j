@@ -38,7 +38,7 @@ Resources/page.tiff \
 Resources/default.css
 
 DocViewer_LANGUAGES = English Japanese
-DocViewer_LOCALIZED_RESOURCE_FILES += DocViewer.gorm PdfDocument.gorm Preferences.gorm
+DocViewer_LOCALIZED_RESOURCE_FILES += Localizable.strings DocViewer.gorm PdfDocument.gorm Preferences.gorm
 
 
 #

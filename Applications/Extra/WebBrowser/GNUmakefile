@@ -43,7 +43,7 @@ Resources/ApplicationScripting.xlp \
 Resources/ScriptingInfo.plist
 
 WebBrowser_LANGUAGES = English Japanese
-WebBrowser_LOCALIZED_RESOURCE_FILES += WebBrowser.gorm Document.gorm Preferences.gorm FindPanel.gorm DownloadPanel.gorm DownloadStatusPanel.gorm LinkPanel.gorm
+WebBrowser_LOCALIZED_RESOURCE_FILES += Localizable.strings WebBrowser.gorm Document.gorm Preferences.gorm FindPanel.gorm DownloadPanel.gorm DownloadStatusPanel.gorm LinkPanel.gorm
 
 
 #

@@ -49,7 +49,7 @@ $(BUNDLE_NAME)_LANGUAGES = \
 #
 # Interface GUI
 #
-$(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= \
+$(BUNDLE_NAME)_LOCALIZED_RESOURCE_FILES= Localizable.strings \
 	Date.gorm
 
 #

@@ -35,7 +35,7 @@ BUNDLE_EXTENSION = .InnerSpace
 NickSpace_RESOURCE_FILES = \
 
 NickSpace_LANGUAGES = English Japanese
-NickSpace_LOCALIZED_RESOURCE_FILES += NickSpace.gorm
+NickSpace_LOCALIZED_RESOURCE_FILES += Localizable.strings NickSpace.gorm
 
 #
 # Header files

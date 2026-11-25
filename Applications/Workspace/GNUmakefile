@@ -44,7 +44,7 @@ $(APP_NAME)_RESOURCE_FILES = \
 WM_DIR = WM
 include GNUmakefile.WM
 
-$(APP_NAME)_LOCALIZED_RESOURCE_FILES = $(notdir $(wildcard English.lproj/*))
+$(APP_NAME)_LOCALIZED_RESOURCE_FILES = Localizable.strings $(notdir $(wildcard English.lproj/*))
 
 $(APP_NAME)_LANGUAGES = $(basename $(wildcard *.lproj))
 

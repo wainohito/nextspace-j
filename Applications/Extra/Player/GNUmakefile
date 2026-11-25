@@ -41,7 +41,7 @@ Resources/ScriptingInfo.plist \
 Resources/ApplicationScripting.xlp
 
 Player_LANGUAGES = English Japanese
-Player_LOCALIZED_RESOURCE_FILES += Player.gorm MediaDocument.gorm VideoDocument.gorm
+Player_LOCALIZED_RESOURCE_FILES += Localizable.strings Player.gorm MediaDocument.gorm VideoDocument.gorm
 
 
 #

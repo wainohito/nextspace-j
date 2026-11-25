@@ -40,7 +40,7 @@ Resources/ScriptingInfo.plist \
 Resources/ApplicationScripting.xlp
 
 Librarian_LANGUAGES = English Japanese
-Librarian_LOCALIZED_RESOURCE_FILES += Librarian.gorm Document.gorm Inspector.gorm
+Librarian_LOCALIZED_RESOURCE_FILES += Localizable.strings Librarian.gorm Document.gorm Inspector.gorm
 
 
 #
