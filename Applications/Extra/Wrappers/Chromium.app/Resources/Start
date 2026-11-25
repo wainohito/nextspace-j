@@ -1,4 +1,8 @@
 # Start Chromium with the user's normal profile (~/.config/chromium).
+# --class: the wrapper (WrappedAppClassName in GSWrapper.plist) tracks the
+# windows of this class, shows its menu for them and appears as running in
+# the Dock; WMWindowAttributes gives the class no appicon of its own.
+CLASS="Wrapper_Chromium"
 CHROME=`type -p chromium`
 [ -z "$CHROME" ] && CHROME=`type -p google-chrome`
 [ -z "$CHROME" ] && CHROME=`type -p chromium-browser`
@@ -12,7 +16,7 @@ fi
 unset FONTCONFIG_FILE
 
 if [ -n "$FILE" ];then
-  "$CHROME" "$FILE"
+  "$CHROME" --class="$CLASS" "$FILE"
 else
-  "$CHROME"
+  "$CHROME" --class="$CLASS"
 fi

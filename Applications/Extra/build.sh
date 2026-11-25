@@ -29,5 +29,8 @@ sudo ldconfig
 # Wrappers around non-GNUstep applications (need WrapperFactory's
 # /Library/bin/GSWrapper_Launcher, installed above)
 for app in Wrappers/*.app; do
+  # Replace, don't merge: files moved inside the wrapper (e.g. Launcher.gorm
+  # into English.lproj) must not survive from an older install.
+  sudo rm -rf "/Applications/$(basename "$app")"
   sudo cp -a "$app" /Applications/
 done

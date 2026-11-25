@@ -1,1 +1,1 @@
-xdotool search --onlyvisible --class Chromium windowactivate
+xdotool search --onlyvisible --class Wrapper_Chromium windowactivate

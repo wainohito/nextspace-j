@@ -502,6 +502,19 @@
  * task notification
  */
 
+- (void)_quitWithoutWrappedWindows
+{
+  if ( appIsTerminating )
+    return;
+  if ( [wrappedApp hasWindows] ) {
+    [self performSelector:@selector(_quitWithoutWrappedWindows) withObject:nil afterDelay:2];
+  }
+  else {
+    NSLog(@"no windows of %@ left - exiting", [wrappedApp wrappedAppClassName]);
+    [NSApp terminate: self];
+  }
+}
+
 - (void)unixAppExited: (NSNotification*)not
 {
     int status = [[not object] terminationStatus];
@@ -513,7 +526,17 @@
                                 @"OK", nil, nil);
     }
     if ( shellDelegate ) {
-      NSLog(@"has UI, continue running");
+      if ( wrappedApp ) {
+        /* The start script has ended, but windows of the wrapped
+           application may remain (e.g. the browser was already running and
+           only opened a window).  Quit together with the last of them, so the
+           Dock doesn't show the wrapper as running with nothing to show. */
+        NSLog(@"has UI, running until the wrapped application's windows are gone");
+        [self performSelector:@selector(_quitWithoutWrappedWindows) withObject:nil afterDelay:3];
+      }
+      else {
+        NSLog(@"has UI, continue running");
+      }
       return;
     }
 

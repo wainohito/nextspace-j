@@ -16,8 +16,8 @@ WebBrowserView: Chromium page windows that WebBrowser.app embeds
 (cdpbridge.py starts them with --class=WebBrowserView).  No appicon, not in
 window lists; they live inside WebBrowser.app's windows.
 
-Chromium, Firefox-esr, Firefox (Mozilla's build): browser windows started
-from /Applications/Chromium.app or Firefox.app.  The wrapper's appicon in
+Wrapper_Firefox, Wrapper_Chromium: browser windows started from
+/Applications/Firefox.app or Chromium.app (--class Wrapper_...).  The wrapper's appicon in
 the Dock stands for them, so the browser's own appicon (which would appear
 at the bottom-left corner as a second icon) is not shown.
 
@@ -36,10 +36,21 @@ ATTRS = {
         "SkipSwitchPanel": "YES",
         "DontSaveSession": "YES",
     },
-    "Chromium": {"NoAppIcon": "YES"},
-    "Firefox-esr": {"NoAppIcon": "YES"},
-    "Firefox": {"NoAppIcon": "YES"},
-    "firefox": {"NoAppIcon": "YES"},
+    # Browser windows started by /Applications/Firefox.app / Chromium.app
+    # (--class Wrapper_...): the wrapper's appicon in the Dock stands for them.
+    "Wrapper_Firefox": {"NoAppIcon": "YES"},
+    "Wrapper_Chromium": {"NoAppIcon": "YES"},
+}
+# Attributes set by earlier versions that must go.
+# ("Firefox"/"Chromium" also matched the wrappers' own instance names and hid
+# their appicons, so the docked icons never showed "running".)
+REMOVE = {
+    "Chromium": ["NoAppIcon"],
+    "Firefox": ["NoAppIcon"],
+    "chromium.Chromium": ["NoAppIcon"],
+    "Firefox-esr": ["NoAppIcon"],
+    "firefox-esr": ["NoAppIcon"],
+    "firefox": ["NoAppIcon"],
 }
 STALE_PREFIX = "text_html,_title_ASGGFD-webview-"
 
@@ -164,6 +175,13 @@ for key in [k for k in new if k.startswith(STALE_PREFIX)]:
 for key, icon in ICONS.items():
     if "Icon" not in new.get(key, {}):
         new[key] = dict(new.get(key, {}), Icon=icon)
+for key, names in REMOVE.items():
+    if isinstance(new.get(key), dict) and any(n in new[key] for n in names):
+        entry = {k: v for k, v in new[key].items() if k not in names}
+        if entry:
+            new[key] = entry
+        else:
+            del new[key]
 for key, attrs in ATTRS.items():
     entry = dict(new.get(key, {}))
     entry.update(attrs)

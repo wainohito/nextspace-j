@@ -138,6 +138,28 @@ char *wintitle (Display *disp, Window win) {
   return nil;
 }
 
+- (BOOL) hasWindows
+{
+  const char *wmclass = [wrappedAppClassName cString];
+  Display *dpy = (Display *)[GSCurrentServer() serverDevice];
+  unsigned long len = 0, i;
+  Window *list;
+  BOOL found = NO;
+
+  if (!wmclass || !(list = winlist(dpy, &len)))
+    return NO;
+  for (i = 0; i < len && !found; i++) {
+    XClassHint whints;
+    if (XGetClassHint(dpy, list[i], &whints)) {
+      found = (whints.res_class && strcmp(whints.res_class, wmclass) == 0);
+      XFree(whints.res_class);
+      XFree(whints.res_name);
+    }
+  }
+  XFree(list);
+  return found;
+}
+
 - (void) startObservingEvents
 {
   [self performSelectorInBackground:@selector(processXWindowsEvents:) withObject:self];

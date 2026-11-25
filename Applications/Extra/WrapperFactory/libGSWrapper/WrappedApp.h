@@ -44,6 +44,8 @@
 - (void)setDelegate:(id)del;
 - (BOOL)isActive;
 - (WrappedWin*) wrappedWindowForID:(Window) wid;
+/** YES while a managed window of the wrapped class exists. */
+- (BOOL) hasWindows;
 
 @end
 

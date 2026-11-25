@@ -1,4 +1,8 @@
 # Start Firefox with the user's normal profile and key settings.
+# --class: the wrapper (WrappedAppClassName in GSWrapper.plist) tracks the
+# windows of this class, shows its menu for them and appears as running in
+# the Dock; WMWindowAttributes gives the class no appicon of its own.
+CLASS="Wrapper_Firefox"
 cleanup() {
   exit 0
 }
@@ -7,9 +11,9 @@ trap cleanup 2 15
 unset FONTCONFIG_FILE
 
 if [ -n "$FILE" ];then
-  firefox "$FILE"
+  firefox --class "$CLASS" "$FILE"
 else
-  firefox --browser
+  firefox --browser --class "$CLASS"
 fi
 
 exit 0
