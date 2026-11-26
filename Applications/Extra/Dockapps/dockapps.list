@@ -13,7 +13,8 @@
 # Not included: dockapps that need settings (weather, mail, wmdrawer,
 # wmhdplop), special hardware or old kernel interfaces (/proc/acpi, APM, OSS,
 # CD), Debian's libwraster (wmforecast, wmweather+) and those without a
-# window class (tdc).
+# window class (tdc), and wmload (an unshaped 64x64 icon window that takes
+# all clicks: the Dock can neither move it nor open its menu).
 
 asmon          | asmon            | asmon.asmon                   | deb:asmon          | CPU・メモリ・スワップ・ディスクの使用状況
 bubblefishymon | bubblefishymon   | bubblefishymon.bubblefishymon | deb:bubblefishymon | 泳ぐアヒルと泡で見るシステム負荷
@@ -36,7 +37,6 @@ wmifinfo       | wmifinfo         | wmifinfo.wmifinfo             | deb:wmifinfo
 wmifs          | wmifs            | wmifs.wmifs                   | deb:wmifs          | ネットワークの通信量
 wmitime        | wmitime          | wmitime.wmitime               | deb:wmitime        | 時計とインターネットタイム
 wmix           | wmix             | wmix.wmix                     | deb:wmix           | 音量ミキサー
-wmload         | wmload -withdrawn | wmload.WMLoad                 | deb:wmload         | システムの負荷
 wmmemload      | wmmemload        | wmmemload.DockApp             | deb:wmmemload      | メモリとスワップの使用量
 wmmisc         | wmmisc           | wmmisc.wmmisc                 | deb:wmmisc         | ユーザー数・プロセス数・稼働時間・負荷
 wmmon          | wmmon            | wmmon.wmmon                   | deb:wmmon          | CPU・ディスク・メモリの使用状況

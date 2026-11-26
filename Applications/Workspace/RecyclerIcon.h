@@ -30,6 +30,9 @@
 }
 - (void)setImage:(NSImage *)anImage;
 - (void)animate;
+// Animation while the WM drags an appicon over the Recycler
+- (void)startAnimation;
+- (void)stopAnimation;
 @end
 
 @class Recycler;

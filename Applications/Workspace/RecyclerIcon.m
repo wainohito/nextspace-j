@@ -111,6 +111,35 @@ static NSTimeInterval tInterval = 0;
   [self setImage:[NSImage imageNamed:imageName]];
 }
 
+- (void)_animationTick:(NSTimer *)aTimer
+{
+  tInterval = 0;  // the timer sets the pace (animate skips frames < 0.1 s apart)
+  [self animate];
+}
+
+- (void)startAnimation
+{
+  if (timer == nil) {
+    tInterval = 0;
+    [self animate];
+    timer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                             target:self
+                                           selector:@selector(_animationTick:)
+                                           userInfo:nil
+                                            repeats:YES];
+    [timer retain];
+  }
+}
+
+- (void)stopAnimation
+{
+  if (timer != nil) {
+    [timer invalidate];
+    [timer release];
+    timer = nil;
+  }
+}
+
 - (NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender
 {
   NSDebugLLog(@"Recycler", @"Recycler: dragging entered!");

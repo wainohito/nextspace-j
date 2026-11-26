@@ -88,8 +88,8 @@ int WSRunAlertPanel(char *title, char *message, char *defaultButton, char *alter
 void WSRingBell(WWindow *wwin);
 
 // --- Recycler
-// An appicon dragged by the WM is over the Recycler and would be accepted
-// (True: show the next frame of the Recycler animation), or no longer (False).
+// An appicon dragged by the WM came over the Recycler and would be accepted
+// (True: the Recycler animates), or left it / was dropped (False).
 void WSRecyclerShowDrop(Bool accept);
 void WSMessage(char *fmt, ...);
 // #define WMLogInfo(fmt, args...) WSMessage(fmt, ## args)

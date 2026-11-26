@@ -396,11 +396,12 @@ void WSRecyclerShowDrop(Bool accept)
   if (!recycler) {
     return;
   }
+  RecyclerIconView *view = [[recycler appIcon] contentView];
+
   if (accept) {
-    [[[recycler appIcon] contentView] performSelectorOnMainThread:@selector(animate)
-                                         withObject:nil
-                                      waitUntilDone:NO];
+    [view performSelectorOnMainThread:@selector(startAnimation) withObject:nil waitUntilDone:NO];
   } else {
+    [view performSelectorOnMainThread:@selector(stopAnimation) withObject:nil waitUntilDone:YES];
     [recycler performSelectorOnMainThread:@selector(updateIconImage)
                                withObject:nil
                             waitUntilDone:NO];

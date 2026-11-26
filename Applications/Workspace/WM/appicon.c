@@ -626,12 +626,15 @@ static WAppIcon *recyclerAppIcon(WScreen *scr)
   return NULL;
 }
 
-/* The application of a running dockapp appicon, NULL if it is not one */
+/* The application of a running dockapp appicon, NULL if it is not one.
+   flags.running is kept for docked appicons only; an appicon outside the
+   docks always belongs to a running application. */
 static WApplication *dockappOf(WAppIcon *aicon)
 {
   WApplication *wapp;
 
-  if (!aicon->flags.running || !(wapp = wApplicationOf(aicon->main_window)) ||
+  if ((aicon->dock != NULL && !aicon->flags.running) ||
+      !(wapp = wApplicationOf(aicon->main_window)) ||
       !wapp->main_wwin || wapp->main_wwin->flags.destroyed || !wApplicationIsDockapp(wapp)) {
     return NULL;
   }
@@ -787,10 +790,16 @@ Bool wHandleAppIconMove(WAppIcon *aicon, XEvent *event)
         }
 
         if (canDropOnRecycler(aicon, recycler, ev.xmotion.x_root, ev.xmotion.y_root)) {
-          onRecycler = True;
-          WSRecyclerShowDrop(True); /* next animation frame */
+          if (!onRecycler) {
+            Window stack[2] = {recycler->icon->core->window, icon->core->window};
+            onRecycler = True;
+            /* the icon goes into the Recycler: just below it */
+            XRestackWindows(dpy, stack, 2);
+            WSRecyclerShowDrop(True); /* starts the animation */
+          }
         } else if (onRecycler) {
           onRecycler = False;
+          wRaiseFrame(icon->core);
           WSRecyclerShowDrop(False);
         }
 
@@ -916,12 +925,11 @@ Bool wHandleAppIconMove(WAppIcon *aicon, XEvent *event)
               if (lastDock && lastDock->type == WM_DRAWER && lastDock != originalDock) {
                 wDrawerFillTheGap(lastDock, aicon, False);
               }
-              if (!aicon->flags.running && !wPreferences.no_animations) {
-                if (aicon->icon->selected) {
-                  wIconSelect(aicon->icon);
-                }
-                DoKaboom(scr, icon->core->window, x, y);
+              /* No "kaboom": the Recycler's animation shows the drop */
+              if (aicon->icon->selected) {
+                wIconSelect(aicon->icon);
               }
+              XUnmapWindow(dpy, icon->core->window);
               if (originalDock != NULL) {
                 wDockDetach(originalDock, aicon);
               }
