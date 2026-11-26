@@ -35,10 +35,16 @@ ROOT=$(cd "$HERE/../../.." && pwd)
 SRC="$ROOT/Packaging/Sources"
 EXTRA_DIR="$ROOT/Packaging/Sources/extra"
 
-# Non-interactive runs can set SUDO_ASKPASS (sudo -A); child bash scripts
-# inherit this function.
-sudo() { if [ -n "$SUDO_ASKPASS" ]; then command sudo -A "$@"; else command sudo "$@"; fi; }
-export -f sudo
+# Non-interactive runs can set SUDO_ASKPASS: every sudo (also in the /bin/sh
+# component scripts, which do not see bash functions) then uses "sudo -A"
+# through a wrapper put first in PATH.
+if [ -n "$SUDO_ASKPASS" ]; then
+  SUDO_WRAP=$(mktemp -d)
+  printf '#!/bin/sh\nexec /usr/bin/sudo -A "$@"\n' > "$SUDO_WRAP/sudo"
+  chmod 755 "$SUDO_WRAP/sudo"
+  export PATH="$SUDO_WRAP:$PATH"
+  trap 'rm -rf "$SUDO_WRAP"' EXIT
+fi
 
 info() { printf '\n\033[1;33m==== %s\033[0m\n' "$*"; }
 die()  { printf '\033[1;31m%s\033[0m\n' "$*" >&2; exit 1; }
