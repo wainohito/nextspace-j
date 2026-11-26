@@ -46,7 +46,8 @@ Debian 12 i386 では `Packaging/Debian13` の代わりに `Packaging/Debian12_x
 `./install.sh` を実行します。
 
 依存パッケージのインストールから、ビルド、日本語の初期設定までを1本のスクリプトで
-行います。詳しい手順と、各段階の内容は
+行います。インストール後の更新は `git pull` してから `./install.sh --update` です
+(設定はそのまま残ります)。詳しい手順と、各段階の内容は
 [Packaging/Debian13/README.md](Packaging/Debian13/README.md)
 ([Debian 12 i386 版](Packaging/Debian12_x86/README.md)) を見てください。
 

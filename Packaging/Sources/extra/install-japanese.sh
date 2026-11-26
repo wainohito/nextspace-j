@@ -21,7 +21,15 @@
 #             profile, Japanese UI and fonts, inline input, fcitx5 XIM,
 #             tray (wmsystemtray/pasystray) autostart
 #
+#   userfiles the user's session scripts only (nextspace-autostart,
+#             nextspace-logout, nextspace-wm-setup) and the fonts; preferences
+#             are left alone (part of "user")
+#
 # Usage:  ./install.sh                 run all stages
+#         ./install.sh --update        after "git pull": update an installed
+#                                      system (deps, core only when its sources
+#                                      changed, nextspace, extra, system,
+#                                      userfiles); the user's settings are kept
 #         ./install.sh extra user      run only the given stages
 #         ./install.sh --from extra    run from a stage to the end
 #         ./install.sh --list          list stages
@@ -33,6 +41,14 @@ STAGES="deps core nextspace extra system user"
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(cd "$HERE/../../.." && pwd)
 SRC="$ROOT/Packaging/Sources"
+# The commit the core stage was last built from (decides whether --update
+# rebuilds the core libraries)
+CORE_COMMIT_FILE=/var/lib/nextspace-j/core-commit
+# Sources of the core stage
+CORE_PATHS="Libraries OS Packaging/Sources/0_* Packaging/Sources/1_* Packaging/Sources/2_*
+            Packaging/Sources/3_* Packaging/Sources/4_* Packaging/Sources/5_*
+            Packaging/Sources/6_* Packaging/Sources/7_* Packaging/environment.sh
+            Packaging/functions.sh Packaging/RedHat/SPECS"
 EXTRA_DIR="$ROOT/Packaging/Sources/extra"
 
 # Non-interactive runs can set SUDO_ASKPASS: every sudo (also in the /bin/sh
@@ -100,6 +116,20 @@ stage_core() {
   run_sources 0_build_libdispatch.sh 1_build_libcorefoundation.sh 2_build_libobjc2.sh \
               3_build_core.sh 3_build_tools-make.sh 4_build_libwraster.sh \
               5_build_libs-base.sh 6_build_libs-gui.sh 7_build_libs-back.sh
+  if commit=$(git -C "$ROOT" rev-parse HEAD 2>/dev/null); then
+    sudo mkdir -p "$(dirname "$CORE_COMMIT_FILE")"
+    echo "$commit" | sudo tee "$CORE_COMMIT_FILE" >/dev/null
+  fi
+}
+
+# --update: does the core need rebuilding? (no record, or its sources
+# changed since the recorded commit)
+core_changed() {
+  local old
+  old=$(cat "$CORE_COMMIT_FILE" 2>/dev/null) || return 0
+  git -C "$ROOT" cat-file -e "$old^{commit}" 2>/dev/null || return 0
+  # shellcheck disable=SC2086
+  ! (cd "$ROOT" && git diff --quiet "$old" HEAD -- $CORE_PATHS)
 }
 
 stage_nextspace() {
@@ -138,6 +168,21 @@ stage_system() {
   sudo ldconfig
 }
 
+# Session scripts in ~/.local/bin (no settings)
+install_user_scripts() {
+  mkdir -p "$HOME/.local/bin" "$HOME/.local/state/nextspace"
+  install -m 755 "$EXTRA_DIR/wm-setup.py" "$HOME/.local/bin/nextspace-wm-setup"
+  install -m 755 "$EXTRA_DIR/nextspace-autostart" "$HOME/.local/bin/nextspace-autostart"
+  install -m 755 "$EXTRA_DIR/nextspace-logout" "$HOME/.local/bin/nextspace-logout"
+}
+
+stage_userfiles() {
+  info "Session scripts in $HOME/.local/bin (settings are kept)"
+  install_user_scripts
+  info "Fonts installed on the system (fontconfig) -> ~/Library/Fonts"
+  /usr/local/bin/nextspace-fonts -v || true
+}
+
 stage_user() {
   info "NEXTSPACE profile in $HOME"
   (cd "$SRC" && ./setup_user_home.sh)
@@ -171,8 +216,7 @@ stage_user() {
   $d write Terminal TerminalFontSize 14
 
   info "Window manager: Japanese fonts, browsers and tray in the Dock, window attributes"
-  mkdir -p "$HOME/.local/bin" "$HOME/.local/state/nextspace"
-  install -m 755 "$EXTRA_DIR/wm-setup.py" "$HOME/.local/bin/nextspace-wm-setup"
+  install_user_scripts
   if pgrep -u "$(id -u)" -x Workspace >/dev/null; then
     # The WM would overwrite its state at logout: apply at the next login
     # (nextspace-autostart, before Workspace starts).
@@ -190,9 +234,6 @@ stage_user() {
   cp "$EXTRA_DIR/fcitx5-xim.conf" "$HOME/.config/fcitx5/conf/xim.conf"
 
   info "Session: fcitx5, tray icons (wmsystemtray, pasystray)"
-  mkdir -p "$HOME/.local/bin"
-  install -m 755 "$EXTRA_DIR/nextspace-autostart" "$HOME/.local/bin/nextspace-autostart"
-  install -m 755 "$EXTRA_DIR/nextspace-logout" "$HOME/.local/bin/nextspace-logout"
   local login="$HOME/Library/Preferences/.NextSpace/Login"
   mkdir -p "$(dirname "$login")"
   [ -f "$login" ] && cp -p "$login" "$login.before-install"
@@ -214,18 +255,31 @@ EOF
 
 #---------------------------------------------------------------- main
 run=""
+update=""
 case "$1" in
-  --list) echo "$STAGES"; exit 0 ;;
+  --list) echo "$STAGES userfiles"; exit 0 ;;
+  --update)
+    update=1
+    if core_changed; then
+      run="deps core nextspace extra system userfiles"
+    else
+      run="deps nextspace extra system userfiles"
+      echo "Core libraries unchanged since $(cut -c1-8 "$CORE_COMMIT_FILE"): core stage skipped."
+    fi ;;
   --from)
     [ -n "$2" ] || die "--from needs a stage"
     on=""; for s in $STAGES; do [ "$s" = "$2" ] && on=1; [ -n "$on" ] && run="$run $s"; done
     [ -n "$run" ] || die "unknown stage: $2" ;;
   "") run="$STAGES" ;;
-  *) for s in "$@"; do case " $STAGES " in *" $s "*) run="$run $s" ;; *) die "unknown stage: $s" ;; esac; done ;;
+  *) for s in "$@"; do case " $STAGES userfiles " in *" $s "*) run="$run $s" ;; *) die "unknown stage: $s" ;; esac; done ;;
 esac
 
 echo "Stages to run:$run"
 for s in $run; do "stage_$s"; done
 info "All done:$run"
+if [ -n "$update" ]; then
+  echo "Updated to $(git -C "$ROOT" log -1 --format='%h %s' 2>/dev/null)."
+  echo "Log out and log in again to use the new Workspace and applications."
+fi
 echo "Log of this installation: $LOG"
 echo "You can delete it after logging in to NEXTSPACE successfully:  rm $LOG"
