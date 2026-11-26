@@ -28,8 +28,8 @@
 
 ## インストール
 
-Debian 13 をデスクトップ環境なし (CLI のみ) でインストールし、sudo を使える一般
-ユーザーで次を実行します。
+Debian 13 (amd64) または Debian 12 (i386, 32 ビット x86) をデスクトップ環境なし
+(CLI のみ) でインストールし、sudo を使える一般ユーザーで次を実行します。
 
 ```
 sudo apt install git
@@ -38,11 +38,16 @@ cd nextspace/Packaging/Debian13
 ./install.sh
 ```
 
+Debian 12 i386 では `Packaging/Debian13` の代わりに `Packaging/Debian12_x86` で
+`./install.sh` を実行します。
+
 依存パッケージのインストールから、ビルド、日本語の初期設定までを1本のスクリプトで
 行います。詳しい手順と、各段階の内容は
-[Packaging/Debian13/README.md](Packaging/Debian13/README.md) を見てください。
+[Packaging/Debian13/README.md](Packaging/Debian13/README.md)
+([Debian 12 i386 版](Packaging/Debian12_x86/README.md)) を見てください。
 
-まっさらな Debian 13 (仮想マシン) への通しのインストールで動作を確認しています。
+まっさらな Debian 13 amd64 と Debian 12 i386 (仮想マシン) への通しのインストールで
+ビルドとログイン画面の起動まで確認しています。
 
 ## ブランチ
 
