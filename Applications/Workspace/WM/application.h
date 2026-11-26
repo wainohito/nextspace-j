@@ -85,5 +85,7 @@ void wApplicationMakeFirst(WApplication *);
 void wApplicationHide(WApplication *wapp);
 void wApplicationHideOthers(struct WWindow *awin);
 void wApplicationQuit(WApplication *wapp, Bool force);
+void wApplicationForceQuit(WApplication *wapp);
+Bool wApplicationIsDockapp(WApplication *wapp);
 
 #endif /* __WORKSPACE_WM_APPLICATION__ */

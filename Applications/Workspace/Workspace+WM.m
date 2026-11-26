@@ -388,6 +388,25 @@ int WSRunAlertPanel(char *title, char *message, char *defaultButton, char *alter
 }
 
 extern void wShakeWindow(WWindow *wwin);
+void WSRecyclerShowDrop(Bool accept)
+{
+  // Called on the WM queue: AppKit drawing happens on the main thread.
+  Recycler *recycler = [(Controller *)[NSApp delegate] recycler];
+
+  if (!recycler) {
+    return;
+  }
+  if (accept) {
+    [[[recycler appIcon] contentView] performSelectorOnMainThread:@selector(animate)
+                                         withObject:nil
+                                      waitUntilDone:NO];
+  } else {
+    [recycler performSelectorOnMainThread:@selector(updateIconImage)
+                               withObject:nil
+                            waitUntilDone:NO];
+  }
+}
+
 void WSRingBell(WWindow *wwin)
 {
   OSEDefaults *defs = [OSEDefaults globalUserDefaults];

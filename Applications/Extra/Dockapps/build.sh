@@ -73,7 +73,6 @@ while IFS='|' read -r name cmd wmclass source desc; do
 # The dockapp is started detached and this script exits at once: Workspace
 # reports an application that exits with a non-zero code (a dockapp stopped
 # at logout ends with SIGTERM) in an alert panel.
-pgrep -u "\$(id -u)" -x "$(basename "$prog" | cut -c1-15)" >/dev/null && exit 0
 log=\$HOME/.local/state/nextspace/dockapps.log
 mkdir -p "\${log%/*}"
 echo "\$(date '+%F %T') $cmd \$*" >> "\$log"

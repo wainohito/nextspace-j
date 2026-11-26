@@ -86,5 +86,10 @@ void WSActivateWorkspaceApp(WScreen *scr);
 int WSRunAlertPanel(char *title, char *message, char *defaultButton, char *alternateButton,
                     char *otherButton);
 void WSRingBell(WWindow *wwin);
+
+// --- Recycler
+// An appicon dragged by the WM is over the Recycler and would be accepted
+// (True: show the next frame of the Recycler animation), or no longer (False).
+void WSRecyclerShowDrop(Bool accept);
 void WSMessage(char *fmt, ...);
 // #define WMLogInfo(fmt, args...) WSMessage(fmt, ## args)

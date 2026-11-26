@@ -852,19 +852,45 @@ void wApplicationHideOthers(WWindow *wwin)
   }
 }
 
+/* Dockapps (Window Maker style: a withdrawn window whose icon window is shown
+   in the appicon) have no window the WM manages, and nothing to save. */
+Bool wApplicationIsDockapp(WApplication *wapp)
+{
+  if (!wapp) {
+    return False;
+  }
+  if (wapp->app_icon && wapp->app_icon->icon && wapp->app_icon->icon->icon_win != None) {
+    return True;
+  }
+  return (wapp->main_wwin && wapp->main_wwin->flags.is_dockapp);
+}
+
 void wApplicationQuit(WApplication *wapp, Bool force)
 {
   CFArrayRef windows = CFArrayCreateCopy(kCFAllocatorDefault, wapp->windows);
   WWindow *wwin;
+  Bool asked = False;
 
   for (int i = 0; i < CFArrayGetCount(windows); i++) {
     wwin = (WWindow *)CFArrayGetValueAtIndex(windows, i);
     if (wwin && wwin->protocols.DELETE_WINDOW) {
       wClientSendProtocol(wwin, w_global.atom.wm.delete_window, w_global.timestamp.last_event);
+      asked = True;
     }
   }
 
   CFRelease(windows);
+
+  // No window can be asked to close (WM_DELETE_WINDOW): Quit would do
+  // nothing.  Dockapps are closed at once, other applications after the
+  // "Kill Application" confirmation.
+  if (!asked && wapp->main_wwin && !wapp->main_wwin->flags.destroyed) {
+    if (wApplicationIsDockapp(wapp)) {
+      wClientKill(wapp->main_wwin);
+    } else {
+      wApplicationForceQuit(wapp);
+    }
+  }
 }
 
 /* TODO */

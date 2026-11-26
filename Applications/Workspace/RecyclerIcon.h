@@ -29,6 +29,7 @@
   unsigned int draggingMask;
 }
 - (void)setImage:(NSImage *)anImage;
+- (void)animate;
 @end
 
 @class Recycler;

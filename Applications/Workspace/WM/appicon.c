@@ -460,16 +460,33 @@ void save_appicon(WAppIcon *aicon, Bool dock)
 static void openApplicationMenu(WApplication *wapp, int x, int y)
 {
   WMenu *menu = wapp->app_menu->brother;
+  WScreen *scr = menu->frame->screen_ptr;
+  WMPoint point = {x, y};
+  WMRect rect = wGetRectForHead(scr, wGetHeadForPoint(scr, point));
+  int right, bottom;
 
-  x -= MENU_WIDTH(menu) / 2;
-  if (x < 0) {
-    x = 0;
+  if (!menu->flags.realized) {
+    wMenuRealize(menu);
   }
 
+  x -= MENU_WIDTH(menu) / 2;
   /* mouse pointer will be located at the middle of titlebar */
   y -= menu->frame->titlebar->height / 2;
-  if (y < 0) {
-    y = 0;
+
+  /* keep the whole menu on the screen (e.g. for an appicon at the bottom) */
+  right = rect.pos.x + (int)rect.size.width;
+  bottom = rect.pos.y + (int)rect.size.height;
+  if (x + (int)MENU_WIDTH(menu) > right) {
+    x = right - (int)MENU_WIDTH(menu);
+  }
+  if (y + (int)MENU_HEIGHT(menu) > bottom) {
+    y = bottom - (int)MENU_HEIGHT(menu);
+  }
+  if (x < rect.pos.x) {
+    x = rect.pos.x;
+  }
+  if (y < rect.pos.y) {
+    y = rect.pos.y;
   }
 
   wMenuMapAt(menu, x, y, False);
@@ -591,6 +608,51 @@ void appIconMouseDown(WObjDescriptor *desc, XEvent *event)
   }
 }
 
+/* The Recycler's icon in the Dock (Workspace's "Recycler.GNUstep") */
+static WAppIcon *recyclerAppIcon(WScreen *scr)
+{
+  WDock *dock = scr->dock;
+
+  if (!dock) {
+    return NULL;
+  }
+  for (int i = 0; i < dock->max_icons; i++) {
+    WAppIcon *ai = dock->icon_array[i];
+    if (ai && ai->wm_instance && ai->wm_class && !strcmp(ai->wm_instance, "Recycler") &&
+        !strcmp(ai->wm_class, "GNUstep")) {
+      return ai;
+    }
+  }
+  return NULL;
+}
+
+/* The application of a running dockapp appicon, NULL if it is not one */
+static WApplication *dockappOf(WAppIcon *aicon)
+{
+  WApplication *wapp;
+
+  if (!aicon->flags.running || !(wapp = wApplicationOf(aicon->main_window)) ||
+      !wapp->main_wwin || wapp->main_wwin->flags.destroyed || !wApplicationIsDockapp(wapp)) {
+    return NULL;
+  }
+  return wapp;
+}
+
+/* Is (x, y) on the Recycler, and would dropping aicon there do something
+   (quit a dockapp, remove a docked appicon that is not running)? */
+static Bool canDropOnRecycler(WAppIcon *aicon, WAppIcon *recycler, int x, int y)
+{
+  if (!recycler || recycler == aicon || !recycler->flags.docked || aicon->flags.lock ||
+      aicon->flags.launching) {
+    return False;
+  }
+  if (x < recycler->x_pos || x >= recycler->x_pos + ICON_SIZE || y < recycler->y_pos ||
+      y >= recycler->y_pos + ICON_SIZE) {
+    return False;
+  }
+  return (dockappOf(aicon) != NULL || (!aicon->flags.running && aicon->dock != NULL));
+}
+
 Bool wHandleAppIconMove(WAppIcon *aicon, XEvent *event)
 {
   WIcon *icon = aicon->icon;
@@ -620,6 +682,8 @@ Bool wHandleAppIconMove(WAppIcon *aicon, XEvent *event)
   int oldX = x;
   int oldY = y;
   Bool hasMoved = False;
+  WAppIcon *recycler = recyclerAppIcon(scr);
+  Bool onRecycler = False; /* the Recycler is animated while it would accept the drop */
 
   if (wPreferences.flags.noupdates && originalDock != NULL)
     return False;
@@ -722,6 +786,14 @@ Bool wHandleAppIconMove(WAppIcon *aicon, XEvent *event)
           }
         }
 
+        if (canDropOnRecycler(aicon, recycler, ev.xmotion.x_root, ev.xmotion.y_root)) {
+          onRecycler = True;
+          WSRecyclerShowDrop(True); /* next animation frame */
+        } else if (onRecycler) {
+          onRecycler = False;
+          WSRecyclerShowDrop(False);
+        }
+
         if (omnipresent && !showed_all_clips) {
           int i;
           for (i = 0; i < scr->desktop_count; i++) {
@@ -740,8 +812,10 @@ Bool wHandleAppIconMove(WAppIcon *aicon, XEvent *event)
         wAppIconMove(aicon, x, y);
 
         WDock *theNewDock = NULL;
-        if (!(ev.xmotion.state & ALT_MOD_MASK) || aicon->flags.launching || aicon->flags.lock ||
-            originalDock == NULL) {
+        /* Over the Recycler: no Dock slot is offered (the shadow is hidden) */
+        if (!onRecycler &&
+            (!(ev.xmotion.state & ALT_MOD_MASK) || aicon->flags.launching || aicon->flags.lock ||
+             originalDock == NULL)) {
           for (i = 0; dockable && i < scr->drawer_count + 2; i++) {
             WDock *theDock = allDocks[i];
             if (theDock == NULL)
@@ -820,6 +894,47 @@ Bool wHandleAppIconMove(WAppIcon *aicon, XEvent *event)
         if (ev.xbutton.button != clickButton)
           break;
         XUngrabPointer(dpy, CurrentTime);
+
+        /* Dropped on the Recycler: a dockapp is quit (and removed from the
+           Dock), a docked appicon that is not running is removed from the
+           Dock.  Running applications other than dockapps are not quit (they
+           may have unsaved documents): they are handled as usual below. */
+        if (onRecycler) {
+          WSRecyclerShowDrop(False);
+        }
+        {
+          if (canDropOnRecycler(aicon, recycler, ev.xbutton.x_root, ev.xbutton.y_root)) {
+            WApplication *dockapp = dockappOf(aicon);
+            {
+              XUnmapWindow(dpy, scr->dock_shadow);
+              if (superfluous) {
+                if (ghost != None) {
+                  XFreePixmap(dpy, ghost);
+                }
+                XSetWindowBackground(dpy, scr->dock_shadow, scr->white_pixel);
+              }
+              if (lastDock && lastDock->type == WM_DRAWER && lastDock != originalDock) {
+                wDrawerFillTheGap(lastDock, aicon, False);
+              }
+              if (!aicon->flags.running && !wPreferences.no_animations) {
+                if (aicon->icon->selected) {
+                  wIconSelect(aicon->icon);
+                }
+                DoKaboom(scr, icon->core->window, x, y);
+              }
+              if (originalDock != NULL) {
+                wDockDetach(originalDock, aicon);
+              }
+              if (dockapp) {
+                wClientKill(dockapp->main_wwin);
+              }
+              if (wPreferences.auto_arrange_icons) {
+                wArrangeIcons(scr, True);
+              }
+              return True;
+            }
+          }
+        }
 
         Bool docked = False;
         if (ondock) {

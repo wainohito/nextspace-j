@@ -36,7 +36,7 @@ wmifinfo       | wmifinfo         | wmifinfo.wmifinfo             | deb:wmifinfo
 wmifs          | wmifs            | wmifs.wmifs                   | deb:wmifs          | ネットワークの通信量
 wmitime        | wmitime          | wmitime.wmitime               | deb:wmitime        | 時計とインターネットタイム
 wmix           | wmix             | wmix.wmix                     | deb:wmix           | 音量ミキサー
-wmload         | wmload           | wmload.WMLoad                 | deb:wmload         | システムの負荷
+wmload         | wmload -withdrawn | wmload.WMLoad                 | deb:wmload         | システムの負荷
 wmmemload      | wmmemload        | wmmemload.DockApp             | deb:wmmemload      | メモリとスワップの使用量
 wmmisc         | wmmisc           | wmmisc.wmmisc                 | deb:wmmisc         | ユーザー数・プロセス数・稼働時間・負荷
 wmmon          | wmmon            | wmmon.wmmon                   | deb:wmmon          | CPU・ディスク・メモリの使用状況
