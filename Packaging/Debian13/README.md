@@ -64,6 +64,10 @@ cd Packaging/Debian13
 ./install.sh --update
 ```
 
+clone したディレクトリを消してしまった場合は、上の「使い方」と同じように
+`git clone` し直してから `./install.sh --update` を実行してください (インストール
+済みのものは clone したディレクトリを使っていないので、場所はどこでもかまいません)。
+
 `--update` は deps, nextspace, extra, system の各段階と、セッション用スクリプト
 (`~/.local/bin/nextspace-autostart` など) の入れ替えを行います。フォントや言語など
 自分で変えた設定はそのまま残ります (user 段階は実行しません)。core 段階
