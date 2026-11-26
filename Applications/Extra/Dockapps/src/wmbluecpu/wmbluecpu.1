@@ -1,0 +1,40 @@
+.TH "WMBlueCPU" "1" "0.4" "Draghicioiu Mihai Andrei" "User Commands"
+.SH "NAME"
+WMBlueCPU \- a dockapp which displays cpu usage
+.SH "SYNOPSIS"
+wmbluecpu [OPTIONS]
+.SH "DESCRIPTION"
+.PP 
+\fBWMBlueCPU\fP is a cpu monitoring dockapp for window managers which support dockapps. It shows the current cpu usage with numbers and a graphical history list.
+.SH "OPTIONS"
+The following options can be passed to WMBlueCPU on the command line:
+.TP 
+.B \-h, \-\-help
+Display basic usage info and exit
+.TP 
+.B \-v, \-\-version
+Display version number and exit
+.TP 
+.B \-display <DISPLAY>
+The X11 display to connect to.
+.TP 
+.B \-m <MILISECS>
+The number of miliseconds between screen updates
+.TP 
+.B \-w, \-\-window
+Run in own window (also good for other windowmanagers)
+.TP 
+.B \-nw, \-\-no\-window
+Don't run in own window
+.TP 
+.B \-s, \-\-shape
+Use the XShape extension
+.TP 
+.B \-ns, \-\-no\-shape
+Don't use the XShape extension. The window will be placed on it's own panel.
+.SH "AUTHOR"
+Draghicioiu Mihai Andrei <misuceldestept@go.ro>
+.SH "THANKS"
+unsigned <soulrider@ifrance.com>
+.SH "WEBSITE"
+http://misuceldestept.go.ro/wmbluecpu

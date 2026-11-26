@@ -1,0 +1,63 @@
+# Window Maker dockapps installed as /Applications/Dockapps/<name>.app
+#
+# name | command | WM_CLASS (instance.class) | source | description
+#
+# name     .app name; also the icon (icons/<name>.png)
+# command  program and arguments (dockapps that need -w to dock get it here)
+# WM_CLASS of the window the window manager manages: the wrapper's
+#          executable is named so, which lets the Dock attach the running
+#          dockapp to an icon dragged from /Applications/Dockapps
+# source   deb:<package> (Debian) or src (built from src/<name>)
+# description  shown by Workspace (ApplicationDescription)
+#
+# Not included: dockapps that need settings (weather, mail, wmdrawer,
+# wmhdplop), special hardware or old kernel interfaces (/proc/acpi, APM, OSS,
+# CD), Debian's libwraster (wmforecast, wmweather+) and those without a
+# window class (tdc).
+
+asmon          | asmon            | asmon.asmon                   | deb:asmon          | CPU・メモリ・スワップ・ディスクの使用状況
+bubblefishymon | bubblefishymon   | bubblefishymon.bubblefishymon | deb:bubblefishymon | 泳ぐアヒルと泡で見るシステム負荷
+wmbattery      | wmbattery        | wmbattery.wmbattery           | deb:wmbattery      | バッテリーの残量と充電状態
+wmbubble       | wmbubble         | wmbubble.wmbubble             | deb:wmbubble       | アヒルの泡で見る CPU とメモリの負荷
+wmbutton       | wmbutton         | wmbutton.Wmbutton             | deb:wmbutton       | アプリを起動する 9 つのボタン (~/.wmbutton で設定)
+wmcalc         | wmcalc           | wmcalc.wmcalc                 | deb:wmcalc         | 小さな電卓
+wmcalclock     | wmcalclock       | wmcalclock.wmcalclock         | deb:wmcalclock     | 時計とカレンダー
+wmcliphist     | wmcliphist       | wmcliphist.DockApp            | deb:wmcliphist     | クリップボードの履歴
+wmclock        | wmclock          | wmclock.WMClock               | deb:wmclock        | NeXTSTEP 風の時計
+wmclockmon     | wmclockmon       | wmclockmon.DockApp            | deb:wmclockmon     | アラーム付きのデジタル時計
+wmcore         | wmcore           | wmcore.wmcore                 | deb:wmcore         | CPU コアごとの使用率
+wmcpuload      | wmcpuload        | wmcpuload.DockApp             | deb:wmcpuload      | CPU 使用率
+wmcube         | wmcube           | wmcube.wmcube                 | deb:wmcube         | CPU 負荷に合わせて回る 3D オブジェクト
+wmdiskmon      | wmdiskmon        | wmdiskmon.DockApp             | deb:wmdiskmon      | ディスクの使用量
+wmfsm          | wmfsm            | wmfsm.wmfsm                   | deb:wmfsm          | ファイルシステムごとの使用率
+wmget          | wmget dock       | wmget.wmget                   | deb:wmget          | バックグラウンドのダウンロードマネージャ
+wmgtemp        | wmgtemp          | wmgtemp.wmgtemp               | deb:wmgtemp        | CPU とシステムの温度 (lm-sensors)
+wmifinfo       | wmifinfo         | wmifinfo.wmifinfo             | deb:wmifinfo       | ネットワークインタフェースの情報 (IP アドレスなど)
+wmifs          | wmifs            | wmifs.wmifs                   | deb:wmifs          | ネットワークの通信量
+wmitime        | wmitime          | wmitime.wmitime               | deb:wmitime        | 時計とインターネットタイム
+wmix           | wmix             | wmix.wmix                     | deb:wmix           | 音量ミキサー
+wmload         | wmload           | wmload.WMLoad                 | deb:wmload         | システムの負荷
+wmmemload      | wmmemload        | wmmemload.DockApp             | deb:wmmemload      | メモリとスワップの使用量
+wmmisc         | wmmisc           | wmmisc.wmmisc                 | deb:wmmisc         | ユーザー数・プロセス数・稼働時間・負荷
+wmmon          | wmmon            | wmmon.wmmon                   | deb:wmmon          | CPU・ディスク・メモリの使用状況
+wmmoonclock    | wmmoonclock      | wmmoonclock.wmmoonclock       | deb:wmmoonclock    | 月の満ち欠け
+wmnd           | wmnd             | wmnd.wmnd                     | deb:wmnd           | ネットワークの通信量 (グラフ)
+wmpinboard     | wmpinboard       | wmpinboard.WMPINBOARD         | deb:wmpinboard     | 小さな伝言板
+wmpuzzle       | /usr/games/wmpuzzle | wmpuzzle.wmpuzzle          | deb:wmpuzzle       | 4×4 のスライドパズル
+wmressel       | wmressel         | wmressel.wmressel             | deb:wmressel       | 画面の解像度の切り替え
+wmshutdown     | wmshutdown       | wmshutdown.DockApp            | deb:wmshutdown     | シャットダウンと再起動
+wmstickynotes  | wmstickynotes    | wmstickynotes.Wmstickynotes   | deb:wmstickynotes  | デスクトップの付箋 (クリックで新しい付箋)
+wmsun          | wmsun            | wmsun.wmsun                   | deb:wmsun          | 日の出と日の入りの時刻
+wmsysmon       | wmsysmon         | wmsysmon.wmsysmon             | deb:wmsysmon       | メモリ・スワップ・ディスク入出力・割り込み
+wmtemp         | wmtemp           | wmtemp.DockApp                | deb:wmtemp         | CPU とシステムの温度 (lm-sensors)
+wmtime         | wmtime           | wmtime.wmtime                 | deb:wmtime         | アナログ・デジタル時計と日付
+wmtop          | wmtop            | wmtop.wmtop                   | deb:wmtop          | CPU やメモリを多く使っているプロセス
+wmusic         | wmusic           | wmusic.DockApp                | deb:wmusic         | 音楽プレーヤーのリモコン (MPRIS)
+wmwave         | wmwave           | wmwave.wmwave                 | deb:wmwave         | 無線 LAN の電波の強さ
+wmwork         | wmwork           | wmwork.wmwork                 | deb:wmwork         | 作業時間の記録
+wmxres         | wmxres           | wmxres.DockApp                | deb:wmxres         | 画面モードの切り替え
+cputnik        | cputnik          | cputnik.cputnik               | src                | CPU 使用率
+wmbluecpu      | wmbluecpu        | wmbluecpu.WMBlueCPU           | src                | CPU 使用率と履歴
+wmnetload      | wmnetload        | wmnetload.DockApp             | src                | ネットワークの状態と通信量
+wmwifi         | wmwifi           | wmwifi.DockApp                | src                | 無線 LAN の状態
+wmamixer       | wmamixer -w      | wmamixer.Wmamixer             | src                | 音量ミキサー (ALSA)

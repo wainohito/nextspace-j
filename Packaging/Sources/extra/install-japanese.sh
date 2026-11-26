@@ -78,6 +78,11 @@ stage_deps() {
        $FRAMEWORKS_BUILD_DEPS $FRAMEWORKS_RUN_DEPS $APPS_BUILD_DEPS $APPS_RUN_DEPS \
        $JAPANESE_DEPS $TRAY_DEPS $EXTRA_APPS_BUILD_DEPS $EXTRA_APPS_RUN_DEPS
 
+  info "Window Maker dockapps (Applications/Extra/Dockapps/dockapps.list)"
+  # shellcheck disable=SC2046
+  sudo apt-get install -y $DOCKAPPS_BUILD_DEPS $(awk -F'|' '!/^#/ && $4 ~ /deb:/ \
+       {sub(/.*deb:/, "", $4); gsub(/ /, "", $4); print $4}' "$ROOT/Applications/Extra/Dockapps/dockapps.list")
+
   info "Install security updates (Firefox, Chromium, ...) automatically"
   sudo apt-get install -y unattended-upgrades
   sudo install -m 644 "$EXTRA_DIR/apt-20auto-upgrades" /etc/apt/apt.conf.d/20auto-upgrades

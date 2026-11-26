@@ -1,0 +1,20 @@
+WMBlueCPU - a dockapp
+
+	WMBlueCPU shows system cpu usage. It runs as a dockapp for
+WindowMaker or some other window manager which supports dockapps.
+	The following options can be passed to WMBlueCPU on the command
+line:
+	-h, --help             - Display basic usage info and exit
+	-v, --version          - Display version and exit
+	-display <DISPLAY>     - The X11 display to connect to
+	-m <MILISECS>          - The number of miliseconds between updates
+	-w,  --window          - Run in a window
+	-nw, --no-window       - Don't run in a window
+	-s,  --shape           - Use the XShape extension
+	-ns, --no-shape        - Don't use the XShape extension, create own panel.
+
+Author:
+	Draghicioiu Mihai <misuceldestept@go.ro>
+
+Website:
+	misuceldestept.go.ro/wmbluecpu

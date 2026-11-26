@@ -34,3 +34,6 @@ for app in Wrappers/*.app; do
   sudo rm -rf "/Applications/$(basename "$app")"
   sudo cp -a "$app" /Applications/
 done
+
+# Window Maker dockapps as /Applications/Dockapps/*.app
+Dockapps/build.sh

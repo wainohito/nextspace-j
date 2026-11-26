@@ -1,0 +1,8 @@
+* add SMP code
+* add -title <title> option - sets the window title
+* add --ignore-nice
+* port to other unices
+* rewrite options.c - it's dirty (use getopt or something)
+* DO ERRORCHECKING!
+* draw in background pixmap !
+* merge all pixmaps into one

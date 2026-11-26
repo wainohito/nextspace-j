@@ -209,3 +209,15 @@ EXTRA_APPS_RUN_DEPS="
     firefox-esr
     chromium
 "
+# Applications/Extra/Dockapps: building the dockapps of src/ (the Debian
+# dockapps themselves are listed in Applications/Extra/Dockapps/dockapps.list)
+DOCKAPPS_BUILD_DEPS="
+    gcc
+    autoconf
+    automake
+    libdockapp-dev
+    libasound2-dev
+    libxpm-dev
+    libxext-dev
+    lm-sensors
+"
