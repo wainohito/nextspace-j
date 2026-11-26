@@ -31,7 +31,12 @@ build() {  # name: build a copy of src/<name> in $BUILD, print the binary path
       cputnik)   make CC=$CC ;;
       wmbluecpu) make CC=$CC ;;
       wmamixer)  $CC -O2 wmamixer.c -Wall -lm -lXpm -lXext -lX11 -lasound -o wmamixer ;;
-      wmnetload) CPPFLAGS=-I/usr/include/libdockapp ./configure -q && make ;;
+      # The generated autotools files are in src/ (its configure.in is too old
+      # for today's automake); git does not keep file times, so make them
+      # newer than their inputs or make tries to regenerate them.
+      wmnetload) find . \( -name configure -o -name aclocal.m4 -o -name Makefile.in \
+                        -o -name config.h.in \) -exec touch {} + &&
+                 CPPFLAGS=-I/usr/include/libdockapp ./configure -q && make ;;
       wmwifi)    autoreconf -fi && ./configure -q && make ;;
     esac
   ) > "$BUILD/$n.log" 2>&1 || { tail -20 "$BUILD/$n.log"; echo "$n: build failed" >&2; exit 1; }
