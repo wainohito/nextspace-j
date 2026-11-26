@@ -198,6 +198,41 @@ NSString *WMDockAppCommand(int position)
     return nil;
   }
 }
+// Name shown in the list: the instance for GNUstep applications.  For X11
+// applications with an .app wrapper the wrapper's name, because the window
+// class can be a generic one like "DockApp" (wmcpuload): the wrapper is found
+// from the Dock command, or, as the Dock keeps the command a dockapp reports
+// (WM_COMMAND) rather than the wrapper, by its executable named
+// "instance.class" in /Applications/Dockapps.  Otherwise the window class.
+NSString *WMDockAppDisplayName(int position)
+{
+  NSString *appName = WMDockAppName(position);
+  NSString *dockappsDir = @"/Applications/Dockapps";
+  NSFileManager *fm = [NSFileManager defaultManager];
+  WAppIcon *appicon;
+  NSString *path;
+
+  if ([[appName pathExtension] isEqualToString:@"GNUstep"]) {
+    return [appName stringByDeletingPathExtension];
+  }
+  for (NSString *app in [fm directoryContentsAtPath:dockappsDir]) {
+    if ([[app pathExtension] isEqualToString:@"app"] &&
+        [fm fileExistsAtPath:[[dockappsDir stringByAppendingPathComponent:app]
+                                 stringByAppendingPathComponent:appName]]) {
+      return [app stringByDeletingPathExtension];
+    }
+  }
+  appicon = wDockAppiconAtSlot(wDefaultScreen()->dock, position);
+  if (appicon && appicon->command) {
+    path = [[[NSString stringWithCString:appicon->command]
+        componentsSeparatedByString:@" "] objectAtIndex:0];
+    path = [path stringByDeletingLastPathComponent];
+    if ([[path pathExtension] isEqualToString:@"app"]) {
+      return [[path lastPathComponent] stringByDeletingPathExtension];
+    }
+  }
+  return [appName pathExtension];
+}
 void WMSetDockAppCommand(int position, const char *command)
 {
   WAppIcon *appicon = wDockAppiconAtSlot(wDefaultScreen()->dock, position);
@@ -341,7 +376,7 @@ void WMSetDockAppDndCommand(int position, const char *command)
 
 - (id)tableView:(NSTableView *)tv objectValueForTableColumn:(NSTableColumn *)tc row:(int)row
 {
-  NSString *appName = WMDockAppName(row);
+  NSString *appName = WMDockAppDisplayName(row);
 
   if (tc == [appList tableColumnWithIdentifier:@"autostart"]) {
     if (WMIsDockAppAutolaunch(row))
@@ -349,11 +384,6 @@ void WMSetDockAppDndCommand(int position, const char *command)
     else
       return nil;
   } else {
-    if ([[appName pathExtension] isEqualToString:@"GNUstep"])
-      appName = [appName stringByDeletingPathExtension];
-    else
-      appName = [appName pathExtension];
-
     if ([appName isEqualToString:@"Workspace"] || [appName isEqualToString:@"Recycler"]) {
       [[tc dataCellForRow:row] setEnabled:NO];
     } else {
@@ -368,12 +398,7 @@ void WMSetDockAppDndCommand(int position, const char *command)
 {
   NSTableView *tv = [aNotification object];
   NSInteger selRow = [tv selectedRow];
-  NSString *appName = WMDockAppName(selRow);
-
-  if ([[appName pathExtension] isEqualToString:@"GNUstep"])
-    appName = [appName stringByDeletingPathExtension];
-  else
-    appName = [appName pathExtension];
+  NSString *appName = WMDockAppDisplayName(selRow);
 
   [nameField setStringValue:appName];
   [autostartBtn setEnabled:YES];

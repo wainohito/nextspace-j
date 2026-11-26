@@ -1,12 +1,21 @@
 #!/bin/sh
-# LogoutHook (~/Library/Preferences/.NextSpace/Login): stop tray programs so
-# they don't survive on the login screen and get re-managed at next login.
+# LogoutHook (~/Library/Preferences/.NextSpace/Login): stop tray programs and
+# dockapps so they don't survive on the login screen and get re-managed at
+# next login.
 pkill -x wmsystemtray
 pkill -x pasystray
+# Dockapps of /Applications/Dockapps: each wrapper names its program in
+# Resources/dockapp.  (The Dock autolaunches the program itself, not the
+# wrapper, so the processes are found by name.)
+for f in /Applications/Dockapps/*.app/Resources/dockapp; do
+  [ -f "$f" ] && pkill -u "$(id -u)" -x "$(head -1 "$f" | cut -c1-15)"
+done
 # Input method: fcitx5 is started by the session (SessionScript).
 # mozc_server ignores SIGTERM (systemd then waited for the stop timeout at
 # every shutdown), so it is killed; Mozc saves its learning data regularly.
+# fcitx5 of Debian 12 can also stay after SIGTERM: killed too if still there.
 pkill -x fcitx5
 sleep 2
 pkill -KILL -x mozc_server
+pkill -KILL -x fcitx5
 exit 0
