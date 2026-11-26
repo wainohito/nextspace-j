@@ -88,5 +88,5 @@ unattended-upgrades を入れ、`/etc/apt/apt.conf.d/20auto-upgrades` で毎日�
 
 `Packaging/Sources/nextspace_uninstall.sh` を参照してください。この手順で追加した
 ファイル: `/etc/apt/preferences.d/nextspace`, `/etc/apt/apt.conf.d/20auto-upgrades`, `/etc/sudoers.d/nextspace-timezone`, `/etc/systemd/{system,user}.conf.d/nextspace-timeout.conf`, `/usr/local/bin/nextspace-fonts`, `/etc/apt/apt.conf.d/99nextspace-fonts`, `~/Library/Fonts/* (auto).nfont`,
-`/etc/environment` の fcitx 用の行, `~/.local/bin/nextspace-autostart`,
+`/etc/environment` の fcitx 用の行, `/Applications/Dockapps`, `/usr/local/bin` の dockapp (cputnik, wmamixer, wmbluecpu, wmnetload, wmwifi, wmpuzzle へのリンク), `~/.local/bin/nextspace-autostart`,
 `~/.local/bin/nextspace-logout`, `~/.config/fcitx5/conf/xim.conf`。
