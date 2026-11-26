@@ -696,6 +696,12 @@ static unsigned char color_table[] = {0, 4, 2, 6, 1, 5, 3, 7, 8, 12, 10, 14, 9, 
       //		del(currcons);
       return;
     case 128 + 27:
+      // 0x9B is the 8-bit CSI, but also a UTF-8 continuation byte (e.g. in
+      // 更 E6 9B B4, 回 E5 9B 9E, せ E3 81 9B): inside a multibyte character it
+      // is part of the character.
+      if ((utf && utf_count) || (iconv_state && input_buf_len > 0)) {
+        break;
+      }
       vc_state = ESsquare;
       return;
   }
