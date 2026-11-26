@@ -42,10 +42,10 @@ cd nextspace/Packaging/Debian13
 
 | 段階 | 内容 |
 |---|---|
-| deps | Debian 版 GNUstep を入れない apt 設定、ビルド・実行に必要なパッケージ、セキュリティ更新の自動適用 |
+| deps | Debian 版 GNUstep を入れない apt 設定、ビルド・実行に必要なパッケージ、Dock アプリ (dockapp) のパッケージ、セキュリティ更新の自動適用 |
 | core | libdispatch, CoreFoundation, libobjc2, gnustep-make, libwraster, libs-base, libs-gui (日本語訳・インライン入力パッチ込み), libs-back |
 | nextspace | Frameworks と NEXTSPACE のアプリ (Login, Workspace, Preferences など) |
-| extra | Applications/Extra: gs-desktop 由来のアプリ、WebBrowser、Firefox/Chromium の .app |
+| extra | Applications/Extra: gs-desktop 由来のアプリ、WebBrowser、Firefox/Chromium の .app、Dock アプリ (`/Applications/Dockapps`) |
 | system | root 用の NEXTSPACE 初期設定 (Login.app 用)、フォントの自動登録 (nextspace-fonts と apt フック)、環境設定からのタイムゾーン変更 (sudoers)、systemd の停止待ち時間 15 秒、fcitx5 用の環境変数 |
 | user | 実行したユーザーのホーム: NEXTSPACE の初期設定、日本語 UI・フォント (スムージング、ウインドウタイトルなど WM の日本語フォント)、Dock に Firefox・Chromium・WebBrowser・トレイ、インライン入力、fcitx5 の XIM 設定、トレイ (wmsystemtray/pasystray) の自動起動 |
 

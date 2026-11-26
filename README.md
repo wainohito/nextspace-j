@@ -21,6 +21,10 @@
 - **追加アプリ** (`Applications/Extra`): [GNUstep Desktop](https://github.com/onflapp/gs-desktop)
   のアプリを移植し、日本語化しました。住所録、付箋、電卓、辞書、PDF ビューア、
   音楽・動画プレーヤー、スクリーンショット、ドローなどです。
+- **Dock アプリ** (`/Applications/Dockapps`): Window Maker の dockapp (時計、CPU・
+  メモリ・ネットワークの表示、ミキサーなど 44 個) を .app にしてあります。Dock に
+  ドラッグして置き、ログイン時の自動起動は Workspace の環境設定の Dock で設定します。
+  終了はメニューの「終了」か、リサイクラーへのドラッグ (Dock からも外れます) です。
 - **WebBrowser.app**: NeXT 風のウインドウで Chromium を使うブラウザ。
   Firefox.app と Chromium.app も `/Applications` から起動できます。
 - **不具合修正**: TIFF 読み込みで Workspace が落ちる問題、Terminal の全角文字幅、
