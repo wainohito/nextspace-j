@@ -53,6 +53,11 @@ while IFS='|' read -r name cmd wmclass source desc; do
   case "$name" in ''|'#'*) continue ;; esac
   cmd=$(echo $cmd); wmclass=$(echo $wmclass); desc=$(echo $desc)
   prog=${cmd%% *}
+  # Debian puts games into /usr/games (not in every PATH); some dockapps take
+  # their WM_CLASS from argv[0], so they must be started by name
+  if ! command -v "$prog" >/dev/null && [ -x "/usr/games/$prog" ]; then
+    sudo ln -sf "/usr/games/$prog" "/usr/local/bin/$prog"
+  fi
   if ! command -v "$prog" >/dev/null && [ ! -x "/usr/local/bin/$prog" ]; then
     echo "Skipping $name ($prog not installed)"
     continue
@@ -65,11 +70,15 @@ while IFS='|' read -r name cmd wmclass source desc; do
 # dockapp's WM_CLASS ($wmclass), so that the Dock attaches the running
 # dockapp to an icon dragged from /Applications/Dockapps.  Resources/dockapp
 # names the program: nextspace-logout stops it at logout.
+# The dockapp is started detached and this script exits at once: Workspace
+# reports an application that exits with a non-zero code (a dockapp stopped
+# at logout ends with SIGTERM) in an alert panel.
 pgrep -u "\$(id -u)" -x "$(basename "$prog" | cut -c1-15)" >/dev/null && exit 0
 log=\$HOME/.local/state/nextspace/dockapps.log
 mkdir -p "\${log%/*}"
 echo "\$(date '+%F %T') $cmd \$*" >> "\$log"
-exec $cmd "\$@" 2>> "\$log"
+setsid -f $cmd "\$@" </dev/null >/dev/null 2>> "\$log"
+exit 0
 EOF
   chmod 755 "$app/$wmclass"
   basename "$prog" > "$app/Resources/dockapp"

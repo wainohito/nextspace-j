@@ -43,7 +43,7 @@ wmmon          | wmmon            | wmmon.wmmon                   | deb:wmmon   
 wmmoonclock    | wmmoonclock      | wmmoonclock.wmmoonclock       | deb:wmmoonclock    | 月の満ち欠け
 wmnd           | wmnd             | wmnd.wmnd                     | deb:wmnd           | ネットワークの通信量 (グラフ)
 wmpinboard     | wmpinboard       | wmpinboard.WMPINBOARD         | deb:wmpinboard     | 小さな伝言板
-wmpuzzle       | /usr/games/wmpuzzle | wmpuzzle.wmpuzzle          | deb:wmpuzzle       | 4×4 のスライドパズル
+wmpuzzle       | wmpuzzle         | wmpuzzle.wmpuzzle             | deb:wmpuzzle       | 4×4 のスライドパズル
 wmressel       | wmressel         | wmressel.wmressel             | deb:wmressel       | 画面の解像度の切り替え
 wmshutdown     | wmshutdown       | wmshutdown.DockApp            | deb:wmshutdown     | シャットダウンと再起動
 wmstickynotes  | wmstickynotes    | wmstickynotes.Wmstickynotes   | deb:wmstickynotes  | デスクトップの付箋 (クリックで新しい付箋)
