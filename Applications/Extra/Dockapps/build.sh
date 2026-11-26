@@ -53,9 +53,10 @@ while IFS='|' read -r name cmd wmclass source desc; do
   case "$name" in ''|'#'*) continue ;; esac
   cmd=$(echo $cmd); wmclass=$(echo $wmclass); desc=$(echo $desc)
   prog=${cmd%% *}
-  # Debian puts games into /usr/games (not in every PATH); some dockapps take
-  # their WM_CLASS from argv[0], so they must be started by name
-  if ! command -v "$prog" >/dev/null && [ -x "/usr/games/$prog" ]; then
+  # Debian puts games into /usr/games, which is not in Workspace's PATH (the
+  # Dock and the wrappers start dockapps by name: some take their WM_CLASS
+  # from argv[0])
+  if [ -x "/usr/games/$prog" ] && [ ! -x "/usr/bin/$prog" ]; then
     sudo ln -sf "/usr/games/$prog" "/usr/local/bin/$prog"
   fi
   if ! command -v "$prog" >/dev/null && [ ! -x "/usr/local/bin/$prog" ]; then
