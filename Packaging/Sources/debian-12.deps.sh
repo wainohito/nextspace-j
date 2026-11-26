@@ -1,10 +1,16 @@
-# Works for Debian 12 and Ubuntu 22.04
+# Debian 12 (bookworm), i386 and amd64.  Ubuntu 22.04 has its own
+# ubuntu-22.deps.sh.
 
 BUILD_TOOLS="
     curl
     clang
     cmake
     git
+    make
+    patch
+    file
+    pkg-config
+    binutils
 "
 #--- libdispatch, libcorefoundation, libobjc2
 RUNTIME_DEPS="
@@ -43,8 +49,8 @@ WRASTER_DEPS="
 "
 WRASTER_RUN_DEPS="
     libgif7
-    libjpeg8
-    libtiff5
+    libjpeg62-turbo
+    libtiff6
     libpng16-16
     libwebp7
     libxpm4
@@ -66,7 +72,7 @@ GNUSTEP_BASE_RUN_DEPS="
     libavahi-client3
     libxml2
     libxslt1.1
-    libicu70
+    libicu72
     libicu-dev
     libgnutls30
     libcups2
@@ -154,3 +160,55 @@ APPS_RUN_DEPS="
 #    libpam0g 
 #xserver-xorg-input-kbd
 #xserver-xorg-input-mouse
+
+#--- japanese branch additions (used by Packaging/Debian12_x86/install.sh)
+# Japanese environment: fonts and fcitx5 + Mozc input method
+JAPANESE_DEPS="
+    task-japanese
+    fonts-noto-cjk
+    fonts-noto-cjk-extra
+    fonts-vlgothic
+    fcitx5
+    fcitx5-mozc
+    fcitx5-frontend-gtk2
+    fcitx5-frontend-gtk3
+    fcitx5-frontend-gtk4
+    fcitx5-frontend-qt5
+    fcitx5-frontend-qt6
+    fcitx5-config-qt
+    im-config
+"
+# Input mode / volume in the Dock (Window Maker dockapp + tray icons)
+TRAY_DEPS="
+    wmsystemtray
+    pasystray
+    pulseaudio-utils
+    fontconfig
+"
+# Applications/Extra (gs-desktop apps, PDFKit, TerminalKit, WebBrowser)
+EXTRA_APPS_BUILD_DEPS="
+    libxtst-dev
+    libsdl2-dev
+    libvncserver-dev
+    libdbus-1-dev
+    libfreetype-dev
+"
+EXTRA_APPS_RUN_DEPS="
+    vlc-bin
+    vlc-plugin-base
+    vlc-plugin-video-output
+    scrot
+    slop
+    ffmpeg
+    sane-utils
+    avahi-utils
+    recollcmd
+    poppler-utils
+    unrtf
+    rclone
+    freerdp2-x11
+    xdotool
+    python3
+    firefox-esr
+    chromium
+"
