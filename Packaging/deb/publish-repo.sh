@@ -51,7 +51,7 @@ Signing key: \`$(gpg --with-colons --fingerprint "${NEXTSPACE_J_KEY:-36EB10F693E
 EOF
 
 git add -A
-git checkout -q --orphan publish
+git checkout -q --orphan "publish-$$"
 git commit -q -m "NEXTSPACE-J packages $(date +%F)"
 git branch -D main >/dev/null 2>&1 || true
 git branch -m main
