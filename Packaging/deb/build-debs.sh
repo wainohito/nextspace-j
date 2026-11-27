@@ -36,6 +36,7 @@ DEB=${VERSION_ID%%.*}
 ARCH=$(dpkg --print-architecture)
 VERSION=$(git -C "$ROOT" log -1 --format=%cd --date=format:%Y%m%d.%H%M)+g$(git -C "$ROOT" rev-parse --short=8 HEAD)~deb$DEB
 MAINTAINER="NEXTSPACE-J <https://github.com/wainohito/nextspace-j>"
+APT_URL=https://wainohito.github.io/nextspace-j-apt/
 . "$SRC/debian-$DEB.deps.sh"
 
 STAGE=/var/tmp/nextspace-j-stage
@@ -210,6 +211,17 @@ install -D -m 440 "$EXTRA_DIR/nextspace-timezone.sudoers" "$P/etc/sudoers.d/next
 for d in system user; do
   install -D -m 644 "$EXTRA_DIR/systemd-timeout.conf" "$P/etc/systemd/$d.conf.d/nextspace-timeout.conf"
 done
+# The NEXTSPACE-J apt repository (updates with apt upgrade)
+install -D -m 644 "$HERE/nextspace-j-archive-keyring.gpg" \
+        "$P/usr/share/keyrings/nextspace-j-archive-keyring.gpg"
+mkdir -p "$P/etc/apt/sources.list.d"
+cat > "$P/etc/apt/sources.list.d/nextspace-j.sources" <<EOF
+Types: deb
+URIs: $APT_URL
+Suites: $VERSION_CODENAME
+Components: main
+Signed-By: /usr/share/keyrings/nextspace-j-archive-keyring.gpg
+EOF
 mkdir -p "$STAGE/nextspace-j-ja.debian"
 cat > "$STAGE/nextspace-j-ja.debian/postinst" <<'EOF'
 #!/bin/sh
