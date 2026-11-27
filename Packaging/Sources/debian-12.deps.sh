@@ -152,6 +152,7 @@ APPS_RUN_DEPS="
     xserver-xorg-input-evdev
     xserver-xorg-input-synaptics
     xfonts-100dpi
+    xfonts-base
     xserver-xorg-video-vmware
     xserver-xorg-video-intel
     x11-xkb-utils
