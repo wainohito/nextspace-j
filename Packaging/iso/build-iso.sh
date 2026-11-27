@@ -68,7 +68,16 @@ get_installer() {
   done
   echo "Installer: $(grep -c ' \./cdrom/' "$d/SHA256SUMS") files of installer-$ARCH (verified)"
 }
-get_installer
+# Debian 12 has the i386 installer: simple-cdd downloads it itself.  But
+# debian-cd's boot script for bookworm leaves "installer-%ARCH%" in the
+# path of the optional images (its trixie script resets it): give the path.
+CUSTOM_INSTALLER=""
+if [ "$DIST" = trixie ]; then
+  get_installer
+  CUSTOM_INSTALLER="custom_installer=\"$WORK/installer\""
+else
+  CUSTOM_INSTALLER="export DI_DIR=\"$WORK/tmp/mirror/dists/$DIST/main/installer-$ARCH/current/images\""
+fi
 
 rm -rf "$WORK/profiles"
 cp -r "$HERE/profiles" "$WORK/profiles"
@@ -79,7 +88,7 @@ debian_mirror="http://deb.debian.org/debian/"
 security_mirror="http://deb.debian.org/debian-security/"
 mirror_components="main non-free-firmware"
 local_packages="$WORK/local"
-custom_installer="$WORK/installer"
+$CUSTOM_INSTALLER
 export ARCH=$ARCH
 export ARCHES=$ARCH
 # Japanese installer: these are asked before the preseed file is read
