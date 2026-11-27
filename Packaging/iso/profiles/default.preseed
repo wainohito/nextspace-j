@@ -1,0 +1,19 @@
+# NEXTSPACE-J installer: settings answered in advance.  Asked as usual:
+# network, host name, root and user accounts, disks, Debian mirror.
+
+# The NEXTSPACE-J profile (simple-cdd), selected automatically
+d-i preseed/early_command string anna-install simple-cdd-profiles
+simple-cdd simple-cdd/profiles multiselect nextspace-j
+
+# Japan.  (Language and keyboard are set on the boot command line,
+# KERNEL_PARAMS in the .conf, as they are asked before this file is read.)
+d-i time/zone string Asia/Tokyo
+d-i clock-setup/utc boolean true
+
+# Software: the standard system utilities only; NEXTSPACE-J (the profile)
+# is the desktop, no Debian desktop environment
+tasksel tasksel/first multiselect standard
+
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+popularity-contest popularity-contest/participate boolean false
