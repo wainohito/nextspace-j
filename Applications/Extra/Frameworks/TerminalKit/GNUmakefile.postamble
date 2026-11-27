@@ -12,10 +12,15 @@
 # before-install::
   
 # Things to do after installing
+# (with DESTDIR, e.g. for a package: into $(DESTDIR)/usr/share/terminfo)
 after-install::
-	if [ -d /etc/terminfo ];then tic -x -o /etc/terminfo terminfo ;fi
-	if [ -d /usr/share/terminfo ];then tic -x -o /usr/share/terminfo terminfo ;fi
-	if [ -d /usr/local/share/terminfo ];then tic -x -o /usr/local/share/terminfo terminfo ;fi
+	if [ -n "$(DESTDIR)" ]; then \
+	  mkdir -p $(DESTDIR)/usr/share/terminfo && tic -x -o $(DESTDIR)/usr/share/terminfo terminfo; \
+	else \
+	  if [ -d /etc/terminfo ];then tic -x -o /etc/terminfo terminfo ;fi; \
+	  if [ -d /usr/share/terminfo ];then tic -x -o /usr/share/terminfo terminfo ;fi; \
+	  if [ -d /usr/local/share/terminfo ];then tic -x -o /usr/local/share/terminfo terminfo ;fi; \
+	fi
 
 # Things to do before uninstalling
 # before-uninstall::

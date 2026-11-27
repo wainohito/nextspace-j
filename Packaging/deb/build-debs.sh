@@ -6,7 +6,12 @@
 # from the same commit (the build of each part uses the headers and libraries
 # of the installed parts), as the normal user who ran install.sh:
 #
-#   Packaging/deb/build-debs.sh [output directory]   (default Packaging/deb/out)
+#   Packaging/deb/build-debs.sh [--clean] [output directory]
+#                                   (default output: Packaging/deb/out)
+#
+# The staging trees are kept in /var/tmp/nextspace-j-stage: a run that
+# stopped continues with the parts not staged yet (also after a new commit;
+# use --clean for packages to publish, and after changes of staged parts).
 #
 # Packages (version: commit date + hash, ~debNN for the Debian release):
 #   nextspace-j-core      libraries: libdispatch, CoreFoundation, libobjc2,
@@ -19,6 +24,7 @@
 #   nextspace-j-desktop   all of the above with Firefox and Chromium
 set -e
 
+if [ "$1" = --clean ]; then clean=1; shift; fi
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../.." && pwd)
 SRC="$ROOT/Packaging/Sources"
@@ -32,8 +38,13 @@ VERSION=$(git -C "$ROOT" log -1 --format=%cd --date=format:%Y%m%d.%H%M)+g$(git -
 MAINTAINER="NEXTSPACE-J <https://github.com/wainohito/nextspace-j>"
 . "$SRC/debian-$DEB.deps.sh"
 
-STAGE=$(mktemp -d /var/tmp/nextspace-j-stage.XXXXXX)
-trap 'rm -rf "$STAGE"' EXIT
+STAGE=/var/tmp/nextspace-j-stage
+# (staged parts are reused even if the commit changed: --clean for a release)
+[ -n "$clean" ] && rm -rf "$STAGE"
+mkdir -p "$STAGE"
+# staged NAME: true when NAME was staged by an earlier run
+staged() { [ -e "$STAGE/.done-$1" ]; }
+done_staging() { touch "$STAGE/.done-$1"; }
 
 # Non-interactive runs can set SUDO_ASKPASS (also for the /bin/sh scripts)
 if [ -n "$SUDO_ASKPASS" ]; then
@@ -69,6 +80,7 @@ shlib_deps() {
 # The tree is $STAGE/NAME; optional maintainer scripts in $STAGE/NAME.debian/
 make_deb() {
   local name=$1 depends=$2 short=$3 long=$4 dir="$STAGE/$1" size
+  rm -rf "$dir/DEBIAN"
   mkdir -p "$dir/DEBIAN"
   if [ -d "$STAGE/$name.debian" ]; then
     cp "$STAGE/$name.debian"/* "$dir/DEBIAN/"
@@ -106,9 +118,13 @@ run_sources() {  # DEST script...
 #================================================================ core
 info "nextspace-j-core"
 P="$STAGE/nextspace-j-core"
-run_sources "$P" 0_build_libdispatch.sh 1_build_libcorefoundation.sh 2_build_libobjc2.sh \
-            3_build_core.sh 3_build_tools-make.sh 4_build_libwraster.sh \
-            5_build_libs-base.sh 6_build_libs-gui.sh 7_build_libs-back.sh
+if ! staged core; then
+  rm -rf "$P"
+  run_sources "$P" 0_build_libdispatch.sh 1_build_libcorefoundation.sh 2_build_libobjc2.sh \
+              3_build_core.sh 3_build_tools-make.sh 4_build_libwraster.sh \
+              5_build_libs-base.sh 6_build_libs-gui.sh 7_build_libs-back.sh
+  done_staging core
+fi
 install -D -m 644 "$EXTRA_DIR/apt-preferences-nextspace" "$P/etc/apt/preferences.d/nextspace"
 mkdir -p "$STAGE/nextspace-j-core.debian"
 cat > "$STAGE/nextspace-j-core.debian/postinst" <<'EOF'
@@ -144,7 +160,11 @@ EOF
 #================================================================ nextspace
 info "nextspace-j"
 P="$STAGE/nextspace-j"
-run_sources "$P" 8_build_Frameworks.sh 9_build_Applications.sh
+if ! staged nextspace; then
+  rm -rf "$P"
+  run_sources "$P" 8_build_Frameworks.sh 9_build_Applications.sh
+  done_staging nextspace
+fi
 mkdir -p "$STAGE/nextspace-j.debian"
 cat > "$STAGE/nextspace-j.debian/postinst" <<'EOF'
 #!/bin/sh
@@ -172,6 +192,7 @@ EOF
 #================================================================ ja
 info "nextspace-j-ja"
 P="$STAGE/nextspace-j-ja"
+rm -rf "$P" "$STAGE/nextspace-j-ja.debian"
 B="$P/usr/NextSpace/bin"
 install -D -m 755 "$EXTRA_DIR/nextspace-autostart" "$B/nextspace-autostart"
 install -D -m 755 "$EXTRA_DIR/nextspace-logout" "$B/nextspace-logout"
@@ -204,12 +225,20 @@ EOF
 #================================================================ extra
 info "nextspace-j-extra"
 P="$STAGE/nextspace-j-extra"
-DESTDIR="$P" NO_DOCKAPPS=1 "$ROOT/Applications/Extra/build.sh"
+if ! staged extra; then
+  rm -rf "$P"
+  DESTDIR="$P" NO_DOCKAPPS=1 "$ROOT/Applications/Extra/build.sh" || die "Applications/Extra failed"
+  done_staging extra
+fi
 
 #================================================================ dockapps
 info "nextspace-j-dockapps"
 P="$STAGE/nextspace-j-dockapps"
-DESTDIR="$P" "$ROOT/Applications/Extra/Dockapps/build.sh"
+if ! staged dockapps; then
+  rm -rf "$P"
+  DESTDIR="$P" "$ROOT/Applications/Extra/Dockapps/build.sh" || die "Dockapps failed"
+  done_staging dockapps
+fi
 DOCKAPP_PKGS=$(awk -F'|' '!/^#/ && $4 ~ /deb:/ {sub(/.*deb:/, "", $4); gsub(/ /, "", $4); print $4}' \
                "$ROOT/Applications/Extra/Dockapps/dockapps.list")
 
@@ -247,7 +276,7 @@ make_deb nextspace-j-dockapps \
   "nextspace-j $V, $( (shlib_deps "$STAGE/nextspace-j-dockapps"; echo $DOCKAPP_PKGS) | deplist)" \
   "NEXTSPACE-J dockapps" \
   "Window Maker dockapps as /Applications/Dockapps/*.app for the NEXTSPACE Dock."
-mkdir -p "$STAGE/nextspace-j-desktop"
+rm -rf "$STAGE/nextspace-j-desktop"; mkdir -p "$STAGE/nextspace-j-desktop"
 make_deb nextspace-j-desktop \
   "nextspace-j $V, nextspace-j-ja $V, nextspace-j-extra $V, nextspace-j-dockapps $V, firefox-esr, chromium" \
   "NEXTSPACE-J desktop (all packages)" \
