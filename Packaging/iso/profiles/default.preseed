@@ -10,9 +10,21 @@ simple-cdd simple-cdd/profiles multiselect nextspace-j
 d-i time/zone string Asia/Tokyo
 d-i clock-setup/utc boolean true
 
-# Software: the standard system utilities only; NEXTSPACE-J (the profile)
-# is the desktop, no Debian desktop environment
-tasksel tasksel/first multiselect standard
+# Debian mirror for the installed system: the official mirror in Japan
+# (ftp.jp.debian.org) and the security updates; used when the network is
+# up, otherwise the install still completes from the image alone.
+d-i apt-setup/use_mirror boolean true
+d-i mirror/country string manual
+d-i mirror/http/hostname string ftp.jp.debian.org
+d-i mirror/http/directory string /debian
+d-i mirror/http/proxy string
+d-i apt-setup/services-select multiselect security, updates
+d-i apt-setup/non-free-firmware boolean true
+
+# Software: no Debian task (their packages are not on the image, the
+# install must work without a network mirror); NEXTSPACE-J (the profile)
+# is the desktop
+tasksel tasksel/first multiselect
 
 d-i grub-installer/only_debian boolean true
 d-i grub-installer/with_other_os boolean true

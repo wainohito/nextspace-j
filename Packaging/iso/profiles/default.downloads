@@ -38,3 +38,10 @@ isolinux
 
 # necessary if user chooses to not set a root password.
 sudo
+# Needed by the installer itself (not dependencies of the profile)
+zstd
+os-prober
+efibootmgr
+shim-signed
+grub-efi-amd64-signed
+grub-efi-ia32

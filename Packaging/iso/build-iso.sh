@@ -99,7 +99,7 @@ EOF
 cd "$WORK"
 build-simple-cdd --conf nextspace-j.conf --dist "$DIST" 2>&1 | tee build.log
 iso=$(ls -t images/*.iso | head -1)
-name="nextspace-j-${VERSION%%~*}-debian${DEBVER}-${ARCH}.iso"
+name="nextspace-j-$(echo "$VERSION" | cut -c1-8)-${ARCH}.iso"   # e.g. nextspace-j-20261128-amd64.iso
 cp "$iso" "$OUT/$name"
 (cd "$OUT" && sha256sum "$name" > "$name.sha256")
 echo "ISO: $OUT/$name ($(du -h "$OUT/$name" | cut -f1))"
