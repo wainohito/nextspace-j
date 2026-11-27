@@ -157,6 +157,13 @@ stage_system() {
   done
   sudo systemctl daemon-reexec
 
+  info "Session scripts for new users (Login.app's default session)"
+  sudo install -m 755 "$EXTRA_DIR/nextspace-autostart" /usr/NextSpace/bin/nextspace-autostart
+  sudo install -m 755 "$EXTRA_DIR/nextspace-logout" /usr/NextSpace/bin/nextspace-logout
+  sudo install -m 755 "$EXTRA_DIR/nextspace-user-setup" /usr/NextSpace/bin/nextspace-user-setup
+  sudo install -m 755 "$EXTRA_DIR/wm-setup.py" /usr/NextSpace/bin/nextspace-wm-setup
+  sudo install -D -m 644 "$EXTRA_DIR/fcitx5-xim.conf" /etc/xdg/fcitx5/conf/xim.conf
+
   info "Fonts: nextspace-fonts makes fontconfig's fonts usable in NEXTSPACE"
   sudo install -m 755 "$EXTRA_DIR/nextspace-fonts" /usr/local/bin/nextspace-fonts
   sudo install -m 644 "$EXTRA_DIR/apt-99nextspace-fonts" /etc/apt/apt.conf.d/99nextspace-fonts
@@ -174,11 +181,15 @@ install_user_scripts() {
   install -m 755 "$EXTRA_DIR/wm-setup.py" "$HOME/.local/bin/nextspace-wm-setup"
   install -m 755 "$EXTRA_DIR/nextspace-autostart" "$HOME/.local/bin/nextspace-autostart"
   install -m 755 "$EXTRA_DIR/nextspace-logout" "$HOME/.local/bin/nextspace-logout"
+  install -m 755 "$EXTRA_DIR/nextspace-user-setup" "$HOME/.local/bin/nextspace-user-setup"
 }
 
 stage_userfiles() {
   info "Session scripts in $HOME/.local/bin (settings are kept)"
   install_user_scripts
+  # Installed before nextspace-user-setup existed: the settings were made by
+  # the user stage; nextspace-autostart must not make them again.
+  touch "$HOME/.local/state/nextspace/user-setup-done"
   info "Fonts installed on the system (fontconfig) -> ~/Library/Fonts"
   /usr/local/bin/nextspace-fonts -v || true
 }
@@ -187,47 +198,16 @@ stage_user() {
   info "NEXTSPACE profile in $HOME"
   (cd "$SRC" && ./setup_user_home.sh)
 
-  info "Japanese UI, fonts and inline (on-the-spot) input"
-  local d=/Library/bin/defaults
-  [ -x "$d" ] || d=defaults
-  . /etc/profile.d/nextspace.sh 2>/dev/null || true
-  $d write NSGlobalDomain NSLanguages '(Japanese, English)'
-  $d write NSGlobalDomain GSXIMInputMethodStyle OnTheSpot
-  for k in NSFont NSUserFont NSMenuFont NSMessageFont NSControlContentFont NSLabelFont NSToolTipsFont; do
-    $d write NSGlobalDomain $k NotoSansCJKjp-Regular
-  done
-  for k in NSBoldFont NSTitleBarFont NSMenuBarFont NSPaletteFont; do
-    $d write NSGlobalDomain $k NotoSansCJKjp-Bold
-  done
-  $d write NSGlobalDomain NSUserFixedPitchFont NotoSansMonoCJKjp-Regular
-  $d write NSGlobalDomain GSFontAntiAlias YES   # smooth (anti-aliased) text
-  for k in NSFontSize NSBoldFontSize NSUserFontSize NSUserFixedPitchFontSize NSMenuFontSize \
-           NSMenuBarFontSize NSTitleBarFontSize NSPaletteFontSize NSControlContentFontSize \
-           NSLabelFontSize; do
-    $d write NSGlobalDomain $k 12
-  done
-  $d write NSGlobalDomain NSMessageFontSize 14
-  $d write NSGlobalDomain NSToolTipsFontSize 11
-  $d write NSGlobalDomain NSSmallFontSize 10
-  $d write NSGlobalDomain NSMiniFontSize 9
-  # Terminal: VL Gothic (a real monospaced Japanese font; full-width
-  # characters are exactly two cells wide)
-  $d write Terminal TerminalFont VL-Gothic-Regular
-  $d write Terminal TerminalFontSize 14
-
-  info "Window manager: Japanese fonts, browsers and tray in the Dock, window attributes"
+  info "Japanese UI, fonts, inline input, Dock and window manager (nextspace-user-setup)"
   install_user_scripts
   if pgrep -u "$(id -u)" -x Workspace >/dev/null; then
     # The WM would overwrite its state at logout: apply at the next login
     # (nextspace-autostart, before Workspace starts).
-    touch "$HOME/.local/state/nextspace/wm-setup-pending"
+    "$HOME/.local/bin/nextspace-user-setup" --no-wm
     echo "NEXTSPACE is running: window manager settings will be applied at the next login."
   else
-    "$HOME/.local/bin/nextspace-wm-setup"
+    "$HOME/.local/bin/nextspace-user-setup"
   fi
-
-  info "Fonts installed on the system (fontconfig) -> ~/Library/Fonts"
-  /usr/local/bin/nextspace-fonts -v || true
 
   info "fcitx5: XIM on-the-spot style"
   mkdir -p "$HOME/.config/fcitx5/conf"

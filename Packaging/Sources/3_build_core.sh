@@ -8,7 +8,7 @@
 CORE_SOURCES=${PROJECT_DIR}/OS/Linux
 
 # /.hidden
-$CP_CMD ${CORE_SOURCES}/dot_hidden /.hidden
+$CP_CMD ${CORE_SOURCES}/dot_hidden $DEST_DIR/.hidden
 
 # Preferences
 #$MKDIR_CMD $DEST_DIR/Library/Preferences
@@ -19,9 +19,12 @@ if ! [ -d $DEST_DIR/etc/ld.so.conf.d ];then
 	$MKDIR_CMD -v $DEST_DIR/etc/ld.so.conf.d
 fi
 $CP_CMD -v ${CORE_SOURCES}/etc/ld.so.conf.d/nextspace.conf $DEST_DIR/etc/ld.so.conf.d/
-sudo ldconfig
+if [ "$DEST_DIR" = "" ]; then
+	sudo ldconfig
+fi
 
 # X11
+$MKDIR_CMD $DEST_DIR/etc/X11
 $CP_CMD ${CORE_SOURCES}/etc/X11/Xresources.nextspace $DEST_DIR/etc/X11
 
 # PolKit & udev
@@ -48,9 +51,11 @@ $CP_CMD ${CORE_SOURCES}/etc/skel/.config $DEST_DIR/etc/skel/
 $CP_CMD ${CORE_SOURCES}/etc/skel/.gtkrc-2.0 $DEST_DIR/etc/skel/
 $CP_CMD ${CORE_SOURCES}/etc/skel/.*.nextspace $DEST_DIR/etc/skel/
 
-# /root
-$CP_CMD ${CORE_SOURCES}/etc/skel/.config /root
-$CP_CMD ${CORE_SOURCES}/etc/skel/Library /root
+# /root (a package does this in its postinst)
+if [ "$DEST_DIR" = "" ]; then
+	$CP_CMD ${CORE_SOURCES}/etc/skel/.config /root
+	$CP_CMD ${CORE_SOURCES}/etc/skel/Library /root
+fi
 
 # Scripts
 if ! [ -d $DEST_DIR/usr/NextSpace/bin ];then

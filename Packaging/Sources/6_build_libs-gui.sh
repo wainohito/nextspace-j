@@ -55,7 +55,8 @@ $INSTALL_CMD || exit 1
 # libwraster crashes on loading default GNUstep common_Tile.tiff.
 # Replace it in case when NextSpace theme will be disabled.
 print_H2 "Replacing /Library/Images/common_Tile.tiff..."
-$CP_CMD -f -v ${SOURCES_DIR}/nextspace-theme/Resources/ThemeImages/common_Tile.tiff /Library/Images || exit 1
+$MKDIR_CMD $DEST_DIR/Library/Images
+$CP_CMD -f -v ${SOURCES_DIR}/nextspace-theme/Resources/ThemeImages/common_Tile.tiff $DEST_DIR/Library/Images || exit 1
 
 #----------------------------------------
 # Download theme
@@ -87,6 +88,7 @@ $CP_CMD ${SOURCES_DIR}/GlobalDefaults.plist $DEST_DIR/Library/Preferences || exi
 #----------------------------------------
 # Install services
 #----------------------------------------
+$MKDIR_CMD $DEST_DIR/usr/NextSpace/lib/systemd
 $CP_CMD ${SOURCES_DIR}/gpbs.service $DEST_DIR/usr/NextSpace/lib/systemd || exit 1
 
 if [ "$DEST_DIR" = "" ] && [ "$GITHUB_ACTIONS" != "true" ]; then

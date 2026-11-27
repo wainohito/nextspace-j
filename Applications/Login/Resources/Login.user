@@ -2,8 +2,10 @@
   LoginHook = "";
   SessionScript = (
     ("/usr/NextSpace/bin/gnustep-services", "start"),
+    ("/usr/bin/fcitx5", "-d"),
+    ("/usr/NextSpace/bin/nextspace-autostart"),
     ("/usr/NextSpace/Apps/Workspace.app/Workspace"),
     ("/usr/NextSpace/bin/gnustep-services", "stop")
   );
-  LogoutHook = "";
+  LogoutHook = "/usr/NextSpace/bin/nextspace-logout";
 }

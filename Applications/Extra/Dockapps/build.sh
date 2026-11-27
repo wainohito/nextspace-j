@@ -2,7 +2,7 @@
 # Window Maker dockapps for NEXTSPACE: /Applications/Dockapps/<name>.app
 #
 # 1. builds the dockapps in src/ (not in Debian) and installs them into
-#    /usr/local/bin;
+#    /usr/local/bin (/Library/bin in the package);
 # 2. makes one .app per dockapps.list entry: Workspace shows them with an
 #    icon, a double click starts the dockapp, and an .app dragged into the
 #    Dock is attached to the running dockapp (the wrapper's executable is
@@ -12,9 +12,18 @@
 # The Debian dockapps (source "deb:" in dockapps.list) are installed by
 # install.sh (deps stage); entries whose program is missing are skipped.
 # Usage: ./build.sh            (asks for sudo when installing)
+#        DESTDIR=/path ./build.sh   install into a staging directory (package);
+#                                   the programs then go to /Library/bin
 set -e
 cd "$(dirname "$0")"
 HERE=$(pwd)
+if [ -n "$DESTDIR" ]; then
+  BINDIR=/Library/bin      # a package must not use /usr/local
+  SUDO=""
+else
+  BINDIR=/usr/local/bin
+  SUDO=sudo
+fi
 DEST=/Applications/Dockapps
 CC=gcc
 BUILD=$(mktemp -d)
@@ -47,7 +56,7 @@ for n in $(awk -F'|' '!/^#/ && NF >= 4 && $4 ~ /src/ {gsub(/ /, "", $1); print $
   build "$n"
   bin=$(find "$BUILD/src/$n" -type f -name "$n" -perm -u+x | head -1)
   [ -n "$bin" ] || { echo "$n: binary not found" >&2; exit 1; }
-  sudo install -m 755 -s "$bin" "/usr/local/bin/$n"
+  $SUDO install -D -m 755 -s "$bin" "$DESTDIR$BINDIR/$n"
 done
 
 #---------------------------------------------------------------- 2. .app
@@ -62,9 +71,10 @@ while IFS='|' read -r name cmd wmclass source desc; do
   # Dock and the wrappers start dockapps by name: some take their WM_CLASS
   # from argv[0])
   if [ -x "/usr/games/$prog" ] && [ ! -x "/usr/bin/$prog" ]; then
-    sudo ln -sf "/usr/games/$prog" "/usr/local/bin/$prog"
+    $SUDO mkdir -p "$DESTDIR$BINDIR"
+    $SUDO ln -sf "/usr/games/$prog" "$DESTDIR$BINDIR/$prog"
   fi
-  if ! command -v "$prog" >/dev/null && [ ! -x "/usr/local/bin/$prog" ]; then
+  if ! command -v "$prog" >/dev/null && [ ! -e "$DESTDIR$BINDIR/$prog" ]; then
     echo "Skipping $name ($prog not installed)"
     continue
   fi
@@ -102,8 +112,8 @@ EOF
 EOF
 done < dockapps.list
 
-echo "Installing $(ls "$STAGE" | wc -l) dockapps into $DEST"
-sudo rm -rf "$DEST"
-sudo mkdir -p "$DEST"
-sudo cp -r "$STAGE"/. "$DEST"/
-sudo chmod -R a+rX "$DEST"
+echo "Installing $(ls "$STAGE" | wc -l) dockapps into $DESTDIR$DEST"
+$SUDO rm -rf "$DESTDIR$DEST"
+$SUDO mkdir -p "$DESTDIR$DEST"
+$SUDO cp -r "$STAGE"/. "$DESTDIR$DEST"/
+$SUDO chmod -R a+rX "$DESTDIR$DEST"

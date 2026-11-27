@@ -1,17 +1,27 @@
 #!/bin/sh
-# Started from ~/Library/Preferences/.NextSpace/Login (SessionScript) before
-# Workspace. Waits for Workspace (window manager) and starts tray programs.
+# Started by Login (SessionScript, ~/Library/Preferences/.NextSpace/Login or
+# Login.app's default Login.user) before Workspace.  Helper scripts are
+# looked up next to this one (~/.local/bin with install.sh,
+# /usr/NextSpace/bin with the packages).
+here=$(cd "$(dirname "$0")" && pwd)
+state="$HOME/.local/state/nextspace"
+
+# First login with the packages: the user's NEXTSPACE-J settings
+if [ ! -e "$state/user-setup-done" ] && [ -x "$here/nextspace-user-setup" ]; then
+  "$here/nextspace-user-setup" >/dev/null 2>&1
+fi
 
 # Fonts installed since the last login (apt, ~/.local/share/fonts): make
 # them available to NEXTSPACE before Workspace and applications start.
-[ -x /usr/local/bin/nextspace-fonts ] && /usr/local/bin/nextspace-fonts >/dev/null 2>&1
+fonts=$(command -v nextspace-fonts || echo "$here/nextspace-fonts")
+[ -x "$fonts" ] && "$fonts" >/dev/null 2>&1
 
 # Window manager settings (Dock, fonts, window attributes) requested while a
 # session was running (the WM writes its state back at logout, so they can
 # only be applied before Workspace starts): apply them once now.
-pending="$HOME/.local/state/nextspace/wm-setup-pending"
-if [ -e "$pending" ] && [ -x "$HOME/.local/bin/nextspace-wm-setup" ]; then
-  "$HOME/.local/bin/nextspace-wm-setup" >/dev/null 2>&1 && rm -f "$pending"
+pending="$state/wm-setup-pending"
+if [ -e "$pending" ] && [ -x "$here/nextspace-wm-setup" ]; then
+  "$here/nextspace-wm-setup" >/dev/null 2>&1 && rm -f "$pending"
 fi
 
 (

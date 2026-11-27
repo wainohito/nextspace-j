@@ -1,0 +1,69 @@
+#!/bin/sh
+# NEXTSPACE-J settings for the user running it (Japanese UI, fonts, inline
+# input, Dock, window manager), once per user:
+#  - install.sh (user stage) runs it;
+#  - with the packages, nextspace-autostart runs it at the first login
+#    (before Workspace starts; the user was created before the packages
+#    were installed, so /etc/skel had no NEXTSPACE files yet).
+# Marker: ~/.local/state/nextspace/user-setup-done
+# Options: --no-wm   do not change the window manager files now (Workspace is
+#                    running: they are applied at the next login instead)
+set -e
+here=$(cd "$(dirname "$0")" && pwd)
+state="$HOME/.local/state/nextspace"
+mkdir -p "$state"
+
+# Default NEXTSPACE files that are missing in the home directory
+if [ -d /etc/skel/Library ]; then
+  mkdir -p "$HOME/Library"
+  cp -Rn /etc/skel/Library/. "$HOME/Library/"
+fi
+[ -d /etc/skel/.config ] && cp -Rn /etc/skel/.config "$HOME/" || true
+
+# Japanese UI, fonts and inline (on-the-spot) input
+d=/Library/bin/defaults
+[ -x "$d" ] || d=defaults
+$d write NSGlobalDomain NSLanguages '(Japanese, English)'
+$d write NSGlobalDomain GSXIMInputMethodStyle OnTheSpot
+for k in NSFont NSUserFont NSMenuFont NSMessageFont NSControlContentFont NSLabelFont NSToolTipsFont; do
+  $d write NSGlobalDomain $k NotoSansCJKjp-Regular
+done
+for k in NSBoldFont NSTitleBarFont NSMenuBarFont NSPaletteFont; do
+  $d write NSGlobalDomain $k NotoSansCJKjp-Bold
+done
+$d write NSGlobalDomain NSUserFixedPitchFont NotoSansMonoCJKjp-Regular
+$d write NSGlobalDomain GSFontAntiAlias YES   # smooth (anti-aliased) text
+for k in NSFontSize NSBoldFontSize NSUserFontSize NSUserFixedPitchFontSize NSMenuFontSize \
+         NSMenuBarFontSize NSTitleBarFontSize NSPaletteFontSize NSControlContentFontSize \
+         NSLabelFontSize; do
+  $d write NSGlobalDomain $k 12
+done
+$d write NSGlobalDomain NSMessageFontSize 14
+$d write NSGlobalDomain NSToolTipsFontSize 11
+$d write NSGlobalDomain NSSmallFontSize 10
+$d write NSGlobalDomain NSMiniFontSize 9
+# Terminal: VL Gothic (a real monospaced Japanese font; full-width
+# characters are exactly two cells wide)
+$d write Terminal TerminalFont VL-Gothic-Regular
+$d write Terminal TerminalFontSize 14
+
+# fcitx5: XIM on-the-spot style (when not set system-wide)
+if [ ! -f /etc/xdg/fcitx5/conf/xim.conf ] && [ -f "$here/fcitx5-xim.conf" ]; then
+  mkdir -p "$HOME/.config/fcitx5/conf"
+  cp "$here/fcitx5-xim.conf" "$HOME/.config/fcitx5/conf/xim.conf"
+fi
+
+# Window manager: Japanese fonts, browsers and tray in the Dock, attributes.
+# The WM writes its state back at logout: only change it while it is not
+# running.
+if [ "$1" = "--no-wm" ]; then
+  touch "$state/wm-setup-pending"
+else
+  "$here/nextspace-wm-setup"
+fi
+
+# Fonts installed on the system (fontconfig) -> ~/Library/Fonts
+fonts=$(command -v nextspace-fonts || echo "$here/nextspace-fonts")
+[ -x "$fonts" ] && "$fonts" -v || true
+
+touch "$state/user-setup-done"
