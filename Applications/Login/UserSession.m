@@ -278,6 +278,13 @@
     [fm changeFileAttributes:@{NSFileOwnerAccountName : _userName} atPath:defaultsPath];
   }
   userDefaults = [NSDictionary dictionaryWithContentsOfFile:defaultsPath];
+  if (userDefaults == nil) {
+    // A new user has no ~/Library/Preferences/.NextSpace yet, so the copy
+    // above fails: use the default user session (Login.user) itself.
+    userDefaults = [NSDictionary
+        dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Login"
+                                                                     ofType:@"user"]];
+  }
 
   // Login hook
   if ((hook = [userDefaults objectForKey:@"LoginHook"]) != nil) {

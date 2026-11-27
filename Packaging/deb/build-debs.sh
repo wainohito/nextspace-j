@@ -86,6 +86,9 @@ make_deb() {
     cp "$STAGE/$name.debian"/* "$dir/DEBIAN/"
     chmod 755 "$dir"/DEBIAN/{preinst,postinst,prerm,postrm} 2>/dev/null || true
   fi
+  # Staged with the user's umask (002): nothing may be writable by others
+  # (GNUstep ignores a group-writable GlobalDefaults.plist, for one)
+  find "$dir" ! -type l ! -path "$dir/DEBIAN*" -exec chmod go-w {} +
   if [ -d "$dir/etc" ]; then
     (cd "$dir" && find etc -type f | sed 's|^|/|') > "$dir/DEBIAN/conffiles"
   fi
